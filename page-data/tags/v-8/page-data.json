@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-js","path":"/tags/v-8/","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/post/2015/v8-nodejs/"},"frontmatter":{"title":"使用v8与js做交互，理解node基本原理"}}}]}},"pageContext":{"tag":"v8"}},"staticQueryHashes":["324394502"]}

@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-js","path":"/tags/codewars/","result":{"data":{"allMarkdownRemark":{"totalCount":2,"edges":[{"node":{"fields":{"slug":"/post/2018/equal-to-24/"},"frontmatter":{"title":"24点"}}},{"node":{"fields":{"slug":"/post/2018/spiral/"},"frontmatter":{"title":"螺旋化"}}}]}},"pageContext":{"tag":"codewars"}},"staticQueryHashes":["324394502"]}
