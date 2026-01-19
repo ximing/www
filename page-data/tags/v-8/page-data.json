@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-tsx","path":"/tags/v-8/","result":{"data":{"site":{"siteMetadata":{"title":"一席之地"}},"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"fields":{"slug":"/post/2015/v8-nodejs/"},"frontmatter":{"title":"使用v8与js做交互，理解node基本原理"}}}]}},"pageContext":{"tag":"v8"}},"staticQueryHashes":["4069201196"],"slicesMap":{}}
