@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="470" viewBox="0 0 760 470" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="30" font-size="15" fill="#4a4a4e" text-anchor="middle" font-weight="600">done 栈的 Item 序列与 undo 弹出</text>
+  <text x="380" y="50" font-size="12" fill="#8a8a8e" text-anchor="middle">书签划分事件；popEvent 从栈尾向前扫到最近的书签，它到栈尾就是最后一个事件</text>
+
+  <!-- done branch -->
+  <text x="34" y="80" font-size="12" fill="#4a4a4e" font-weight="600">done 栈</text>
+  <text x="700" y="80" font-size="11" fill="#8a8a8e" text-anchor="end">旧 → 新</text>
+  <rect x="30" y="88" width="700" height="90" rx="6" fill="#f7f7f8" stroke="#c8c8cc" stroke-width="1.5"/>
+
+  <g font-size="11" text-anchor="middle">
+    <rect x="48" y="105" width="104" height="56" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="100" y="124" fill="#2a6db0" font-weight="600">A</text>
+    <text x="100" y="140" fill="#4a4a4e">逆步 + map</text>
+    <text x="100" y="155" fill="#b05a5a">书签</text>
+
+    <rect x="168" y="105" width="104" height="56" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="220" y="124" fill="#2a6db0" font-weight="600">B</text>
+    <text x="220" y="140" fill="#4a4a4e">逆步 + map</text>
+
+    <rect x="288" y="105" width="104" height="56" rx="4" fill="#f0f0f2" stroke="#a8a8ac" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="340" y="124" fill="#8a8a8e" font-weight="600">C</text>
+    <text x="340" y="140" fill="#8a8a8e">纯映射项</text>
+    <text x="340" y="155" fill="#8a8a8e">只有 map</text>
+
+    <rect x="408" y="105" width="104" height="56" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="460" y="124" fill="#2a6db0" font-weight="600">D</text>
+    <text x="460" y="140" fill="#4a4a4e">逆步 + map</text>
+    <text x="460" y="155" fill="#b05a5a">书签</text>
+
+    <rect x="528" y="105" width="104" height="56" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="580" y="124" fill="#2a6db0" font-weight="600">E</text>
+    <text x="580" y="140" fill="#4a4a4e">逆步 + map</text>
+
+    <text x="678" y="138" fill="#8a8a8e">栈尾</text>
+  </g>
+
+  <!-- event brackets -->
+  <g stroke="#8a8a8e" stroke-width="1.2" fill="none">
+    <path d="M48,182 v8 M48,190 H392 M392,182 v8"/>
+    <path d="M408,182 v8 M408,190 H632 M632,182 v8"/>
+  </g>
+  <text x="220" y="212" font-size="11" fill="#8a8a8e" text-anchor="middle">事件 1（A 的书签是起点，C 落在事件内部）</text>
+  <text x="520" y="212" font-size="11" fill="#8a8a8e" text-anchor="middle">事件 2</text>
+
+  <!-- undo arrow -->
+  <line x1="520" y1="216" x2="520" y2="262" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="534" y="234" font-size="11" fill="#4a4a4e">undo：popEvent 弹出事件 2</text>
+  <text x="534" y="250" font-size="11" fill="#8a8a8e">逆步按 E⁻、D⁻ 顺序应用到新 transaction</text>
+
+  <!-- undone branch -->
+  <text x="34" y="278" font-size="12" fill="#4a4a4e" font-weight="600">undone 栈</text>
+  <rect x="230" y="266" width="500" height="90" rx="6" fill="#f7f7f8" stroke="#c8c8cc" stroke-width="1.5"/>
+  <g font-size="11" text-anchor="middle">
+    <rect x="250" y="283" width="170" height="56" rx="4" fill="#f7efe3" stroke="#b0894a" stroke-width="1.5"/>
+    <text x="335" y="302" fill="#b0894a" font-weight="600">E′</text>
+    <text x="335" y="318" fill="#4a4a4e">step = 原步骤 E（逆步的逆步）</text>
+    <text x="335" y="333" fill="#b05a5a">书签 = undo 时的当前选区</text>
+
+    <rect x="440" y="283" width="170" height="56" rx="4" fill="#f7efe3" stroke="#b0894a" stroke-width="1.5"/>
+    <text x="525" y="302" fill="#b0894a" font-weight="600">D′</text>
+    <text x="525" y="318" fill="#4a4a4e">step = 原步骤 D</text>
+    <text x="525" y="333" fill="#4a4a4e">map</text>
+
+    <text x="665" y="318" fill="#8a8a8e">栈尾</text>
+  </g>
+  <text x="250" y="380" font-size="11" fill="#8a8a8e">addTransform 把弹出的 transaction 重新存入，redo 弹出该事件时按 D、E 顺序重做</text>
+
+  <!-- legend -->
+  <rect x="30" y="400" width="700" height="56" rx="6" fill="#f7f7f8" stroke="#c8c8cc" stroke-width="1"/>
+  <text x="46" y="423" font-size="11" fill="#4a4a4e">Item 四字段：map（正向 StepMap，必有） · step（逆步，可空） · selection（选区书签，事件起点标记） · mirrorOffset（互逆声明，协作模式用）</text>
+  <text x="46" y="443" font-size="11" fill="#8a8a8e">纯映射项的来源：addToHistory = false 的修改、远端步骤、preserveItems 模式下弹出事件改写留下的项</text>
+</svg>

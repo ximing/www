@@ -1,0 +1,105 @@
+<svg viewBox="0 0 980 640" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="client" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a365d"/><stop offset="100%" stop-color="#2a4a7f"/></linearGradient>
+    <linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="mq" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#5c4228"/></linearGradient>
+    <linearGradient id="es" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#58a6ff"/></marker>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="980" height="640" fill="url(#bg)" rx="8"/>
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">小程序实时日志系统整体架构</text>
+
+  <!-- Client layer -->
+  <rect x="30" y="64" width="200" height="150" rx="6" fill="url(#client)" filter="url(#glow)"/>
+  <text x="130" y="88" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">小程序端</text>
+  <text x="130" y="106" text-anchor="middle" fill="#8b949e" font-size="10">Mini Program Runtime</text>
+  <rect x="46" y="116" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="130" y="133" text-anchor="middle" fill="#c9d1d9" font-size="11">日志采集 Hook</text>
+  <rect x="46" y="148" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="130" y="165" text-anchor="middle" fill="#c9d1d9" font-size="11">环形缓冲池 Ring Buffer</text>
+  <rect x="46" y="180" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="130" y="197" text-anchor="middle" fill="#c9d1d9" font-size="11">长连 SDK 上报</text>
+
+  <!-- Gateway layer -->
+  <rect x="280" y="64" width="200" height="150" rx="6" fill="url(#gw)" filter="url(#glow)"/>
+  <text x="380" y="88" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="bold">长连接网关</text>
+  <text x="380" y="106" text-anchor="middle" fill="#8b949e" font-size="10">Long-lived Connection Gateway</text>
+  <rect x="296" y="116" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="380" y="133" text-anchor="middle" fill="#c9d1d9" font-size="11">连接会话管理</text>
+  <rect x="296" y="148" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="380" y="165" text-anchor="middle" fill="#c9d1d9" font-size="11">协议解包 / 鉴权</text>
+  <rect x="296" y="180" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="380" y="197" text-anchor="middle" fill="#c9d1d9" font-size="11">按 Set 路由转发</text>
+
+  <!-- Kafka layer -->
+  <rect x="530" y="64" width="180" height="150" rx="6" fill="url(#mq)" filter="url(#glow)"/>
+  <text x="620" y="88" text-anchor="middle" fill="#d29922" font-size="13" font-weight="bold">Kafka</text>
+  <text x="620" y="106" text-anchor="middle" fill="#8b949e" font-size="10">Message Queue</text>
+  <rect x="546" y="116" width="148" height="26" rx="4" fill="#0d1117"/>
+  <text x="620" y="133" text-anchor="middle" fill="#c9d1d9" font-size="11">按 appId 分区</text>
+  <rect x="546" y="148" width="148" height="26" rx="4" fill="#0d1117"/>
+  <text x="620" y="165" text-anchor="middle" fill="#c9d1d9" font-size="11">削峰填谷 / 解耦</text>
+  <rect x="546" y="180" width="148" height="26" rx="4" fill="#0d1117"/>
+  <text x="620" y="197" text-anchor="middle" fill="#c9d1d9" font-size="11">多消费组分发</text>
+
+  <!-- ES layer -->
+  <rect x="750" y="64" width="200" height="150" rx="6" fill="url(#es)" filter="url(#glow)"/>
+  <text x="850" y="88" text-anchor="middle" fill="#a371f7" font-size="13" font-weight="bold">Elasticsearch</text>
+  <text x="850" y="106" text-anchor="middle" fill="#8b949e" font-size="10">Log Storage &amp; Index</text>
+  <rect x="766" y="116" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="850" y="133" text-anchor="middle" fill="#c9d1d9" font-size="11">Logstash 消费入库</text>
+  <rect x="766" y="148" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="850" y="165" text-anchor="middle" fill="#c9d1d9" font-size="11">按天 / 按 App 建索引</text>
+  <rect x="766" y="180" width="168" height="26" rx="4" fill="#0d1117"/>
+  <text x="850" y="197" text-anchor="middle" fill="#c9d1d9" font-size="11">冷热分层 / 生命周期</text>
+
+  <!-- arrows row1 -->
+  <line x1="230" y1="139" x2="278" y2="139" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="254" y="130" text-anchor="middle" fill="#8b949e" font-size="10">WebSocket</text>
+  <line x1="480" y1="139" x2="528" y2="139" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="504" y="130" text-anchor="middle" fill="#8b949e" font-size="10">Produce</text>
+  <line x1="710" y1="139" x2="748" y2="139" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="729" y="130" text-anchor="middle" fill="#8b949e" font-size="10">Consume</text>
+
+  <!-- Panel layer -->
+  <rect x="280" y="260" width="470" height="150" rx="6" fill="url(#panel)" filter="url(#glow)"/>
+  <text x="515" y="284" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">日志管理面板</text>
+  <text x="515" y="302" text-anchor="middle" fill="#8b949e" font-size="10">Log Console for R&amp;D</text>
+  <rect x="296" y="312" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="366" y="329" text-anchor="middle" fill="#c9d1d9" font-size="11">实时 Tail 查看</text>
+  <rect x="444" y="312" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="514" y="329" text-anchor="middle" fill="#c9d1d9" font-size="11">多维检索 / 聚合</text>
+  <rect x="592" y="312" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="662" y="329" text-anchor="middle" fill="#c9d1d9" font-size="11">HAR 请求回放</text>
+  <rect x="296" y="346" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="366" y="363" text-anchor="middle" fill="#c9d1d9" font-size="11">异常告警订阅</text>
+  <rect x="444" y="346" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="514" y="363" text-anchor="middle" fill="#c9d1d9" font-size="11">用户会话串联</text>
+  <rect x="592" y="346" width="140" height="26" rx="4" fill="#0d1117"/>
+  <text x="662" y="363" text-anchor="middle" fill="#c9d1d9" font-size="11">研发权限隔离</text>
+
+  <!-- arrow ES -> panel -->
+  <line x1="850" y1="214" x2="850" y2="335" stroke="#8b949e" stroke-width="2"/>
+  <line x1="850" y1="335" x2="752" y2="335" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="905" y="270" fill="#8b949e" font-size="10" transform="rotate(90,905,270)" text-anchor="middle">Query DSL</text>
+
+  <!-- Bottom: developer -->
+  <rect x="30" y="290" width="180" height="90" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1.5"/>
+  <text x="120" y="318" text-anchor="middle" fill="#e6edf3" font-size="13" font-weight="bold">研发人员</text>
+  <text x="120" y="338" text-anchor="middle" fill="#8b949e" font-size="10">按 traceId / 用户 / 时间检索</text>
+  <text x="120" y="356" text-anchor="middle" fill="#8b949e" font-size="10">定位报错与网络问题</text>
+  <line x1="210" y1="335" x2="278" y2="335" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Bottom summary -->
+  <rect x="30" y="460" width="920" height="140" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="50" y="486" fill="#e6edf3" font-size="12" font-weight="bold">链路特点</text>
+  <text x="50" y="510" fill="#8b949e" font-size="11">1. 端上先写入本地环形缓冲池，长连接建立前的日志不丢失，建立后统一补发。</text>
+  <text x="50" y="532" fill="#8b949e" font-size="11">2. 复用既有长连接基础设施（原实时协作文档网关），小程序侧只需接入 SDK，无需新建通道。</text>
+  <text x="50" y="554" fill="#8b949e" font-size="11">3. 网关只做转发不做重逻辑，写入 Kafka 后异步落 ES，避免日志洪峰打垮存储层。</text>
+  <text x="50" y="576" fill="#8b949e" font-size="11">4. 巅峰期约 300 台机器同时维持长连接，日均日志量约 1.2TB，全部经同一条链路处理。</text>
+</svg>

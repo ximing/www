@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b05a5a"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="30" font-size="15" fill="#4a4a4e" text-anchor="middle" font-weight="600">rebased：远端步骤到达后的栈尾重写</text>
+  <text x="380" y="50" font-size="12" fill="#8a8a8e" text-anchor="middle">本地未确认步骤被 rebase 到远端步骤之上，history 用 mapping.getMirror 找回新旧步骤的对应关系</text>
+
+  <!-- column headers -->
+  <g font-size="12" fill="#4a4a4e" font-weight="600" text-anchor="middle">
+    <text x="150" y="84">栈尾（rebase 前）</text>
+    <text x="395" y="84">rebasedTransform</text>
+    <text x="630" y="84">栈尾（rebase 后）</text>
+  </g>
+
+  <!-- column 1: old items -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="80" y="100" width="140" height="44" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="150" y="118" fill="#4a4a4e">item：逆 S1</text>
+    <text x="150" y="134" fill="#8a8a8e">map + 逆步</text>
+
+    <rect x="80" y="156" width="140" height="44" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="150" y="174" fill="#4a4a4e">item：逆 S2</text>
+    <text x="150" y="190" fill="#b05a5a">书签（事件起点）</text>
+
+    <rect x="80" y="212" width="140" height="44" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="150" y="230" fill="#4a4a4e">item：逆 S3</text>
+    <text x="150" y="246" fill="#8a8a8e">map + 逆步</text>
+
+    <text x="150" y="286" fill="#8a8a8e">本地未确认步骤 S1 S2 S3</text>
+    <text x="150" y="302" fill="#8a8a8e">对应的栈尾三个 item</text>
+  </g>
+
+  <!-- column 2: rebased transform -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="320" y="100" width="150" height="44" rx="4" fill="#f0f0f2" stroke="#a8a8ac" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="395" y="118" fill="#8a8a8e">R1（远端步骤）</text>
+    <text x="395" y="134" fill="#8a8a8e">不进历史</text>
+
+    <rect x="320" y="156" width="150" height="44" rx="4" fill="#f7efe3" stroke="#b0894a" stroke-width="1.5"/>
+    <text x="395" y="174" fill="#4a4a4e">S1′</text>
+    <text x="395" y="190" fill="#8a8a8e">rebase 后的 S1</text>
+
+    <rect x="320" y="212" width="150" height="44" rx="4" fill="#f7efe3" stroke="#b0894a" stroke-width="1.5"/>
+    <text x="395" y="230" fill="#4a4a4e">S2′</text>
+    <text x="395" y="246" fill="#8a8a8e">rebase 后的 S2</text>
+
+    <text x="395" y="286" fill="#b05a5a">S3 与远端冲突，rebase 中被丢弃</text>
+    <text x="395" y="302" fill="#8a8a8e">前段逆应用（图中略），mapping 登记镜像对</text>
+  </g>
+
+  <!-- column 3: rewritten items -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="550" y="100" width="160" height="44" rx="4" fill="#f0f0f2" stroke="#a8a8ac" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="630" y="118" fill="#8a8a8e">纯映射项</text>
+    <text x="630" y="134" fill="#8a8a8e">R1 的 map</text>
+
+    <rect x="550" y="156" width="160" height="44" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="630" y="174" fill="#4a4a4e">item：逆 S1′</text>
+    <text x="630" y="190" fill="#8a8a8e">对 S1′ 重新求逆</text>
+
+    <rect x="550" y="212" width="160" height="44" rx="4" fill="#eef4fb" stroke="#2a6db0" stroke-width="1.5"/>
+    <text x="630" y="230" fill="#4a4a4e">item：逆 S2′</text>
+    <text x="630" y="246" fill="#b05a5a">书签经子映射搬运</text>
+
+    <text x="630" y="286" fill="#8a8a8e">逆 S3 的 item 从栈里消失</text>
+  </g>
+
+  <!-- arrows col1 -> col2 (getMirror) -->
+  <g stroke="#666" stroke-width="1.2" fill="none">
+    <line x1="220" y1="122" x2="318" y2="170" marker-end="url(#arr)"/>
+    <line x1="220" y1="178" x2="318" y2="226" marker-end="url(#arr)"/>
+    <line x1="220" y1="234" x2="300" y2="278" stroke-dasharray="4,3" stroke="#b05a5a" marker-end="url(#arrR)"/>
+  </g>
+  <text x="252" y="140" font-size="10" fill="#4a4a4e">getMirror</text>
+  <text x="252" y="200" font-size="10" fill="#4a4a4e">getMirror</text>
+  <text x="228" y="266" font-size="10" fill="#b05a5a">getMirror 返回空</text>
+
+  <!-- arrows col2 -> col3 -->
+  <g stroke="#666" stroke-width="1.2" fill="none">
+    <line x1="470" y1="122" x2="548" y2="122" marker-end="url(#arr)"/>
+    <line x1="470" y1="178" x2="548" y2="178" marker-end="url(#arr)"/>
+    <line x1="470" y1="234" x2="548" y2="234" marker-end="url(#arr)"/>
+  </g>
+  <text x="509" y="114" font-size="10" fill="#4a4a4e" text-anchor="middle">map 进栈</text>
+  <text x="509" y="170" font-size="10" fill="#4a4a4e" text-anchor="middle">重新求逆</text>
+  <text x="509" y="226" font-size="10" fill="#4a4a4e" text-anchor="middle">重新求逆</text>
+
+  <!-- bottom note -->
+  <rect x="80" y="330" width="600" height="52" rx="6" fill="#f7f7f8" stroke="#c8c8cc" stroke-width="1"/>
+  <text x="98" y="352" font-size="11" fill="#4a4a4e">重写后：远端步骤以纯映射项进栈，本地 item 换成 rebase 后步骤的逆步，书签用 mapping.slice 走一遍</text>
+  <text x="98" y="370" font-size="11" fill="#8a8a8e">纯映射项超过 500 个（max_empty_items）时触发 compress，把它们折叠进步骤里</text>
+</svg>

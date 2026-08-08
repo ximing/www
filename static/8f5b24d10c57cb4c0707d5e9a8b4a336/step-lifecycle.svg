@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="320" viewBox="0 0 640 320" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- apply / invert -->
+  <text x="320" y="26" text-anchor="middle" font-size="11" fill="#555">apply(doc)：执行这步，得到新文档</text>
+  <rect x="40" y="36" width="150" height="44" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="115" y="63" text-anchor="middle" font-size="12" fill="#2c4a73">doc（应用前）</text>
+  <rect x="450" y="36" width="150" height="44" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="525" y="63" text-anchor="middle" font-size="12" fill="#2c4a73">doc（应用后）</text>
+  <line x1="190" y1="50" x2="450" y2="50" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="450" y1="72" x2="190" y2="72" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="320" y="98" text-anchor="middle" font-size="11" fill="#555">invert(doc) 生成逆 step，对逆 step 再 apply 即还原</text>
+
+  <!-- getMap -->
+  <text x="320" y="146" text-anchor="middle" font-size="11" fill="#555">getMap()：本步对每个文档位置的映射</text>
+  <rect x="40" y="156" width="150" height="44" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="115" y="183" text-anchor="middle" font-size="12" fill="#2e5a3c">位置 p（旧文档）</text>
+  <rect x="450" y="156" width="150" height="44" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="525" y="183" text-anchor="middle" font-size="12" fill="#2e5a3c">位置 p′（新文档）</text>
+  <line x1="190" y1="178" x2="450" y2="178" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- merge -->
+  <text x="320" y="246" text-anchor="middle" font-size="11" fill="#555">merge(other)：与紧跟的下一步尝试合并</text>
+  <rect x="40" y="256" width="100" height="40" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="90" y="280" text-anchor="middle" font-size="12" fill="#6b4c22">step₁</text>
+  <rect x="160" y="256" width="100" height="40" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="210" y="280" text-anchor="middle" font-size="12" fill="#6b4c22">step₂</text>
+  <line x1="260" y1="276" x2="450" y2="276" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <rect x="450" y="256" width="150" height="40" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="525" y="280" text-anchor="middle" font-size="12" fill="#6b4c22">合并后的单个 step</text>
+</svg>

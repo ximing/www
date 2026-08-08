@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 530" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="530" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">全局锁 vs 分段锁：同一批并发写入的对照</text>
+
+  <!-- 左：全局锁 -->
+  <rect x="30" y="55" width="340" height="315" rx="8" fill="#ffffff" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="200" y="82" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">全局锁：synchronized 全方法</text>
+  <text x="200" y="100" font-size="11" fill="#64748b" text-anchor="middle">（所有操作共用一把锁）</text>
+
+  <rect x="45" y="118" width="92" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="91" y="138" font-size="12" fill="#1f2937" text-anchor="middle">线程 T1（写）</text>
+
+  <rect x="45" y="163" width="92" height="32" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="91" y="183" font-size="12" fill="#1f2937" text-anchor="middle">线程 T2（写）</text>
+
+  <rect x="45" y="208" width="92" height="32" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="91" y="228" font-size="12" fill="#1f2937" text-anchor="middle">线程 T3（写）</text>
+
+  <rect x="45" y="253" width="92" height="32" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="91" y="273" font-size="12" fill="#1f2937" text-anchor="middle">线程 T4（写）</text>
+
+  <rect x="183" y="172" width="64" height="64" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="215" y="209" font-size="12.5" font-weight="600" fill="#b91c1c" text-anchor="middle">全局锁</text>
+
+  <rect x="283" y="138" width="72" height="132" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+  <text x="319" y="162" font-size="12" fill="#1f2937" text-anchor="middle">整个 Map</text>
+  <line x1="291" y1="180" x2="347" y2="180" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="291" y1="205" x2="347" y2="205" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="291" y1="230" x2="347" y2="230" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="291" y1="252" x2="347" y2="252" stroke="#cbd5e1" stroke-width="1"/>
+
+  <line x1="137" y1="134" x2="181" y2="190" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="152" y="152" font-size="10.5" fill="#16a34a" text-anchor="middle">拿到锁</text>
+
+  <line x1="137" y1="179" x2="181" y2="196" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <line x1="137" y1="224" x2="181" y2="212" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <line x1="137" y1="269" x2="181" y2="228" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="150" y="258" font-size="10.5" fill="#dc2626" text-anchor="middle">排队等待</text>
+
+  <line x1="247" y1="204" x2="281" y2="204" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <text x="45" y="318" font-size="11.5" fill="#b91c1c">同一时刻只有一个线程能进锁</text>
+  <text x="45" y="338" font-size="11.5" fill="#b91c1c">N 个并发写被串行化</text>
+  <text x="45" y="358" font-size="11.5" fill="#b91c1c">压测：RT 随并发数线性上涨</text>
+
+  <!-- 右：分段锁 -->
+  <rect x="410" y="55" width="340" height="315" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="580" y="82" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">分段锁：ConcurrentHashMap（JDK 7）</text>
+  <text x="580" y="100" font-size="11" fill="#64748b" text-anchor="middle">（表拆成多个 Segment，各带一把锁，默认 16 段）</text>
+
+  <rect x="425" y="118" width="92" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="471" y="138" font-size="12" fill="#1f2937" text-anchor="middle">线程 T1（写）</text>
+
+  <rect x="425" y="163" width="92" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="471" y="183" font-size="12" fill="#1f2937" text-anchor="middle">线程 T2（写）</text>
+
+  <rect x="425" y="208" width="92" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="471" y="228" font-size="12" fill="#1f2937" text-anchor="middle">线程 T3（写）</text>
+
+  <rect x="425" y="253" width="92" height="32" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="471" y="273" font-size="12" fill="#1f2937" text-anchor="middle">线程 T4（写）</text>
+
+  <rect x="560" y="112" width="175" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <rect x="568" y="122" width="26" height="24" rx="4" fill="#2563eb"/>
+  <text x="581" y="138" font-size="11" fill="#ffffff" text-anchor="middle">锁</text>
+  <text x="668" y="139" font-size="12" fill="#1f2937" text-anchor="middle">Segment 0</text>
+
+  <rect x="560" y="162" width="175" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <rect x="568" y="172" width="26" height="24" rx="4" fill="#2563eb"/>
+  <text x="581" y="188" font-size="11" fill="#ffffff" text-anchor="middle">锁</text>
+  <text x="668" y="189" font-size="12" fill="#1f2937" text-anchor="middle">Segment 1</text>
+
+  <rect x="560" y="212" width="175" height="44" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <rect x="568" y="222" width="26" height="24" rx="4" fill="#d97706"/>
+  <text x="581" y="238" font-size="11" fill="#ffffff" text-anchor="middle">锁</text>
+  <text x="668" y="239" font-size="12" fill="#1f2937" text-anchor="middle">Segment 2</text>
+
+  <rect x="560" y="262" width="175" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <rect x="568" y="272" width="26" height="24" rx="4" fill="#2563eb"/>
+  <text x="581" y="288" font-size="11" fill="#ffffff" text-anchor="middle">锁</text>
+  <text x="668" y="289" font-size="12" fill="#1f2937" text-anchor="middle">Segment 3</text>
+
+  <line x1="517" y1="134" x2="558" y2="130" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="517" y1="179" x2="558" y2="180" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="517" y1="224" x2="558" y2="230" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="517" y1="269" x2="558" y2="246" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+  <text x="425" y="324" font-size="11.5" fill="#16a34a">T1/T2/T3 落在不同段：并行写入</text>
+  <text x="425" y="342" font-size="11.5" fill="#b45309">T4 与 T3 撞在同一段：仅这一对排队</text>
+  <text x="425" y="360" font-size="11.5" fill="#475569">读操作大多数路径不加锁</text>
+
+  <!-- 底：要点 -->
+  <rect x="30" y="390" width="720" height="115" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="50" y="414" font-size="13" font-weight="600" fill="#475569">要点</text>
+  <text x="50" y="438" font-size="12" fill="#475569">· 全局锁下任意两个操作都互斥：N 个并发写实际串行执行，吞吐被一把锁卡死；</text>
+  <text x="50" y="460" font-size="12" fill="#475569">· 分段锁把互斥缩到「哈希进同一段」的写之间：理想并发度约等于段数（JDK 7 默认 16）；</text>
+  <text x="50" y="482" font-size="12" fill="#475569">· ConcurrentHashMap 的读大多数路径不加锁——读多写少的元数据缓存收益最大。</text>
+</svg>

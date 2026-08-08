@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 620" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="620" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">请求线程、数据库连接池与事务边界的关系</text>
+
+  <!-- 左：业务线程池 -->
+  <rect x="30" y="60" width="180" height="250" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="86" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">业务线程池</text>
+  <text x="120" y="104" font-size="11" fill="#64748b" text-anchor="middle">（第 2 篇按快慢隔离）</text>
+
+  <rect x="45" y="116" width="150" height="38" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="120" y="140" font-size="12.5" fill="#1f2937" text-anchor="middle">线程 A（事务中）</text>
+
+  <rect x="45" y="166" width="150" height="38" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="120" y="190" font-size="12.5" fill="#1f2937" text-anchor="middle">线程 B（慢 SQL）</text>
+
+  <rect x="45" y="216" width="150" height="38" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="120" y="240" font-size="12.5" fill="#1f2937" text-anchor="middle">线程 C（等连接）</text>
+
+  <text x="120" y="288" font-size="11" fill="#64748b" text-anchor="middle">每个请求独占一个线程</text>
+
+  <!-- 中：连接池 -->
+  <rect x="330" y="60" width="200" height="250" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="430" y="86" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">数据库连接池</text>
+  <text x="430" y="104" font-size="11" fill="#64748b" text-anchor="middle">maxActive = 3（固定复用）</text>
+
+  <rect x="345" y="116" width="170" height="38" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="430" y="140" font-size="12.5" fill="#1f2937" text-anchor="middle">连接 1：线程 A 事务占用</text>
+
+  <rect x="345" y="166" width="170" height="38" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="430" y="190" font-size="12.5" fill="#1f2937" text-anchor="middle">连接 2：慢 SQL 长时间占用</text>
+
+  <rect x="345" y="216" width="170" height="38" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="430" y="240" font-size="12.5" fill="#1f2937" text-anchor="middle">连接 3：另一慢事务占用</text>
+
+  <text x="430" y="278" font-size="11" fill="#b91c1c" text-anchor="middle">池取空后：排队 maxWait</text>
+  <text x="430" y="296" font-size="11" fill="#b91c1c" text-anchor="middle">超时仍无连接则抛异常</text>
+
+  <!-- 右：MySQL -->
+  <rect x="610" y="120" width="140" height="110" rx="8" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+  <text x="680" y="168" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">MySQL</text>
+  <text x="680" y="190" font-size="11" fill="#64748b" text-anchor="middle">建连接代价高</text>
+  <text x="680" y="208" font-size="11" fill="#64748b" text-anchor="middle">连接数有上限</text>
+
+  <!-- 线程到连接池的箭头 -->
+  <line x1="195" y1="135" x2="330" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="262" y="126" font-size="11" fill="#475569" text-anchor="middle">事务开始：借出</text>
+
+  <line x1="195" y1="185" x2="330" y2="185" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="262" y="176" font-size="11" fill="#475569" text-anchor="middle">借出</text>
+
+  <line x1="195" y1="235" x2="330" y2="235" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="262" y="226" font-size="11" fill="#dc2626" text-anchor="middle">排队等待</text>
+
+  <!-- 连接池到 MySQL 的箭头 -->
+  <line x1="515" y1="135" x2="610" y2="150" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="515" y1="185" x2="610" y2="185" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="515" y1="235" x2="610" y2="215" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+  <!-- 归还箭头（从连接回到线程 A） -->
+  <path d="M 345 150 L 260 320 L 130 320 L 125 158" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+  <text x="245" y="332" font-size="11" fill="#16a34a">提交 / 回滚后归还连接</text>
+
+  <!-- 下：事务边界 -->
+  <rect x="30" y="350" width="720" height="120" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="50" y="376" font-size="13.5" font-weight="600" fill="#6d28d9">事务边界：一次 @Transactional 方法调用（AOP 代理织入）</text>
+
+  <rect x="50" y="392" width="150" height="52" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="125" y="413" font-size="12" fill="#1f2937" text-anchor="middle">进入方法</text>
+  <text x="125" y="431" font-size="12" fill="#1f2937" text-anchor="middle">代理开启事务</text>
+
+  <line x1="200" y1="418" x2="222" y2="418" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="222" y="392" width="180" height="52" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="312" y="413" font-size="12" fill="#1f2937" text-anchor="middle">从连接池取连接</text>
+  <text x="312" y="431" font-size="12" fill="#1f2937" text-anchor="middle">绑定到当前线程</text>
+
+  <line x1="402" y1="418" x2="424" y2="418" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="424" y="392" width="150" height="52" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="499" y="413" font-size="12" fill="#1f2937" text-anchor="middle">方法内所有 DAO</text>
+  <text x="499" y="431" font-size="12" fill="#1f2937" text-anchor="middle">复用同一连接</text>
+
+  <line x1="574" y1="418" x2="596" y2="418" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="596" y="392" width="140" height="52" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="666" y="407" font-size="12" fill="#1f2937" text-anchor="middle">返回：提交</text>
+  <text x="666" y="423" font-size="12" fill="#1f2937" text-anchor="middle">异常：回滚</text>
+  <text x="666" y="439" font-size="12" fill="#1f2937" text-anchor="middle">归还连接</text>
+
+  <!-- 底：要点 -->
+  <rect x="30" y="490" width="720" height="108" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="50" y="514" font-size="13" font-weight="600" fill="#475569">要点</text>
+  <text x="50" y="538" font-size="12" fill="#475569">· 事务期间连接被当前线程独占，提交或回滚之后才归还池中；</text>
+  <text x="50" y="558" font-size="12" fill="#475569">· 慢 SQL 会把事务拖长，连接归还变慢，高并发下连接池被打满；</text>
+  <text x="50" y="578" font-size="12" fill="#475569">· 池满之后所有线程都卡在「取连接」，业务线程池的隔离（第 2 篇）帮不上忙。</text>
+</svg>

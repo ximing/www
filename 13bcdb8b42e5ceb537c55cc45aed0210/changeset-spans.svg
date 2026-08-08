@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="22" text-anchor="middle" font-size="12" fill="#555">一个 Change 的双坐标：fromA/toA 相对起始文档，fromB/toB 相对当前文档，span 上各挂一份 data</text>
+
+  <!-- old document -->
+  <text x="30" y="62" font-size="12" fill="#333">起始文档（A 坐标）</text>
+  <rect x="30" y="72" width="180" height="34" fill="#eef1f4" stroke="#9aa5b1"/>
+  <text x="120" y="93" text-anchor="middle" font-size="11" fill="#55606c">未变内容</text>
+
+  <rect x="210" y="72" width="110" height="34" fill="#f7e3e3" stroke="#b05050"/>
+  <text x="265" y="87" text-anchor="middle" font-size="11" fill="#7a2e2e">deleted[0]</text>
+  <text x="265" y="100" text-anchor="middle" font-size="10" fill="#7a2e2e">len 6 · data U1</text>
+
+  <rect x="320" y="72" width="110" height="34" fill="#f7e3e3" stroke="#b05050"/>
+  <text x="375" y="87" text-anchor="middle" font-size="11" fill="#7a2e2e">deleted[1]</text>
+  <text x="375" y="100" text-anchor="middle" font-size="10" fill="#7a2e2e">len 4 · data U2</text>
+
+  <rect x="430" y="72" width="180" height="34" fill="#eef1f4" stroke="#9aa5b1"/>
+  <text x="520" y="93" text-anchor="middle" font-size="11" fill="#55606c">未变内容</text>
+
+  <text x="205" y="66" text-anchor="middle" font-size="11" fill="#7a2e2e">fromA</text>
+  <text x="436" y="66" text-anchor="middle" font-size="11" fill="#7a2e2e">toA</text>
+  <text x="640" y="93" font-size="11" fill="#55606c">toA − fromA = 6 + 4 = 10</text>
+
+  <!-- new document -->
+  <text x="30" y="176" font-size="12" fill="#333">当前文档（B 坐标）</text>
+  <rect x="30" y="186" width="180" height="34" fill="#eef1f4" stroke="#9aa5b1"/>
+  <text x="120" y="207" text-anchor="middle" font-size="11" fill="#55606c">未变内容</text>
+
+  <rect x="210" y="186" width="150" height="34" fill="#e3f0e3" stroke="#4a7c59"/>
+  <text x="285" y="201" text-anchor="middle" font-size="11" fill="#2e5a3c">inserted[0]</text>
+  <text x="285" y="214" text-anchor="middle" font-size="10" fill="#2e5a3c">len 9 · data U2</text>
+
+  <rect x="360" y="186" width="90" height="34" fill="#e3f0e3" stroke="#4a7c59"/>
+  <text x="405" y="201" text-anchor="middle" font-size="11" fill="#2e5a3c">inserted[1]</text>
+  <text x="405" y="214" text-anchor="middle" font-size="10" fill="#2e5a3c">len 3 · data U1</text>
+
+  <rect x="450" y="186" width="160" height="34" fill="#eef1f4" stroke="#9aa5b1"/>
+  <text x="530" y="207" text-anchor="middle" font-size="11" fill="#55606c">未变内容</text>
+
+  <text x="205" y="180" text-anchor="middle" font-size="11" fill="#2e5a3c">fromB</text>
+  <text x="456" y="180" text-anchor="middle" font-size="11" fill="#2e5a3c">toB</text>
+  <text x="640" y="207" font-size="11" fill="#55606c">toB − fromB = 9 + 3 = 12</text>
+
+  <!-- connector -->
+  <line x1="265" y1="106" x2="285" y2="186" stroke="#666" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="255" y="152" text-anchor="end" font-size="11" fill="#555">同一处替换</text>
+
+  <!-- notes -->
+  <rect x="30" y="248" width="700" height="64" fill="#fafafa" stroke="#d0d0d0"/>
+  <text x="44" y="270" font-size="11" fill="#444">deleted 各 span 长度之和必须等于 toA − fromA，inserted 各 span 长度之和必须等于 toB − fromB</text>
+  <text x="44" y="290" font-size="11" fill="#444">data 是任意元数据（作者、时间戳等），相邻 span 能否合并由 create 时传入的 combine 函数决定</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="460" viewBox="0 0 1080 460" font-family="PingFang SC, Microsoft YaHei, Helvetica Neue, sans-serif">
+  <defs>
+    <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- 汇聚到四行 -->
+  <path d="M180,232 C240,232 240,68 292,68" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <path d="M180,232 C240,232 240,174 292,174" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <path d="M180,232 C240,232 240,280 292,280" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <path d="M180,232 C240,232 240,386 292,386" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+
+  <!-- 汇聚节点 -->
+  <rect x="60" y="200" width="120" height="64" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="1.5"/>
+  <text x="120" y="238" font-size="15" font-weight="600" fill="#334155" text-anchor="middle">汇聚</text>
+
+  <!-- 行 1：单测 -->
+  <rect x="300" y="30" width="720" height="76" rx="8" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="325" y="60" font-size="15" font-weight="600" fill="#991B1B">单元测试失败</text>
+  <text x="325" y="84" font-size="13" fill="#B91C1C">关键分支，立即终止：取消其他检查，带着失败堆栈回修复</text>
+
+  <!-- 行 2：类型检查 -->
+  <rect x="300" y="136" width="720" height="76" rx="8" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="325" y="166" font-size="15" font-weight="600" fill="#991B1B">类型检查失败</text>
+  <text x="325" y="190" font-size="13" fill="#B91C1C">关键分支，立即终止：类型错误没有"部分成功"可讲</text>
+
+  <!-- 行 3：bundle size -->
+  <rect x="300" y="242" width="720" height="76" rx="8" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+  <text x="325" y="272" font-size="15" font-weight="600" fill="#92400E">bundle size 超标</text>
+  <text x="325" y="296" font-size="13" fill="#92400E">等全部检查跑完再阻断发布：超标原因需要完整报告才能定位</text>
+
+  <!-- 行 4：视觉回归 -->
+  <rect x="300" y="348" width="720" height="76" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="325" y="378" font-size="15" font-weight="600" fill="#14532D">视觉回归有 diff</text>
+  <text x="325" y="402" font-size="13" fill="#14532D">允许降级：标记"待确认"继续，不阻塞其他检查</text>
+</svg>

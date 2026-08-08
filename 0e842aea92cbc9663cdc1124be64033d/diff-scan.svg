@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="252" viewBox="0 0 640 252" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <!-- row A label -->
+  <text x="20" y="74" font-size="13" fill="#333">A（旧）</text>
+  <!-- row A tokens: p始 a b c p终 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="90" y="52" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="110" y="75" fill="#2c4a73">p 始</text>
+    <rect x="130" y="52" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="146" y="75" fill="#2e5a3c">a</text>
+    <rect x="162" y="52" width="32" height="36" fill="#fbe4e4" stroke="#b35c5c"/>
+    <text x="178" y="75" fill="#7a2e2e">b</text>
+    <rect x="194" y="52" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="210" y="75" fill="#2e5a3c">c</text>
+    <rect x="226" y="52" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="246" y="75" fill="#2c4a73">p 终</text>
+  </g>
+  <!-- row A scan arrows -->
+  <line x1="94" y1="40" x2="156" y2="40" stroke="#4a7c59" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="262" y1="40" x2="200" y2="40" stroke="#4a6fa5" stroke-width="1.5" marker-end="url(#arrB)"/>
+  <!-- row A boundary markers -->
+  <line x1="162" y1="46" x2="162" y2="94" stroke="#b35c5c" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="194" y1="46" x2="194" y2="94" stroke="#b35c5c" stroke-width="1" stroke-dasharray="3 3"/>
+  <!-- row A positions -->
+  <g font-size="11" text-anchor="middle" fill="#333">
+    <text x="90" y="106">0</text>
+    <text x="130" y="106">1</text>
+    <text x="162" y="106">2</text>
+    <text x="194" y="106">3</text>
+    <text x="226" y="106">4</text>
+    <text x="266" y="106">5</text>
+    <text x="178" y="122" fill="#7a2e2e">[start, endA) = [2, 3)</text>
+  </g>
+
+  <!-- row B label -->
+  <text x="20" y="164" font-size="13" fill="#333">B（新）</text>
+  <!-- row B tokens: p始 a x y c p终 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="90" y="142" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="110" y="165" fill="#2c4a73">p 始</text>
+    <rect x="130" y="142" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="146" y="165" fill="#2e5a3c">a</text>
+    <rect x="162" y="142" width="32" height="36" fill="#ddf0dd" stroke="#3c6e47" stroke-width="1.5"/>
+    <text x="178" y="165" fill="#24502d">x</text>
+    <rect x="194" y="142" width="32" height="36" fill="#ddf0dd" stroke="#3c6e47" stroke-width="1.5"/>
+    <text x="210" y="165" fill="#24502d">y</text>
+    <rect x="226" y="142" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="242" y="165" fill="#2e5a3c">c</text>
+    <rect x="258" y="142" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="278" y="165" fill="#2c4a73">p 终</text>
+  </g>
+  <!-- row B scan arrows -->
+  <line x1="94" y1="190" x2="156" y2="190" stroke="#4a7c59" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <line x1="294" y1="190" x2="232" y2="190" stroke="#4a6fa5" stroke-width="1.5" marker-end="url(#arrB)"/>
+  <!-- row B boundary markers -->
+  <line x1="162" y1="136" x2="162" y2="184" stroke="#3c6e47" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="226" y1="136" x2="226" y2="184" stroke="#3c6e47" stroke-width="1" stroke-dasharray="3 3"/>
+  <!-- row B positions -->
+  <g font-size="11" text-anchor="middle" fill="#333">
+    <text x="90" y="212">0</text>
+    <text x="130" y="212">1</text>
+    <text x="162" y="212">2</text>
+    <text x="194" y="212">3</text>
+    <text x="226" y="212">4</text>
+    <text x="258" y="212">5</text>
+    <text x="298" y="212">6</text>
+    <text x="194" y="230" fill="#24502d">[start, endB) = [2, 4)</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="11" fill="#555">
+    <line x1="330" y1="40" x2="356" y2="40" stroke="#4a7c59" stroke-width="1.5" marker-end="url(#arrG)"/>
+    <text x="362" y="44">findDiffStart 从头扫，相同部分跳过</text>
+    <line x1="330" y1="60" x2="356" y2="60" stroke="#4a6fa5" stroke-width="1.5" marker-end="url(#arrB)"/>
+    <text x="362" y="64">findDiffEnd 从尾扫，相同部分回退</text>
+  </g>
+  <text x="330" y="90" font-size="11" fill="#555">结果：用 B 的 [2, 4)（xy）替换 A 的 [2, 3)（b）</text>
+
+  <defs>
+    <marker id="arrG" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#4a7c59"/>
+    </marker>
+    <marker id="arrB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#4a6fa5"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,140 @@
+<svg viewBox="0 0 1000 755" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+  </defs>
+
+  <rect width="1000" height="755" fill="url(#bg)" rx="8"/>
+
+  <text x="500" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">三个月学习地图复盘：已掌握、半懂、待解三层</text>
+  <text x="500" y="55" text-anchor="middle" fill="#8b949e" font-size="12">六篇笔记对应的知识层，按「能否复述机制 + 核心步骤亲手算过」的标准分档</text>
+
+  <!-- ============ 左侧：六篇笔记时间轴 ============ -->
+  <text x="40" y="95" fill="#8b949e" font-size="11">六篇笔记（2022-12 ~ 2023-03）</text>
+  <line x1="150" y1="120" x2="150" y2="560" stroke="#30363d" stroke-width="2"/>
+
+  <circle cx="150" cy="120" r="7" fill="#3fb950"/>
+  <text x="132" y="124" text-anchor="end" fill="#8b949e" font-size="11">12-20</text>
+  <text x="170" y="124" fill="#c9d1d9" font-size="12">神经网络入门</text>
+
+  <circle cx="150" cy="208" r="7" fill="#3fb950"/>
+  <text x="132" y="212" text-anchor="end" fill="#8b949e" font-size="11">01-05</text>
+  <text x="170" y="212" fill="#c9d1d9" font-size="12">词怎么变成向量</text>
+
+  <circle cx="150" cy="296" r="7" fill="#3fb950"/>
+  <text x="132" y="300" text-anchor="end" fill="#8b949e" font-size="11">01-18</text>
+  <text x="170" y="300" fill="#c9d1d9" font-size="12">序列模型与注意力</text>
+
+  <circle cx="150" cy="384" r="7" fill="#d29922"/>
+  <text x="132" y="388" text-anchor="end" fill="#8b949e" font-size="11">02-01</text>
+  <text x="170" y="388" fill="#c9d1d9" font-size="12">Transformer 详解</text>
+
+  <circle cx="150" cy="472" r="7" fill="#d29922"/>
+  <text x="132" y="476" text-anchor="end" fill="#8b949e" font-size="11">02-15</text>
+  <text x="170" y="476" fill="#c9d1d9" font-size="12">GPT 系列演进</text>
+
+  <circle cx="150" cy="560" r="7" fill="#d29922"/>
+  <text x="132" y="564" text-anchor="end" fill="#8b949e" font-size="11">03-01</text>
+  <text x="170" y="564" fill="#c9d1d9" font-size="12">指令微调与 RLHF</text>
+
+  <!-- 图例 -->
+  <text x="40" y="610" fill="#8b949e" font-size="11">节点颜色 = 该篇主体的掌握程度</text>
+  <circle cx="50" cy="632" r="5" fill="#3fb950"/>
+  <text x="64" y="636" fill="#c9d1d9" font-size="11">能复述机制，核心步骤亲手算过</text>
+  <circle cx="50" cy="657" r="5" fill="#d29922"/>
+  <text x="64" y="661" fill="#c9d1d9" font-size="11">能复述流程，关键推导没走通</text>
+
+  <!-- ============ 面板一：已掌握层 ============ -->
+  <rect x="320" y="90" width="640" height="235" rx="8" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="340" y="118" fill="#3fb950" font-size="15" font-weight="bold">已掌握层</text>
+  <text x="440" y="118" fill="#8b949e" font-size="11">能复述机制，且核心步骤亲手算过一遍</text>
+
+  <rect x="338" y="150" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="167" r="3" fill="#3fb950"/>
+  <text x="364" y="171" fill="#c9d1d9" font-size="12">训练闭环：损失 / 梯度 / 反向传播</text>
+
+  <rect x="648" y="150" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="167" r="3" fill="#3fb950"/>
+  <text x="674" y="171" fill="#c9d1d9" font-size="12">numpy 手写两层网络（XOR 跑通）</text>
+
+  <rect x="338" y="194" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="211" r="3" fill="#3fb950"/>
+  <text x="364" y="215" fill="#c9d1d9" font-size="12">Word2Vec 机制与负采样</text>
+
+  <rect x="648" y="194" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="211" r="3" fill="#3fb950"/>
+  <text x="674" y="215" fill="#c9d1d9" font-size="12">注意力三步：打分 → softmax → 加权</text>
+
+  <rect x="338" y="238" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="255" r="3" fill="#3fb950"/>
+  <text x="364" y="259" fill="#c9d1d9" font-size="12">自注意力 Q/K/V 矩阵手算</text>
+
+  <rect x="648" y="238" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="255" r="3" fill="#3fb950"/>
+  <text x="674" y="259" fill="#c9d1d9" font-size="12">因果掩码与并行训练</text>
+
+  <rect x="338" y="282" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="299" r="3" fill="#3fb950"/>
+  <text x="364" y="303" fill="#c9d1d9" font-size="12">GPT 三代演进与 scaling law</text>
+
+  <rect x="648" y="282" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="299" r="3" fill="#3fb950"/>
+  <text x="674" y="303" fill="#c9d1d9" font-size="12">SFT 与奖励模型（无新机制）</text>
+
+  <!-- ============ 面板二：半懂层 ============ -->
+  <rect x="320" y="345" width="640" height="190" rx="8" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
+  <text x="340" y="373" fill="#d29922" font-size="15" font-weight="bold">半懂层 · 只记住了名词</text>
+  <text x="340" y="391" fill="#8b949e" font-size="11">能复述流程，关键推导没走通；先标注挂在哪一篇哪一节，用到再回头补</text>
+
+  <rect x="338" y="405" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="422" r="3" fill="#d29922"/>
+  <text x="364" y="426" fill="#c9d1d9" font-size="12">LayerNorm 的理论依据</text>
+
+  <rect x="648" y="405" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="422" r="3" fill="#d29922"/>
+  <text x="674" y="426" fill="#c9d1d9" font-size="12">位置编码的相对位置推导</text>
+
+  <rect x="338" y="449" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="466" r="3" fill="#d29922"/>
+  <text x="364" y="470" fill="#c9d1d9" font-size="12">FFN 升维再降维的设计</text>
+
+  <rect x="648" y="449" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="466" r="3" fill="#d29922"/>
+  <text x="674" y="470" fill="#c9d1d9" font-size="12">PPO 目标函数每一项</text>
+
+  <rect x="338" y="493" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="510" r="3" fill="#d29922"/>
+  <text x="364" y="514" fill="#c9d1d9" font-size="12">深层网络为什么有效</text>
+
+  <rect x="648" y="493" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="510" r="3" fill="#d29922"/>
+  <text x="674" y="514" fill="#c9d1d9" font-size="12">in-context learning 算不算学会</text>
+
+  <!-- ============ 面板三：待解问题 ============ -->
+  <rect x="320" y="555" width="640" height="180" rx="8" fill="#0d1117" stroke="#f85149" stroke-width="1.5"/>
+  <text x="340" y="583" fill="#f85149" font-size="15" font-weight="bold">待解问题 · 当时文献里也没有答案</text>
+  <text x="340" y="601" fill="#8b949e" font-size="11">如实悬置，不假装有结论；其中一部分直接决定下一步去哪</text>
+
+  <rect x="338" y="613" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="630" r="3" fill="#f85149"/>
+  <text x="364" y="634" fill="#c9d1d9" font-size="12">幻觉：生成目标与事实性的张力</text>
+
+  <rect x="648" y="613" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="630" r="3" fill="#f85149"/>
+  <text x="674" y="634" fill="#c9d1d9" font-size="12">涌现能力的机理</text>
+
+  <rect x="338" y="655" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="672" r="3" fill="#f85149"/>
+  <text x="364" y="676" fill="#c9d1d9" font-size="12">大模型的可解释性</text>
+
+  <rect x="648" y="655" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="672" r="3" fill="#f85149"/>
+  <text x="674" y="676" fill="#c9d1d9" font-size="12">图片输入怎么接进 decoder-only</text>
+
+  <rect x="338" y="697" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="352" cy="714" r="3" fill="#f85149"/>
+  <text x="364" y="718" fill="#c9d1d9" font-size="12">模型内部存着的分步计算是什么形态</text>
+
+  <rect x="648" y="697" width="292" height="34" rx="6" fill="#161b22" stroke="#30363d"/>
+  <circle cx="662" cy="714" r="3" fill="#f85149"/>
+  <text x="674" y="718" fill="#c9d1d9" font-size="12">GPT-4（03-14）改变了什么</text>
+</svg>
