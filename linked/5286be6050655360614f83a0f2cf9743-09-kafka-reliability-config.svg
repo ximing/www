@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 760" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="760" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">Kafka 可靠性配置：生产、副本、消费三环节的档位</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">"不丢消息"由三环节配置共同决定，任何一环档位不对整体不成立</text>
+
+  <!-- ============ ① 生产端 ============ -->
+  <rect x="20" y="74" width="300" height="430" rx="6" fill="#eff6ff" opacity="0.55"/>
+  <text x="36" y="96" font-size="13" font-weight="600" fill="#1d4ed8">① 生产端：消息持久化到几个副本</text>
+
+  <rect x="36" y="112" width="268" height="92" rx="5" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+  <text x="48" y="132" font-size="12" font-weight="600" fill="#1f2937">acks（核心档位）</text>
+  <text x="48" y="150" font-size="10" fill="#dc2626">acks=0  发出即成功，不等确认（可能丢）</text>
+  <text x="48" y="166" font-size="10" fill="#ca8a04">acks=1  leader 写入即确认（leader 宕机可能丢）</text>
+  <text x="48" y="182" font-size="10" fill="#16a34a">acks=all  等 ISR 全部写入才确认（推荐）</text>
+  <text x="48" y="197" font-size="9" fill="#64748b">acks=all 强度取决于 ISR 实际大小</text>
+
+  <rect x="36" y="214" width="268" height="58" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1"/>
+  <text x="48" y="234" font-size="11" font-weight="600" fill="#1f2937">retries / max.in.flight</text>
+  <text x="48" y="250" font-size="10" fill="#475569">retries 调大：网络抖动时重试，配合幂等避免重复</text>
+  <text x="48" y="265" font-size="10" fill="#475569">max.in.flight=1：无幂等时保分区内顺序</text>
+
+  <rect x="36" y="280" width="268" height="50" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="48" y="300" font-size="11" font-weight="600" fill="#92400e">enable.idempotence（0.11，当时未上）</text>
+  <text x="48" y="316" font-size="10" fill="#475569">broker 去重，单会话单分区内不因重试重复</text>
+
+  <rect x="36" y="340" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="48" y="358" font-size="11" font-weight="600" fill="#15803d">推荐组合</text>
+  <text x="48" y="373" font-size="10" fill="#475569">acks=all + retries 大 + min.insync≥2</text>
+
+  <text x="36" y="408" font-size="10" fill="#64748b">生产端只决定"确认前持久化到几个副本"，</text>
+  <text x="36" y="423" font-size="10" fill="#64748b">不决定故障切换时是否丢已确认数据。</text>
+
+  <!-- ============ ② broker 副本 ============ -->
+  <rect x="340" y="74" width="320" height="430" rx="6" fill="#f0fdf4" opacity="0.55"/>
+  <text x="356" y="96" font-size="13" font-weight="600" fill="#16a34a">② broker 副本：故障切换时是否丢已确认数据</text>
+
+  <rect x="356" y="112" width="288" height="78" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="368" y="132" font-size="12" font-weight="600" fill="#1f2937">ISR（in-sync replicas，动态）</text>
+  <text x="368" y="150" font-size="10" fill="#475569">"跟得上 leader 的副本集合"，非副本总数</text>
+  <text x="368" y="165" font-size="10" fill="#475569">由 replica.lag.time.max.ms 动态移出/加入</text>
+  <text x="368" y="180" font-size="10" fill="#dc2626">ISR 收缩时 acks=all 退化为 acks=1</text>
+
+  <rect x="356" y="198" width="288" height="64" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="368" y="218" font-size="12" font-weight="600" fill="#1f2937">min.insync.replicas（堵 ISR 收缩的口）</text>
+  <text x="368" y="236" font-size="10" fill="#475569">ISR 不足此数 → 写入直接失败</text>
+  <text x="368" y="251" font-size="10" fill="#16a34a">≥2 配合 acks=all：至少两副本持久化才确认</text>
+
+  <rect x="356" y="270" width="288" height="92" rx="5" fill="#ffffff" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="368" y="290" font-size="12" font-weight="600" fill="#1f2937">unclean.leader.election.enable</text>
+  <text x="368" y="308" font-size="10" fill="#16a34a">false（默认）：ISR 空时拒绝选举，不可用但不丢</text>
+  <text x="368" y="324" font-size="10" fill="#dc2626">true：允许非 ISR 副本当 leader，可用但丢 HW 以上数据</text>
+  <text x="368" y="340" font-size="10" fill="#475569">日志类业务可开 true，账务类必须关</text>
+  <text x="368" y="355" font-size="9" fill="#64748b">可用性 vs 数据完整性的取舍点</text>
+
+  <rect x="356" y="370" width="288" height="58" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1"/>
+  <text x="368" y="390" font-size="11" font-weight="600" fill="#1f2937">HW / LEO（消费可见性边界）</text>
+  <text x="368" y="406" font-size="10" fill="#475569">HW = ISR 中最小 LEO，消费者只读 HW 以下</text>
+  <text x="368" y="421" font-size="10" fill="#475569">保证消费者读到的消息已同步到全部 ISR 副本</text>
+
+  <rect x="356" y="436" width="288" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="368" y="454" font-size="11" font-weight="600" fill="#15803d">推荐组合</text>
+  <text x="368" y="469" font-size="10" fill="#475569">replication.factor=3 + min.insync=2 + unclean=false</text>
+
+  <!-- ============ ③ 消费端 ============ -->
+  <rect x="680" y="74" width="280" height="430" rx="6" fill="#fef2f2" opacity="0.5"/>
+  <text x="696" y="96" font-size="13" font-weight="600" fill="#dc2626">③ 消费端：位移提交时机决定至少/至多一次</text>
+
+  <rect x="696" y="112" width="248" height="78" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="708" y="132" font-size="12" font-weight="600" fill="#1f2937">enable.auto.commit（默认 true）</text>
+  <text x="708" y="150" font-size="10" fill="#475569">周期性提交"当前位点"= poll() 返回最大位移</text>
+  <text x="708" y="165" font-size="10" fill="#475569">位点在 poll() 返回时已推进，先于处理</text>
+  <text x="708" y="180" font-size="10" fill="#dc2626">处理慢/失败时位移已过 → 至多一次（跳过）</text>
+
+  <rect x="696" y="198" width="248" height="92" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="708" y="218" font-size="12" font-weight="600" fill="#1f2937">手动提交（关闭自动提交）</text>
+  <text x="708" y="236" font-size="10" fill="#dc2626">先提交后处理：可能丢（至多一次）</text>
+  <text x="708" y="252" font-size="10" fill="#16a34a">先处理后提交：可能重（至少一次+幂等）</text>
+  <text x="708" y="268" font-size="10" fill="#475569">commitSync：同步阻塞，可靠</text>
+  <text x="708" y="283" font-size="10" fill="#475569">commitAsync：异步不阻塞，可能失败不重试</text>
+
+  <rect x="696" y="298" width="248" height="78" rx="5" fill="#ffffff" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="708" y="318" font-size="12" font-weight="600" fill="#1f2937">rebalance（消费停顿）</text>
+  <text x="708" y="336" font-size="10" fill="#475569">触发：消费者加入/离开、分区数变化</text>
+  <text x="708" y="351" font-size="10" fill="#475569">期间所有消费者停顿，等待重新分配</text>
+  <text x="708" y="366" font-size="10" fill="#dc2626">慢消费超 max.poll.interval.ms → 踢出 → rebalance</text>
+
+  <rect x="696" y="384" width="248" height="50" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1"/>
+  <text x="708" y="404" font-size="11" font-weight="600" fill="#1f2937">max.poll.interval.ms / max.poll.records</text>
+  <text x="708" y="420" font-size="10" fill="#475569">调大间隔 + 限单批量，让处理时间可控</text>
+
+  <rect x="696" y="442" width="248" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="708" y="460" font-size="11" font-weight="600" fill="#15803d">推荐组合</text>
+  <text x="708" y="475" font-size="10" fill="#475569">auto.commit=false + 手动 commitSync + 幂等</text>
+
+  <!-- 环节间箭头 -->
+  <line x1="320" y1="289" x2="338" y2="289" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <line x1="660" y1="289" x2="678" y2="289" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ============ 底部结论 ============ -->
+  <rect x="24" y="520" width="936" height="68" rx="6" fill="#fffbeb" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="40" y="542" font-size="11" font-weight="600" fill="#92400e">单点开关不够</text>
+  <text x="40" y="560" font-size="10" fill="#475569">· 只开 acks=all 不开 min.insync.replicas：ISR 收缩时退化为 acks=1，仍可能丢</text>
+  <text x="40" y="576" font-size="10" fill="#475569">· 只关 unclean 不开 acks=all：leader 切换仍可能丢已确认数据；只关自动提交不配幂等：重复无法处理</text>
+
+  <!-- 配置组合速查 -->
+  <rect x="24" y="600" width="936" height="108" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="622" font-size="11" font-weight="600" fill="#1f2937">三环节档位速查</text>
+  <text x="40" y="642" font-size="10" fill="#1d4ed8">生产端</text>
+  <text x="92" y="642" font-size="10" fill="#475569">acks=all + retries 大（+幂等 if 0.11）→ 确认前持久化到全部 ISR 副本</text>
+  <text x="40" y="660" font-size="10" fill="#16a34a">broker</text>
+  <text x="92" y="660" font-size="10" fill="#475569">replication.factor=3 + min.insync.replicas=2 + unclean.leader.election=false → 拒绝丢已确认数据</text>
+  <text x="40" y="678" font-size="10" fill="#dc2626">消费端</text>
+  <text x="92" y="678" font-size="10" fill="#475569">enable.auto.commit=false + 处理后 commitSync + max.poll.interval 大于最坏处理时间 + 幂等</text>
+  <text x="40" y="696" font-size="9" fill="#64748b">三环齐备 = 至少一次投递（可能重复，重复由业务幂等处理）；不保证全局顺序、业务侧恰好一次、无限积压</text>
+</svg>

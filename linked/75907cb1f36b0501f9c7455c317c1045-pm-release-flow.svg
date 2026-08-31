@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 660" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+<rect width="1000" height="660" fill="#ffffff"/>
+<text x="40" y="30" font-size="15" font-weight="700" fill="#1a1a1a">pm release &lt;mod&gt; 的执行路径（pm.js 中的 release / changelog / bumpVersion / setDepVersion）</text>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9" fill="none" stroke="#555" stroke-width="1.6"/></marker></defs>
+
+<rect x="40" y="60" width="230" height="60" rx="6" fill="#f7f9fc" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="155" y="84" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">git log 上个 tag..HEAD</text>
+<text x="155" y="102" text-anchor="middle" font-size="11" fill="#555">全部 commit message（%B）</text>
+
+<rect x="40" y="150" width="230" height="52" rx="6" fill="#f7f9fc" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="155" y="172" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">本仓库 package.json</text>
+<text x="155" y="190" text-anchor="middle" font-size="11" fill="#555">当前 version</text>
+
+<line x1="270" y1="90" x2="316" y2="90" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+<path d="M 270 176 C 296 176 296 112 316 104" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="62" width="370" height="56" rx="6" fill="#eef3ee" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="84" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">changelog()：正则抓取 FIX / FEATURE / BREAKING 段</text>
+<text x="505" y="102" text-anchor="middle" font-size="11" fill="#555">分成 fix、feature、breaking 三组</text>
+
+<line x1="505" y1="118" x2="505" y2="144" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="148" width="370" height="56" rx="6" fill="#eef3ee" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="170" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">bumpVersion()：breaking 升 major，feature 升 minor，fix 升 patch</text>
+<text x="505" y="188" text-anchor="middle" font-size="11" fill="#555">三组皆空直接抛错，没有变更不许发版</text>
+
+<line x1="505" y1="204" x2="505" y2="230" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="234" width="370" height="56" rx="6" fill="#eef3ee" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="256" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">releaseNotes()：生成「## x.y.z（日期）」新节</text>
+<text x="505" y="274" text-anchor="middle" font-size="11" fill="#555">](## 形式的锚点链接改写成文档站完整 URL</text>
+
+<line x1="505" y1="290" x2="505" y2="316" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="320" width="370" height="52" rx="6" fill="#eef3ee" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="342" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">setModuleVersion()：正则改写本仓库的 version 字段</text>
+<text x="505" y="360" text-anchor="middle" font-size="11" fill="#555">新节前插到 CHANGELOG.md 头部</text>
+
+<line x1="505" y1="372" x2="505" y2="398" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="402" width="370" height="72" rx="6" fill="#fdf6ec" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="424" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">setDepVersion()：仅本次含 breaking 时执行</text>
+<text x="505" y="442" text-anchor="middle" font-size="11" fill="#555">遍历 modsAndWebsite 其余仓库，把 "prosemirror-x": "^旧" 改成 "^新"</text>
+<text x="505" y="460" text-anchor="middle" font-size="11" fill="#555">有改动的仓库各提交一笔 Upgrade prosemirror-x dependency</text>
+
+<line x1="505" y1="474" x2="505" y2="500" stroke="#555" stroke-width="1.4" marker-end="url(#arr)"/>
+
+<rect x="320" y="504" width="370" height="56" rx="6" fill="#eef3ee" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="505" y="526" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1a1a1a">git add package.json + CHANGELOG.md</text>
+<text x="505" y="544" text-anchor="middle" font-size="11" fill="#555">commit「Mark version x.y.z」，再打带注解的 tag</text>
+
+<rect x="750" y="62" width="210" height="66" rx="6" fill="#f5f5f5" stroke="#999" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="855" y="84" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a">pm unreleased</text>
+<text x="855" y="101" text-anchor="middle" font-size="10.5" fill="#555">同一份数据的 dry run</text>
+<text x="855" y="117" text-anchor="middle" font-size="10.5" fill="#555">列出已提交未发布的变更</text>
+
+<rect x="750" y="148" width="210" height="66" rx="6" fill="#f5f5f5" stroke="#999" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="855" y="170" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a">pm changes</text>
+<text x="855" y="187" text-anchor="middle" font-size="10.5" fill="#555">每个仓库上个 tag 以来</text>
+<text x="855" y="203" text-anchor="middle" font-size="10.5" fill="#555">的提交历史</text>
+
+<line x1="690" y1="95" x2="748" y2="95" stroke="#999" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+<line x1="690" y1="176" x2="748" y2="181" stroke="#999" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+<text x="40" y="610" font-size="11.5" fill="#555">fix / feature 发布不触碰其他仓库：依赖声明是 ^ 范围，下游下次安装自然拿到新版。只有 breaking 才把下游的依赖下限显式抬上来。</text>
+<text x="40" y="634" font-size="11" fill="#777">辅助命令（虚线框）与 release 读取同一份 changelog 数据，但不做任何写操作。</text>
+</svg>

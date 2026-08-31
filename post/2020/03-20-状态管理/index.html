@@ -1,0 +1,757 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>状态管理 | 一席之地</title><meta name="description" content="swr https://github.com/zeit/swr 数据更新的处理较复杂 https://stook-cn.now.sh/docs/rest/share-state 可通过 REST 范式约束后端接口，获得相近的状态共享方式 不需要ssr，没有路由诉求 stream return stream Type…"><meta property="og:title" content="状态管理"><meta property="og:description" content="swr https://github.com/zeit/swr 数据更新的处理较复杂 https://stook-cn.now.sh/docs/rest/share-state 可通过 REST 范式约束后端接口，获得相近的状态共享方式 不需要ssr，没有路由诉求 stream return stream Type…"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="状态管理"><meta name="twitter:description" content="swr https://github.com/zeit/swr 数据更新的处理较复杂 https://stook-cn.now.sh/docs/rest/share-state 可通过 REST 范式约束后端接口，获得相近的状态共享方式 不需要ssr，没有路由诉求 stream return stream Type…"><meta name="keywords" content="架构"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">状态管理</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2020-03-20</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/架构/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#架构</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>swr</p>
+<p><a href="https://github.com/zeit/swr">https://github.com/zeit/swr</a></p>
+<p>数据更新的处理较复杂</p>
+<p><a href="https://stook-cn.now.sh/docs/rest/share-state">https://stook-cn.now.sh/docs/rest/share-state</a></p>
+<p>可通过 REST 范式约束后端接口，获得相近的状态共享方式</p>
+<p>不需要ssr，没有路由诉求</p>
+<p>stream</p>
+<p>return stream</p>
+<ul>
+<li>Type Inference 类型推断</li>
+<li>Framework extensions are fully typed 框架扩展是完全类型化的</li>
+<li>The initial state is fully typed 初始状态是完全类型化的</li>
+<li>Jump to definition works seamlessly 跳转到定义工作无缝</li>
+</ul>
+<p>状态有几种</p>
+<ul>
+<li>纯静态的</li>
+<li>组件内部的</li>
+<li>从数据源中获取的，而且组件生命周期内只需要获取一次</li>
+<li>需要进行动态管理的，比如列表数据中某一项更新</li>
+</ul>
+<p>架构需要支持按业务拆分和组合；状态管理也应与业务模块边界对应，避免由单一全局状态承载所有业务。</p>
+<p>应用入口需要用统一机制管理共享依赖。</p>
+<p>app.config.js</p>
+<p>减少业务重复代码主要发生在状态管理和请求封装两个环节。</p>
+<h2 id="rsjscore">@rsjs/core<a aria-hidden="true" tabindex="-1" href="#rsjscore"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p><a href="https://www.npmjs.com/package/@rsjs/core"><img src="https://xming-images.oss-cn-beijing.aliyuncs.com/md/1585980520898-672456c0f6ca909cbbd49e9035e80d01.svg" alt="Version"></a></p>
+<ul>
+<li><a href="#introduction-wave">Introduction 👋</a></li>
+<li><a href="#installation-cd">Installation 💿</a></li>
+<li><a href="#everyday-usage-sunglasses">Everyday Usage 😎</a>
+<ul>
+<li><a href="#creating-global-stores">Creating global stores</a></li>
+<li><a href="#creating-reactive-views">Creating reactive views</a></li>
+<li><a href="#creating-local-stores">Creating local stores</a></li>
+</ul>
+</li>
+<li><a href="#advanced-usage-nerd_face">Advanced Usage :nerd_face:</a>
+<ul>
+<li><a href="#adding-side-effects">Adding side effects</a></li>
+</ul>
+</li>
+<li><a href="#api-summary-book">API Summary 📖</a>
+<ul>
+<li><a href="#storeobj">store(obj)</a></li>
+<li><a href="#viewcomp">view(Comp)</a></li>
+<li><a href="#batchfn">batch(fn)</a></li>
+<li><a href="#autoeffectfn">autoEffect(fn)</a></li>
+<li><a href="#cleareffectfn">clearEffect(fn)</a></li>
+</ul>
+</li>
+<li><a href="#examples-with-live-demos-tv">Examples with live demos 📺</a></li>
+<li><a href="#articles-loudspeaker">Articles 📢</a></li>
+<li><a href="#performance-rocket">Performance 🚀</a></li>
+<li><a href="#platform-support-computer">Platform support 💻</a></li>
+</ul>
+<h2 id="introduction-">Introduction 👋<a aria-hidden="true" tabindex="-1" href="#introduction-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>这里关注的状态管理能力包括：</p>
+<ul>
+<li>状态读写方式容易理解</li>
+<li>框架扩展是完全类型化的</li>
+<li>自动类型推断，且初始状态是完全类型化的</li>
+<li>支持跳转到定义</li>
+</ul>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">/*
+最简单的 demo
+*/
+import React from 'react';
+import { useObserverState, view } from '@rsjs/core';
+
+export default view(() => {
+    const counter = useObserverState({
+      num: 0,
+      increment: () => counter.num++
+    });
+    return &#x3C;button onClick={counter.increment}>{counter.num}&#x3C;/button>
+});</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>点击这里查看详细Demo <a href="https://codesandbox.io/s/github/RisingStack/react-easy-state/tree/master/examples/todo-mvc?module=%2Fsrc%2FtodosStore.js">TodoMVC codesandbox</a></p>
+<h2 id="installation-">Installation 💿<a aria-hidden="true" tabindex="-1" href="#installation-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p><code class="language-text">npm install @rsjs/core</code></p>
+<details>
+<summary><strong>Setting up a quick project</strong></summary>
+<p></p>
+<p>@rsjs/core不需要额外的配置就支持 <a href="https://github.com/facebookincubator/create-react-app">Create React App</a>，和react-native</p>
+<div class="gatsby-highlight" data-language="shellscript"><pre style="counter-reset: linenumber NaN" class="language-shellscript line-numbers"><code class="language-shellscript">npx create-react-app my-app
+cd my-app
+npm install @rsjs/core
+npm run start</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span></span></pre></div>
+<p><em>npx需要npm 5.2+以上版本</em></p>
+</details>
+<h2 id="usage-">Usage 😎<a aria-hidden="true" tabindex="-1" href="#usage-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="创建service">创建service<a aria-hidden="true" tabindex="-1" href="#创建service"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>CountService</p>
+<div class="gatsby-highlight" data-language="typescript"><pre style="counter-reset: linenumber NaN" class="language-typescript line-numbers"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> Service<span class="token punctuation">,</span> Injectable <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token decorator"><span class="token at operator">@</span><span class="token function">Injectable</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">class</span> <span class="token class-name">CountService</span> <span class="token keyword">extends</span> <span class="token class-name">Service</span><span class="token punctuation">{</span>
+  <span class="token comment">// 初始值有状态，类型自动推断</span>
+  num <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  profile <span class="token operator">=</span> <span class="token punctuation">{</span>
+    firstName<span class="token operator">:</span> <span class="token string">'Bob'</span><span class="token punctuation">,</span>
+    lastName<span class="token operator">:</span> <span class="token string">'Smith'</span><span class="token punctuation">,</span>
+    <span class="token keyword">get</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>profile<span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>profile<span class="token punctuation">.</span>lastName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+	<span class="token keyword">async</span> <span class="token function">add</span><span class="token punctuation">(</span>n<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">await</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>num<span class="token operator">+=</span>n<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<details>
+<summary>State stores may have arbitrary structure and they may be mutated in any syntactically valid way.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// stores can include any valid JS structure</span>
+<span class="token comment">// including nested data, arrays, Maps, Sets, getters, setters, inheritance, ...</span>
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">profile</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">'Bob'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">lastName</span><span class="token operator">:</span> <span class="token string">'Smith'</span><span class="token punctuation">,</span>
+    <span class="token keyword">get</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>lastName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">hobbies</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'programming'</span><span class="token punctuation">,</span> <span class="token string">'sports'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">friends</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// stores may be mutated in any syntactically valid way</span>
+user<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>firstName <span class="token operator">=</span> <span class="token string">'Bob'</span><span class="token punctuation">;</span>
+<span class="token keyword">delete</span> user<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>lastName<span class="token punctuation">;</span>
+user<span class="token punctuation">.</span>hobbies<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'reading'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+user<span class="token punctuation">.</span>friends<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'id'</span><span class="token punctuation">,</span> otherUser<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Async operations can be expressed with the standard async/await syntax.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> userStore <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">user</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token keyword">async</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userStore<span class="token punctuation">.</span>user <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'/user'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> userStore<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>State stores may import and use other state stores in their methods.</summary>
+<p></p>
+<p><em>userStore.js</em></p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> userStore <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">user</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token keyword">async</span> <span class="token function">fetchUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userStore<span class="token punctuation">.</span>user <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'/user'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> userStore<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p><em>recipesStore.js</em></p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> userStore <span class="token keyword">from</span> <span class="token string">'./userStore'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> recipesStore <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">recipes</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token keyword">async</span> <span class="token function">fetchRecipes</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    recipesStore<span class="token punctuation">.</span>recipes <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/recipes?user=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>userStore<span class="token punctuation">.</span>user<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> recipesStore<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Wrap your state stores with <code>store</code> as early as possible.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token comment">// DON'T DO THIS</span>
+<span class="token keyword">const</span> person <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Bob'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+person<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Ann'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">store</span><span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token comment">// DO THIS INSTEAD</span>
+<span class="token keyword">const</span> person <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Bob'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+person<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Ann'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> person<span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>The first example wouldn’t trigger re-renders on the <code class="language-text">person.name = 'Ann'</code> mutation, because it is targeted at the raw object. Mutating the raw - none <code class="language-text">store</code>-wrapped object - won’t schedule renders.</p>
+</details>
+<p></p>
+<details>
+<summary>Avoid using the <code>this</code> keyword in the methods of your state stores.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import { store, view } from '@rsjs/core';
+
+const counter = store({
+  num: 0,
+  increment() {
+    // DON'T DO THIS
+    this.num++;
+    // DO THIS INSTEAD
+    counter.num++;
+  }
+});
+
+export default view(() => &#x3C;div onClick={counter.increment}>{counter.num}&#x3C;/div>);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p><code class="language-text">this.num++</code> won’t work, because <code class="language-text">increment</code> is passed as a callback and loses its <code class="language-text">this</code>. You should use the direct object reference - <code class="language-text">counter</code> - instead of <code class="language-text">this</code>.</p>
+</details>
+<h3 id="creating-reactive-views">Creating reactive views<a aria-hidden="true" tabindex="-1" href="#creating-reactive-views"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Wrapping your components with <code class="language-text">view</code> turns them into reactive views. A reactive view re-renders whenever a piece of store - used inside its render - changes.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+// this is a global state store
+const user = store({ name: 'Bob' });
+
+// this is re-rendered whenever user.name changes
+export default view(() => (
+  &#x3C;div>
+    &#x3C;input value={user.name} onChange={(ev) => (user.name = ev.target.value)} />
+    &#x3C;div>Hello {user.name}!&#x3C;/div>
+  &#x3C;/div>
+));</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<details>
+<summary><strong>Wrap ALL of your components with <code>view</code> - including class and function ones - even if they don't seem to directly use a store.</strong></summary>
+<p></p>
+<p>Every component that is using a store or part of a store inside its render must be wrapped with <code class="language-text">view</code>. Sometimes store usage is not so explicit and easy to to miss.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import { view, store } from '@rsjs/core';
+
+const appStore = store({
+  user: { name: 'Ann' }
+});
+
+const App = view(() => (
+  &#x3C;div>
+    &#x3C;h1>My App&#x3C;/h1>
+    &#x3C;Profile user={appStore.user} />
+  &#x3C;/div>
+));
+
+// DO THIS
+const Profile = view(({ user }) => &#x3C;p>Name: {user.name}&#x3C;/p>);
+
+// DON'T DO THIS
+// This won't re-render on appStore.user.name = 'newName' like mutations
+const Profile = ({ user }) => &#x3C;p>Name: {user.name}&#x3C;/p>;</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>If you are <strong>100% sure</strong> that your component is not using any stores you can skip the <code class="language-text">view</code> wrapper.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+
+// you don't have to wrap this component with `view`
+export default () => &#x3C;p>This is just plain text&#x3C;/p>;</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span></span></pre></div>
+<p><code class="language-text">view</code> wrapping is advised even in these cases though.</p>
+<ul>
+<li>It saves you from future headaches as your project grows and you start to use stores inside these components.</li>
+<li><code class="language-text">view</code> is pretty much equivalent to <code class="language-text">memo</code> if you don’t use any stores. That is nearly always nice to have.</li>
+</ul>
+</details>
+<p></p>
+<details>
+<summary>A single reactive component may use multiple stores inside its render.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+const user = store({ name: 'Bob' });
+const timeline = store({ posts: ['react-easy-state'] });
+
+// this is re-rendered whenever user.name or timeline.posts[0] changes
+export default view(() => (
+  &#x3C;div>
+    &#x3C;div>Hello {user.name}!&#x3C;/div>
+    &#x3C;div>Your first post is: {timeline.posts[0]}&#x3C;/div>
+  &#x3C;/div>
+));</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary><code>view</code> implements an optimal <code>shouldComponentUpdate</code> (or <code>memo</code>) for your components.</summary>
+<p></p>
+<ul>
+<li>
+<p>Using <code class="language-text">PureComponent</code> or <code class="language-text">memo</code> will provide no additional performance benefits.</p>
+</li>
+<li>
+<p>Defining a custom <code class="language-text">shouldComponentUpdate</code> may rarely provide performance benefits when you apply some use case specific heuristics inside it.</p>
+</li>
+</ul>
+</details>
+<p></p>
+<details>
+<summary>Reactive renders are batched. Multiple synchronous store mutations won't result in multiple re-renders of the same component.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+const user = store({ name: 'Bob', age: 30 });
+
+function mutateUser() {
+  user.name = 'Ann';
+  user.age = 32;
+}
+
+// calling `mutateUser` will only trigger a single re-render of the below component
+// even though it mutates the store two times in quick succession
+export default view(() => (
+  &#x3C;div onClick={mutateUser}>
+    name: {user.name}, age: {user.age}
+  &#x3C;/div>
+));</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>If you mutate your stores multiple times synchronously from <strong>exotic task sources</strong>, multiple renders may rarely happen. If you experience performance issues you can batch changes manually with the <code class="language-text">batch</code> function. <code class="language-text">batch(fn)</code> executes the passed function immediately and batches any subsequent re-renders until the function execution finishes.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store, batch } from '@rsjs/core';
+
+const user = store({ name: 'Bob', age: 30 });
+
+function mutateUser() {
+  // this makes sure the state changes will cause maximum one re-render,
+  // no matter where this function is getting invoked from
+  batch(() => {
+    user.name = 'Ann';
+    user.age = 32;
+  });
+}
+
+export default view(() => (
+  &#x3C;div>
+    name: {user.name}, age: {user.age}
+  &#x3C;/div>
+));</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<blockquote>
+<p><strong>NOTE:</strong> The React team plans to improve render batching in the future. The <code class="language-text">batch</code> function and built-in batching may be deprecated and removed in the future in favor of React’s own batching.</p>
+</blockquote>
+</details>
+<p></p>
+<details>
+<summary>Always apply <code>view</code> as the latest (innermost) wrapper when you combine it with other Higher Order Components.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import { view } from '@rsjs/core';
+import { withRouter } from 'react-router-dom';
+import { withTheme } from 'styled-components';
+
+const Comp = () => &#x3C;div>A reactive component&#x3C;/div>;
+
+// DO THIS
+withRouter(view(Comp));
+withTheme(view(Comp));
+
+// DON'T DO THIS
+view(withRouter(Comp));
+view(withTheme(Comp));</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Usage with (pre v4.4) React Router.</summary>
+<p></p>
+<ul>
+<li>
+<p>If routing is not updated properly, wrap your <code class="language-text">view(Comp)</code> - with the <code class="language-text">Route</code>s inside - in <code class="language-text">withRouter(view(Comp))</code>. This lets react-router know when to update.</p>
+</li>
+<li>
+<p>The order of the HOCs matter, always use <code class="language-text">withRouter(view(Comp))</code>.</p>
+</li>
+</ul>
+<p>This is not necessary if you use React Router 4.4+. You can find more details and some reasoning about this in <a href="https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md">this react-router docs page</a>.</p>
+</details>
+<p></p>
+<details>
+<summary>Usage with React Developer Tools.</summary>
+<p></p>
+<p>If you want React Developer Tools to recognize your reactive view components’ names, you have to pass either a <strong>named function</strong> or an anonymous function with <strong>name inference</strong> to the <code class="language-text">view</code> wrapper.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+const user = store({
+  name: 'Rick'
+});
+
+const componentName = () => &#x3C;div>{user.name}&#x3C;/div>;
+
+export default view(componentName);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Passing nested data to third party components.</summary>
+<p></p>
+<p>Third party helpers - like data grids - may consist of many internal components which can not be wrapped by <code class="language-text">view</code>, but sometimes you would like them to re-render when the passed data mutates. Traditional React components re-render when their props change by reference, so mutating the passed reactive data won’t work in these cases. You can solve this issue by deep cloning the observable data before passing it to the component. This creates a new reference for the consuming component on every store mutation.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+import Table from 'rc-table';
+import cloneDeep from 'lodash/cloneDeep';
+
+const dataStore = store({
+  items: [
+    {
+      product: 'Car',
+      value: 12
+    }
+  ]
+});
+
+export default view(() => &#x3C;Table data={cloneDeep(dataStore.items)} />);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<h3 id="creating-local-stores">Creating local stores<a aria-hidden="true" tabindex="-1" href="#creating-local-stores"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>A singleton global store is perfect for something like the current user, but sometimes having local component states is a better fit. Just create a store inside a function component or as a class component property in these cases.</p>
+<h4 id="local-stores-in-function-components">Local stores in function components<a aria-hidden="true" tabindex="-1" href="#local-stores-in-function-components"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h4>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react'
+import { view, store } from '@rsjs/core'
+
+export default view(() => {
+  const counter = store({ num: 0 })
+  const increment = () => counter.num++
+  return &#x3C;button={increment}>{counter.num}&#x3C;/div>
+})</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p><strong>Local stores in functions rely on React hooks. They require React and React DOM v16.8+ or React Native v0.59+ to work.</strong></p>
+<details>
+<summary>You can use React hooks - including <code>useState</code> - in function components, Easy State won't interfere with them. Consider using <a href="#local-auto-effects-in-function-components">autoEffect</a> instead of the <code>useEffect</code> hook for the best experience though.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+export default view(() => {
+  const [name, setName] = useState('Ann');
+  const user = store({ age: 30 });
+  return (
+    &#x3C;div>
+      &#x3C;input value={name} onChange={(ev) => setName(ev.target.value)} />
+      &#x3C;input value={user.age} onChange={(ev) => (user.age = ev.target.value)} />
+    &#x3C;/div>
+  );
+});</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<h4 id="local-stores-in-class-components">Local stores in class components<a aria-hidden="true" tabindex="-1" href="#local-stores-in-class-components"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h4>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React, { Component } from 'react';
+import { view, store } from '@rsjs/core';
+
+class Counter extends Component {
+  counter = store({ num: 0 });
+  increment = () => counter.num++;
+
+  render() {
+    return &#x3C;button onClick={this.increment}>{this.counter.num}&#x3C;/button>;
+  }
+}
+
+export default view(Counter);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<details>
+<summary>You can also use vanilla <code>setState</code> in your class components, Easy State won't interfere with it.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsx"><pre style="counter-reset: linenumber NaN" class="language-jsx line-numbers"><code class="language-jsx"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'react'</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> view<span class="token punctuation">,</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Profile</span> <span class="token keyword">extends</span> <span class="token class-name">Component</span> <span class="token punctuation">{</span>
+  state <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Ann'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  user <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function-variable function">setName</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> ev<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function-variable function">setAge</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">ev</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>user<span class="token punctuation">.</span>age <span class="token operator">=</span> ev<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;</span>div</span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;</span>input</span> <span class="token attr-name">value</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>name<span class="token punctuation">}</span></span> <span class="token attr-name">onChange</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span>setName<span class="token punctuation">}</span></span> <span class="token punctuation">/></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;</span>input</span> <span class="token attr-name">value</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span>user<span class="token punctuation">.</span>age<span class="token punctuation">}</span></span> <span class="token attr-name">onChange</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span>setAge<span class="token punctuation">}</span></span> <span class="token punctuation">/></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">view</span><span class="token punctuation">(</span>Profile<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Don't name local stores as <code>state</code>. It may conflict with linter rules, which guard against direct state mutations.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React, { Component } from 'react';
+import { view, store } from '@rsjs/core';
+
+class Profile extends Component {
+  // DON'T DO THIS
+  state = store({});
+  // DO THIS
+  user = store({});
+  render() {}
+}</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<details>
+<summary>Deriving local stores from props (<code>getDerivedStateFromProps</code>).</summary>
+<p></p>
+<p>Class components wrapped with <code class="language-text">view</code> have an extra static <code class="language-text">deriveStoresFromProps</code> lifecycle method, which works similarly to the vanilla <code class="language-text">getDerivedStateFromProps</code>.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React, { Component } from 'react';
+import { view, store } from '@rsjs/core';
+
+class NameCard extends Component {
+  userStore = store({ name: 'Bob' });
+
+  static deriveStoresFromProps(props, userStore) {
+    userStore.name = props.name || userStore.name;
+  }
+
+  render() {
+    return &#x3C;div>{this.userStore.name}&#x3C;/div>;
+  }
+}
+
+export default view(NameCard);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>Instead of returning an object, you should directly mutate the received stores. If you have multiple local stores on a single component, they are all passed as arguments - in their definition order - after the first props argument.</p>
+</details>
+<h2 id="advanced-usage-nerd_face">Advanced Usage :nerd_face:<a aria-hidden="true" tabindex="-1" href="#advanced-usage-nerd_face"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="adding-side-effects">Adding side effects<a aria-hidden="true" tabindex="-1" href="#adding-side-effects"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Use <code class="language-text">autoEffect</code> to react with automatic side effect to your store changes. Auto effects should contain end-of-chain logic - like changing the document title or saving data to LocalStorage. <code class="language-text">view</code> is a special auto effect that does rendering.</p>
+<details>
+<summary>Never use auto effects to derive data from other data. Use dynamic getters instead.</summary>
+<p></p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import { store, autoEffect } from '@rsjs/core';
+
+// DON'T DO THIS
+const store1 = store({ name: 'Store 1' });
+const store2 = store({ name: 'Store 2' });
+autoEffect(() => (store2.name = store1.name));
+
+// DO THIS INSTEAD
+const store1 = store({ name: 'Store 1' });
+const store2 = store({
+  get name() {
+    return store1.name;
+  }
+});</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<h4 id="global-auto-effects">Global auto effects<a aria-hidden="true" tabindex="-1" href="#global-auto-effects"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h4>
+<p>Global auto effects can be created with <code class="language-text">autoEffect</code> and cleared up with <code class="language-text">clearEffect</code>.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import { store, autoEffect, clearEffect } from '@rsjs/core';
+
+const app = store({ name: 'My App' });
+const effect = autoEffect(() => (document.title = app.name));
+
+// this also updates the document title
+app.name = 'My Awesome App';
+
+clearEffect(effect);
+// this won't update the document title, the effect is cleared
+app.name = 'My App';</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h4 id="local-auto-effects-in-function-components">Local auto effects in function components<a aria-hidden="true" tabindex="-1" href="#local-auto-effects-in-function-components"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h4>
+<p>Use local auto effects in function components instead of the <code class="language-text">useEffect</code> hook when reactive stores are used inside them. These local effects are automatically cleared when the component unmounts.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { store, view, autoEffect } from '@rsjs/core';
+
+export default view(() => {
+  const app = store({ name: 'My App' });
+  // no need to clear the effect
+  autoEffect(() => (document.title = app.name));
+});</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<details>
+<summary>Explicitly pass none reactive dependencies - like vanillas props and state - to local auto effects in function components.</summary>
+<p></p>
+<p>Because of the design of React hooks you have to explicitly pass all none reactive data to a hook-like dependency array. This makes sure that the effect also runs when the none reactive data changes.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { store, view, autoEffect } from '@rsjs/core';
+
+export default view(({ greeting }) => {
+  const app = store({ name: 'My App' });
+  // pass `greeting` in the dependency array because it is not coming from a store
+  autoEffect(() => (document.title = `${greeting} ${app.name}`), [greeting]);
+});</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+</details>
+<p></p>
+<h4 id="local-auto-effects-in-class-components">Local auto effects in class components<a aria-hidden="true" tabindex="-1" href="#local-auto-effects-in-class-components"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h4>
+<p>Local effects in class components must be cleared when the component unmounts.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React, { Component } from 'react';
+import { store, view, autoEffect } from '@rsjs/core';
+
+class App extends Component {
+  app = store({ name: 'My App' });
+
+  componentDidMount() {
+    this.effect = autoEffect(() => (document.title = this.app.name));
+  }
+
+  componentWillUnmount() {
+    // local effects in class components must be cleared on unmount
+    clearEffect(this.effect);
+  }
+}</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h2 id="api-summary-">API Summary 📖<a aria-hidden="true" tabindex="-1" href="#api-summary-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="storeobj">store(obj)<a aria-hidden="true" tabindex="-1" href="#storeobj"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Creates an observable store from the passed object and returns it. Can be used outside components for <a href="#creating-global-stores">global stores</a> and inside components for <a href="(#creating-local-stores)">local stores</a>.</p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Rick'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<h3 id="viewcomp">view(Comp)<a aria-hidden="true" tabindex="-1" href="#viewcomp"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Creates a <a href="#creating-reactive-views">reactive view</a> from the passed component and returns it. A reactive view re-renders whenever any store data used inside it is mutated.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+const user = store({ name: 'Bob' });
+
+export default view(() => &#x3C;div>Hello {user.name}!&#x3C;/div>);</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h3 id="batchfn">batch(fn)<a aria-hidden="true" tabindex="-1" href="#batchfn"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Immediately executes the passed function and batches all store mutations inside it. Batched mutations are guaranteed to not trigger unnecessary double renders. Most task sources are batched automatically, only use <code class="language-text">batch</code> if you encounter performance issues.</p>
+<div class="gatsby-highlight" data-language="jsxharmony"><pre style="counter-reset: linenumber NaN" class="language-jsxharmony line-numbers"><code class="language-jsxharmony">import React from 'react';
+import { view, store } from '@rsjs/core';
+
+const user = store({ name: 'Bob' });
+
+function setName() {
+  batch(() => {
+    user.name = 'Rick';
+    user.name = 'Ann';
+  });
+}</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h3 id="autoeffectfn">autoEffect(fn)<a aria-hidden="true" tabindex="-1" href="#autoeffectfn"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Creates a reactive function from the passed one, immediately executes it, and returns it. A reactive function automatically re-reruns whenever any store data used inside it is mutated.</p>
+<p>Can be used both <a href="#global-auto-effects">outside</a> and <a href="#local-auto-effects-in-function-components">inside</a> components.</p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store<span class="token punctuation">,</span> autoEffect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Bob'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">autoEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>title <span class="token operator">=</span> user<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h3 id="cleareffectfn">clearEffect(fn)<a aria-hidden="true" tabindex="-1" href="#cleareffectfn"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Takes a reactive function (returned by <code class="language-text">autoEffect</code>) and clears the reactivity from it. Cleared reactive functions will no longer re-rerun on related store mutations. Reactive functions created inside function components are automatically cleared when the component unmounts.</p>
+<div class="gatsby-highlight" data-language="js"><pre style="counter-reset: linenumber NaN" class="language-js line-numbers"><code class="language-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> store<span class="token punctuation">,</span> autoEffect<span class="token punctuation">,</span> clearEffect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@rsjs/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token function">store</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Bob'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> effect <span class="token operator">=</span> <span class="token function">autoEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>title <span class="token operator">=</span> user<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">clearEffect</span><span class="token punctuation">(</span>effect<span class="token punctuation">)</span><span class="token punctuation">;</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<h2 id="articles-">Articles 📢<a aria-hidden="true" tabindex="-1" href="#articles-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<ul>
+<li>TODO</li>
+</ul>
+<h2 id="performance-">Performance 🚀<a aria-hidden="true" tabindex="-1" href="#performance-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>You can compare Easy State with plain React and other state management libraries with the below benchmarks. It performs a bit better than MobX and similarly to Redux.</p>
+<h2 id="platform-support-">Platform support 💻<a aria-hidden="true" tabindex="-1" href="#platform-support-"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<ul>
+<li>Node: 6 and above</li>
+<li>Chrome: 49 and above</li>
+<li>Firefox: 38 and above</li>
+<li>Safari: 10 and above</li>
+<li>Edge: 12 and above</li>
+<li>Opera: 36 and above</li>
+<li>React Native: 0.59 and above</li>
+</ul>
+<p><em>This library is based on non polyfillable ES6 Proxies. Because of this, it will never support IE.</em></p></div><hr class="my-8 border-theme-subtle"><astro-island uid="R3XKG" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2020/03-20-状态管理/&quot;],&quot;words&quot;:[0,1086],&quot;paragraphs&quot;:[0,128]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1086<!-- --> 字 · <!-- -->128<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2020/03-18-zookeeper与共识/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ZooKeeper/etcd：小数据强一致的协调服务</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2020/04-11-团队拆分与子团队负责人/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">团队拆分与子团队负责人：按工作依赖划分边界</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2026/05-08-code-knowledge-graph-tools/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">CodeGraph、GitNexus 与 Graphify：代码知识图谱的比较维度</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-05-08</time></a><a href="/post/2023/07-28-架构整洁之道/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">架构整洁之道-阅读笔记</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2023-07-28</time></a><a href="/post/2021/01-01-系统可维护到底指的是什么/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">系统可维护到底指的是什么</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2021-01-01</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="ZPm5cS" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2020/03-20-状态管理/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="Z2hdXBq" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#rsjscore\&quot;&gt;@rsjs/core&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#introduction-\&quot;&gt;Introduction 👋&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#installation-\&quot;&gt;Installation 💿&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#usage-\&quot;&gt;Usage 😎&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%88%9B%E5%BB%BAservice\&quot;&gt;创建service&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#creating-reactive-views\&quot;&gt;Creating reactive views&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#creating-local-stores\&quot;&gt;Creating local stores&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#local-stores-in-function-components\&quot;&gt;Local stores in function components&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#local-stores-in-class-components\&quot;&gt;Local stores in class components&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#advanced-usage-nerd_face\&quot;&gt;Advanced Usage :nerd_face:&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#adding-side-effects\&quot;&gt;Adding side effects&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#global-auto-effects\&quot;&gt;Global auto effects&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#local-auto-effects-in-function-components\&quot;&gt;Local auto effects in function components&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#local-auto-effects-in-class-components\&quot;&gt;Local auto effects in class components&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#api-summary-\&quot;&gt;API Summary 📖&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#storeobj\&quot;&gt;store(obj)&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#viewcomp\&quot;&gt;view(Comp)&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#batchfn\&quot;&gt;batch(fn)&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#autoeffectfn\&quot;&gt;autoEffect(fn)&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#cleareffectfn\&quot;&gt;clearEffect(fn)&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#articles-\&quot;&gt;Articles 📢&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#performance-\&quot;&gt;Performance 🚀&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#platform-support-\&quot;&gt;Platform support 💻&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

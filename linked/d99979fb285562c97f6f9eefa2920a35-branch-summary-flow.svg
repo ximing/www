@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 760" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10z" fill="#89847b"/>
+    </marker>
+    <marker id="orangeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10z" fill="#bf5835"/>
+    </marker>
+  </defs>
+
+  <text x="520" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#252320">分支摘要：旧分支保留，摘要作为新分支上的 entry 进入 context</text>
+  <text x="520" y="51" text-anchor="middle" font-size="12" fill="#68635b">示例：从旧 leaf e7 跳回 e3，并选择 summarize</text>
+
+  <!-- tree panel -->
+  <text x="90" y="86" font-size="14" font-weight="700" fill="#403d37">1. 内存树与 parentId</text>
+  <text x="88" y="106" font-size="12" fill="#68635b">灰色实线：child.parentId → parent；橙色：新 context 路径</text>
+
+  <!-- shared chain -->
+  <g>
+    <rect x="400" y="125" width="220" height="46" rx="8" fill="#f4f2ee"/>
+    <text x="510" y="146" text-anchor="middle" font-size="13" font-weight="700" fill="#4a463f">e1 · user</text>
+    <text x="510" y="162" text-anchor="middle" font-size="10.5" fill="#716c64">parentId: null</text>
+
+    <rect x="400" y="196" width="220" height="46" rx="8" fill="#faf9f7" stroke="#d8d4cc"/>
+    <text x="510" y="217" text-anchor="middle" font-size="13" font-weight="700" fill="#4a463f">e2 · assistant</text>
+    <text x="510" y="233" text-anchor="middle" font-size="10.5" fill="#716c64">parentId: e1</text>
+
+    <rect x="400" y="267" width="220" height="46" rx="8" fill="#fff6f1" stroke="#bf5835" stroke-width="2"/>
+    <text x="510" y="288" text-anchor="middle" font-size="13" font-weight="700" fill="#9d482c">e3 · 共同祖先 / 跳转目标</text>
+    <text x="510" y="304" text-anchor="middle" font-size="10.5" fill="#716c64">parentId: e2</text>
+  </g>
+
+  <!-- old branch -->
+  <g>
+    <rect x="760" y="360" width="210" height="46" rx="8" fill="#f1efeb"/>
+    <text x="865" y="381" text-anchor="middle" font-size="13" font-weight="700" fill="#68635b">e4 · user</text>
+    <text x="865" y="397" text-anchor="middle" font-size="10.5" fill="#827d74">parentId: e3</text>
+
+    <rect x="760" y="431" width="210" height="46" rx="8" fill="#f1efeb"/>
+    <text x="865" y="452" text-anchor="middle" font-size="13" font-weight="700" fill="#68635b">e5 · assistant</text>
+    <text x="865" y="468" text-anchor="middle" font-size="10.5" fill="#827d74">parentId: e4</text>
+
+    <rect x="760" y="502" width="210" height="46" rx="8" fill="#f1efeb"/>
+    <text x="865" y="523" text-anchor="middle" font-size="13" font-weight="700" fill="#68635b">e6 · toolResult</text>
+    <text x="865" y="539" text-anchor="middle" font-size="10.5" fill="#827d74">parentId: e5</text>
+
+    <rect x="760" y="573" width="210" height="46" rx="8" fill="#f1efeb" stroke="#827d74"/>
+    <text x="865" y="594" text-anchor="middle" font-size="13" font-weight="700" fill="#68635b">e7 · assistant（旧 leaf）</text>
+    <text x="865" y="610" text-anchor="middle" font-size="10.5" fill="#827d74">parentId: e6</text>
+  </g>
+
+  <!-- New branch -->
+  <g>
+    <rect x="80" y="430" width="250" height="58" rx="8" fill="#fdf0ea" stroke="#bf5835" stroke-width="2"/>
+    <text x="205" y="451" text-anchor="middle" font-size="13" font-weight="700" fill="#9d482c">e9 · branch_summary</text>
+    <text x="205" y="468" text-anchor="middle" font-size="10.5" fill="#6b645d">parentId: e3 · fromId: e3</text>
+    <text x="205" y="482" text-anchor="middle" font-size="10.5" fill="#6b645d">summary + details + usage</text>
+
+    <rect x="80" y="535" width="250" height="46" rx="8" fill="#fff6f1" stroke="#bf5835" stroke-width="1.5"/>
+    <text x="205" y="556" text-anchor="middle" font-size="13" font-weight="700" fill="#9d482c">e10 · user（继续对话）</text>
+    <text x="205" y="572" text-anchor="middle" font-size="10.5" fill="#6b645d">parentId: e9 · 当前 leafId</text>
+  </g>
+
+  <!-- leaf entry -->
+  <g>
+    <rect x="670" y="650" width="230" height="47" rx="8" fill="#f1efeb" stroke="#827d74" stroke-dasharray="4 3"/>
+    <text x="785" y="671" text-anchor="middle" font-size="13" font-weight="700" fill="#68635b">e8 · leaf（跳转记录）</text>
+    <text x="785" y="687" text-anchor="middle" font-size="10.5" fill="#827d74">parentId: e7 · targetId: e3</text>
+  </g>
+
+  <!-- Parent edges -->
+  <g fill="none" stroke="#89847b" stroke-width="1.5" marker-end="url(#arrow)">
+    <path d="M510 196 L510 175"/>
+    <path d="M510 267 L510 246"/>
+    <path d="M760 383 C704 360 636 337 545 313"/>
+    <path d="M865 431 L865 410"/>
+    <path d="M865 502 L865 481"/>
+    <path d="M865 573 L865 552"/>
+    <path d="M785 650 L850 623"/>
+  </g>
+  <g fill="none" stroke="#bf5835" stroke-width="1.8" marker-end="url(#orangeArrow)">
+    <path d="M330 459 C357 401 409 367 487 315"/>
+    <path d="M205 535 L205 493"/>
+  </g>
+  <path d="M670 674 C602 643 533 510 510 316" fill="none" stroke="#bf5835" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#orangeArrow)"/>
+
+  <!-- callouts -->
+  <g font-size="12" fill="#534e47">
+    <text x="665" y="335">被摘要的范围：e4 → e5 → e6 → e7</text>
+    <text x="665" y="352">= 旧 leaf 到共同祖先 e3 之间</text>
+    <text x="427" y="620" fill="#9d482c">e8 写入旧分支后，leafId 跳到 e3；e9 从 e3 长出新分支</text>
+    <text x="508" y="714" fill="#9d482c">e8.targetId = e3</text>
+  </g>
+
+  <!-- persistence panel -->
+  <rect x="30" y="724" width="980" height="1" fill="#d8d4cc"/>
+  <text x="50" y="749" font-size="12" fill="#4a463f">文件追加顺序：e1, e2, e3, e4, e5, e6, e7, e8(leaf), e9(branch_summary), e10。旧节点仍在 JSONL；重启后扫描恢复整棵树，leafId=e10，当前 context 通过 e10 → e9 → e3… 回溯。</text>
+</svg>

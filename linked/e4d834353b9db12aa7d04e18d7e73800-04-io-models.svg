@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 780" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="940" height="780" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">三种 IO 模型下线程与连接的对应关系</text>
+
+  <!-- ============ Band 1: BIO ============ -->
+  <rect x="24" y="58" width="892" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.4"/>
+  <text x="40" y="82" font-size="13" font-weight="600" fill="#dc2626">BIO：每连接一线程</text>
+
+  <!-- connections -->
+  <g font-size="11" fill="#1f2937" text-anchor="middle">
+    <circle cx="80" cy="120" r="14" fill="#ffffff" stroke="#94a3b8"/><text x="80" y="124">C1</text>
+    <circle cx="80" cy="158" r="14" fill="#ffffff" stroke="#94a3b8"/><text x="80" y="162">C2</text>
+    <circle cx="80" cy="196" r="14" fill="#ffffff" stroke="#94a3b8"/><text x="80" y="200">C3</text>
+    <text x="80" y="232" font-size="10" fill="#64748b">连接</text>
+  </g>
+
+  <!-- arrows to threads -->
+  <g stroke="#475569" stroke-width="1.4" marker-end="url(#arr)">
+    <line x1="94" y1="120" x2="226" y2="120"/>
+    <line x1="94" y1="158" x2="226" y2="158"/>
+    <line x1="94" y1="196" x2="226" y2="196"/>
+  </g>
+
+  <!-- thread pool box -->
+  <rect x="230" y="96" width="260" height="148" rx="8" fill="#ffffff" stroke="#dc2626" stroke-width="1.4"/>
+  <text x="360" y="116" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">线程池（N 个 worker 线程）</text>
+  <g font-size="11" fill="#1f2937" text-anchor="middle">
+    <rect x="250" y="132" width="64" height="28" rx="4" fill="#fee2e2" stroke="#dc2626"/><text x="282" y="150">T1</text>
+    <rect x="328" y="132" width="64" height="28" rx="4" fill="#fee2e2" stroke="#dc2626"/><text x="360" y="150">T2</text>
+    <rect x="406" y="132" width="64" height="28" rx="4" fill="#fee2e2" stroke="#dc2626"/><text x="438" y="150">T3</text>
+    <rect x="250" y="180" width="64" height="28" rx="4" fill="#f8fafc" stroke="#cbd5e1"/><text x="282" y="198" fill="#64748b">…</text>
+    <rect x="328" y="180" width="64" height="28" rx="4" fill="#f8fafc" stroke="#cbd5e1"/><text x="360" y="198" fill="#64748b">…</text>
+    <rect x="406" y="180" width="64" height="28" rx="4" fill="#f8fafc" stroke="#cbd5e1"/><text x="438" y="198" fill="#64748b">TN</text>
+  </g>
+
+  <!-- BIO notes -->
+  <rect x="520" y="104" width="380" height="128" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="536" y="128" font-size="12" font-weight="600" fill="#1f2937">特征</text>
+  <text x="536" y="150" font-size="11" fill="#475569">· worker 从请求读取到响应写出全程占用</text>
+  <text x="536" y="170" font-size="11" fill="#475569">· 等 IO、等下游时线程也挂着不释放</text>
+  <text x="536" y="190" font-size="11" fill="#475569">· 容量上限 = 线程池大小</text>
+  <text x="536" y="212" font-size="11" fill="#9a3412">· 长连接吃满线程池，后续请求排队</text>
+
+  <!-- ============ Band 2: NIO connector ============ -->
+  <rect x="24" y="276" width="892" height="220" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="40" y="300" font-size="13" font-weight="600" fill="#2563eb">容器 NIO connector：accept / select / dispatch</text>
+
+  <!-- connections -->
+  <g font-size="11" fill="#1f2937" text-anchor="middle">
+    <circle cx="70" cy="340" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="344">C1</text>
+    <circle cx="70" cy="372" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="376">C2</text>
+    <circle cx="70" cy="404" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="408">C3</text>
+    <circle cx="70" cy="436" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="440">…</text>
+    <text x="70" y="468" font-size="10" fill="#64748b">连接</text>
+  </g>
+
+  <!-- Acceptor -->
+  <rect x="150" y="372" width="120" height="44" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="210" y="392" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Acceptor</text>
+  <text x="210" y="408" font-size="10" fill="#64748b" text-anchor="middle">1 线程 · accept()</text>
+  <line x1="86" y1="394" x2="148" y2="394" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+
+  <!-- Poller / Selector -->
+  <rect x="330" y="338" width="150" height="112" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="405" y="358" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Poller（Selector）</text>
+  <text x="405" y="376" font-size="10" fill="#64748b" text-anchor="middle">少量线程 · select()</text>
+  <text x="405" y="396" font-size="10" fill="#64748b" text-anchor="middle">轮询就绪事件</text>
+  <text x="405" y="416" font-size="10" fill="#64748b" text-anchor="middle">空闲连接挂此处</text>
+  <text x="405" y="436" font-size="10" fill="#16a34a" text-anchor="middle">不占 worker</text>
+  <line x1="270" y1="394" x2="328" y2="394" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="298" y="386" font-size="10" fill="#64748b" text-anchor="middle">注册</text>
+
+  <!-- Worker pool -->
+  <rect x="550" y="338" width="160" height="112" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="630" y="358" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Worker 线程池</text>
+  <text x="630" y="376" font-size="10" fill="#64748b" text-anchor="middle">N 个线程</text>
+  <g font-size="10" fill="#1f2937" text-anchor="middle">
+    <rect x="566" y="388" width="44" height="24" rx="4" fill="#dbeafe" stroke="#2563eb"/><text x="588" y="404">W1</text>
+    <rect x="618" y="388" width="44" height="24" rx="4" fill="#dbeafe" stroke="#2563eb"/><text x="640" y="404">W2</text>
+    <rect x="660" y="388" width="40" height="24" rx="4" fill="#f8fafc" stroke="#cbd5e1"/><text x="680" y="404" fill="#64748b">…</text>
+  </g>
+  <text x="630" y="438" font-size="10" fill="#64748b" text-anchor="middle">处理业务，可阻塞</text>
+  <line x1="480" y1="394" x2="548" y2="394" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="514" y="386" font-size="10" fill="#64748b" text-anchor="middle">dispatch</text>
+
+  <!-- NIO notes -->
+  <rect x="740" y="338" width="160" height="112" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="754" y="360" font-size="12" font-weight="600" fill="#1f2937">特征</text>
+  <text x="754" y="380" font-size="10" fill="#475569">· 接收/轮询/处理拆三段</text>
+  <text x="754" y="398" font-size="10" fill="#475569">· 空闲连接不占 worker</text>
+  <text x="754" y="416" font-size="10" fill="#475569">· 业务仍在线程池阻塞跑</text>
+  <text x="754" y="434" font-size="10" fill="#9a3412">· 容量仍受线程池约束</text>
+
+  <!-- ============ Band 3: Reactor ============ -->
+  <rect x="24" y="514" width="892" height="220" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="40" y="538" font-size="13" font-weight="600" fill="#16a34a">Netty Reactor：boss / worker 事件循环组</text>
+
+  <!-- connections -->
+  <g font-size="11" fill="#1f2937" text-anchor="middle">
+    <circle cx="70" cy="578" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="582">C1</text>
+    <circle cx="70" cy="610" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="614">C2</text>
+    <circle cx="70" cy="642" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="646">…</text>
+    <circle cx="70" cy="674" r="13" fill="#ffffff" stroke="#94a3b8"/><text x="70" y="678">Cn</text>
+    <text x="70" y="706" font-size="10" fill="#64748b">大量连接</text>
+  </g>
+
+  <!-- bossGroup -->
+  <rect x="150" y="612" width="130" height="44" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="215" y="632" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">bossGroup</text>
+  <text x="215" y="648" font-size="10" fill="#64748b" text-anchor="middle">1 EventLoop · accept</text>
+  <line x1="86" y1="634" x2="148" y2="634" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+
+  <!-- workerGroup: EventLoops each bound to multiple channels -->
+  <rect x="330" y="566" width="180" height="150" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="420" y="586" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">workerGroup</text>
+  <text x="420" y="602" font-size="10" fill="#64748b" text-anchor="middle">少量 EventLoop（≈CPU 核数）</text>
+  <!-- EL1 with channels -->
+  <rect x="346" y="612" width="148" height="40" rx="4" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="356" y="628" font-size="10" fill="#1f2937">EL1</text>
+  <g font-size="9" fill="#1f2937" text-anchor="middle">
+    <circle cx="390" cy="635" r="8" fill="#ffffff" stroke="#16a34a"/><text x="390" y="638">c</text>
+    <circle cx="410" cy="635" r="8" fill="#ffffff" stroke="#16a34a"/><text x="410" y="638">c</text>
+    <circle cx="430" cy="635" r="8" fill="#ffffff" stroke="#16a34a"/><text x="430" y="638">c</text>
+    <circle cx="450" cy="635" r="8" fill="#ffffff" stroke="#16a34a"/><text x="450" y="638">…</text>
+    <circle cx="470" cy="635" r="8" fill="#ffffff" stroke="#16a34a"/><text x="470" y="638">c</text>
+  </g>
+  <text x="420" y="668" font-size="9" fill="#64748b" text-anchor="middle">一个 EventLoop 绑多个 Channel</text>
+  <line x1="280" y1="634" x2="344" y2="634" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="312" y="626" font-size="10" fill="#64748b" text-anchor="middle">注册</text>
+
+  <!-- ChannelPipeline -->
+  <rect x="560" y="566" width="170" height="150" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="645" y="586" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">ChannelPipeline</text>
+  <text x="645" y="602" font-size="10" fill="#64748b" text-anchor="middle">handler 链（在 EventLoop 上跑）</text>
+  <g font-size="10" fill="#1f2937" text-anchor="middle">
+    <rect x="576" y="614" width="138" height="22" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="645" y="629">Decoder</text>
+    <rect x="576" y="642" width="138" height="22" rx="4" fill="#dcfce7" stroke="#16a34a"/><text x="645" y="657">BusinessHandler</text>
+    <rect x="576" y="670" width="138" height="22" rx="4" fill="#fefce8" stroke="#ca8a04"/><text x="645" y="685">阻塞 = 拖住整条 EL</text>
+  </g>
+  <line x1="510" y1="634" x2="558" y2="634" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+
+  <!-- Reactor notes -->
+  <rect x="760" y="566" width="140" height="150" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="774" y="588" font-size="12" font-weight="600" fill="#1f2937">特征</text>
+  <text x="774" y="608" font-size="10" fill="#475569">· 业务跑在 EventLoop</text>
+  <text x="774" y="626" font-size="10" fill="#475569">· 线程数与连接数解耦</text>
+  <text x="774" y="644" font-size="10" fill="#475569">· 瓶颈在 CPU 与内存</text>
+  <text x="774" y="664" font-size="10" fill="#9a3412">· 阻塞 EventLoop 拖住</text>
+  <text x="774" y="680" font-size="10" fill="#9a3412">  同组所有 Channel</text>
+
+  <!-- ============ Legend ============ -->
+  <rect x="24" y="744" width="892" height="28" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="40" y="762" font-size="11" fill="#475569">容量口径：BIO 受线程池大小限制 ＜ 容器 NIO 仍受 worker 线程池限制 ＜ Reactor 受 CPU/内存限制，线程数与连接数解耦</text>
+</svg>

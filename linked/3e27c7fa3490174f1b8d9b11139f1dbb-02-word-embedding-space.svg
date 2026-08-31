@@ -1,0 +1,112 @@
+<svg viewBox="0 0 980 680" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="panelL" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="panelR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#58a6ff"/></marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#f85149"/></marker>
+    <marker id="arrGreen" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3fb950"/></marker>
+    <marker id="arrPurple" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#a371f7"/></marker>
+  </defs>
+
+  <rect width="980" height="680" fill="url(#bg)" rx="8"/>
+
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">词向量空间：语义关系变成几何关系</text>
+  <text x="490" y="54" text-anchor="middle" fill="#8b949e" font-size="12">左：king − man + woman ≈ queen 的平行四边形结构；右：语义近邻与国家-首都的平行差向量（300 维投影到 2 维示意）</text>
+
+  <!-- ============ 左：属性差的方向 ============ -->
+  <rect x="30" y="80" width="440" height="430" rx="6" fill="url(#panelL)" filter="url(#glow)"/>
+  <text x="250" y="104" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">属性差对应固定方向</text>
+  <text x="250" y="121" text-anchor="middle" fill="#8b949e" font-size="10">关系相同的词对，差向量方向与长度几乎一致</text>
+
+  <!-- 坐标轴 -->
+  <line x1="70" y1="450" x2="440" y2="450" stroke="#8b949e" stroke-width="1" marker-end="url(#arrGray)"/>
+  <line x1="70" y1="450" x2="70" y2="150" stroke="#8b949e" stroke-width="1" marker-end="url(#arrGray)"/>
+  <text x="444" y="466" fill="#8b949e" font-size="11">维度 i</text>
+  <text x="40" y="146" fill="#8b949e" font-size="11">维度 j</text>
+
+  <!-- 皇室方向箭头（紫）：man->king 实线，woman->queen 虚线 -->
+  <path d="M 146 384 C 175 340, 200 280, 224 212" fill="none" stroke="#a371f7" stroke-width="2" marker-end="url(#arrPurple)"/>
+  <path d="M 336 404 C 365 360, 390 300, 414 232" fill="none" stroke="#a371f7" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrPurple)"/>
+  <text x="178" y="300" fill="#a371f7" font-size="10">「皇室」方向</text>
+  <text x="178" y="314" fill="#a371f7" font-size="10">king − man</text>
+
+  <!-- 性别方向箭头（绿）：man->woman 实线，king->queen 虚线 -->
+  <path d="M 152 396 C 210 402, 270 408, 318 410" fill="none" stroke="#3fb950" stroke-width="2" marker-end="url(#arrGreen)"/>
+  <path d="M 242 206 C 300 212, 360 218, 408 220" fill="none" stroke="#3fb950" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrGreen)"/>
+  <text x="210" y="434" fill="#3fb950" font-size="10">「性别」方向 woman − man ≈ queen − king</text>
+
+  <!-- 词点 -->
+  <circle cx="140" cy="390" r="6" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+  <text x="140" y="416" text-anchor="middle" fill="#c9d1d9" font-size="12">man</text>
+  <circle cx="230" cy="200" r="6" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+  <text x="230" y="186" text-anchor="middle" fill="#c9d1d9" font-size="12">king</text>
+  <circle cx="330" cy="410" r="6" fill="#0d1117" stroke="#3fb950" stroke-width="2"/>
+  <text x="330" y="434" text-anchor="middle" fill="#c9d1d9" font-size="12">woman</text>
+  <circle cx="420" cy="220" r="6" fill="#0d1117" stroke="#3fb950" stroke-width="2"/>
+  <text x="420" y="206" text-anchor="middle" fill="#c9d1d9" font-size="12">queen</text>
+
+  <!-- 公式 -->
+  <text x="250" y="492" text-anchor="middle" fill="#e6edf3" font-size="12">king − man + woman ≈ queen（全词表最近邻）</text>
+
+  <!-- 左图注 -->
+  <rect x="30" y="524" width="440" height="130" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="46" y="548" fill="#a371f7" font-size="11">● 紫箭头平行：king−man 与 queen−woman 同为「皇室」差</text>
+  <text x="46" y="570" fill="#3fb950" font-size="11">● 绿箭头平行：woman−man 与 queen−king 同为「性别」差</text>
+  <text x="46" y="592" fill="#8b949e" font-size="10">国家-首都、动词时态、形容词比较级也有同样的平行结构</text>
+  <text x="46" y="614" fill="#8b949e" font-size="10">这类类比题在论文的 Semantic-Syntactic 测试集上可批量验证</text>
+  <text x="46" y="636" fill="#8b949e" font-size="10">实际向量约 300 维，本图是投影到 2 维后的相对位置示意</text>
+
+  <!-- ============ 右：语义近邻与距离 ============ -->
+  <rect x="500" y="80" width="450" height="430" rx="6" fill="url(#panelR)" filter="url(#glow)"/>
+  <text x="725" y="104" text-anchor="middle" fill="#a371f7" font-size="13" font-weight="bold">近与远反映语义，差向量可以复用</text>
+  <text x="725" y="121" text-anchor="middle" fill="#8b949e" font-size="10">用法相近的词聚成簇；同一类关系在不同词对间共享方向</text>
+
+  <!-- 动物簇 -->
+  <ellipse cx="640" cy="185" rx="95" ry="72" fill="none" stroke="#a371f7" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <text x="640" y="112" text-anchor="middle" fill="#a371f7" font-size="10">动物簇</text>
+  <circle cx="605" cy="180" r="5" fill="#a371f7"/>
+  <text x="605" y="166" text-anchor="middle" fill="#c9d1d9" font-size="11">cat</text>
+  <circle cx="662" cy="205" r="5" fill="#a371f7"/>
+  <text x="662" y="225" text-anchor="middle" fill="#c9d1d9" font-size="11">dog</text>
+  <circle cx="648" cy="148" r="5" fill="#a371f7"/>
+  <text x="678" y="152" text-anchor="middle" fill="#c9d1d9" font-size="11">tiger</text>
+
+  <!-- 近邻距离线 -->
+  <path d="M 610 183 L 657 202" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arrGreen)"/>
+  <text x="566" y="232" fill="#3fb950" font-size="10">近：相似度高</text>
+  <path d="M 610 186 C 640 250, 680 320, 706 362" fill="none" stroke="#f85149" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrRed)"/>
+  <text x="612" y="290" fill="#f85149" font-size="10">远：语义无关</text>
+
+  <!-- 国家-首都词对 -->
+  <circle cx="610" cy="340" r="5" fill="#58a6ff"/>
+  <text x="580" y="344" text-anchor="middle" fill="#c9d1d9" font-size="11">China</text>
+  <circle cx="700" cy="280" r="5" fill="#58a6ff"/>
+  <text x="742" y="272" text-anchor="middle" fill="#c9d1d9" font-size="11">Beijing</text>
+  <path d="M 616 336 C 645 322, 672 302, 694 286" fill="none" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrBlue)"/>
+
+  <circle cx="620" cy="430" r="5" fill="#58a6ff"/>
+  <text x="588" y="434" text-anchor="middle" fill="#c9d1d9" font-size="11">France</text>
+  <circle cx="710" cy="370" r="5" fill="#58a6ff"/>
+  <text x="752" y="366" text-anchor="middle" fill="#c9d1d9" font-size="11">Paris</text>
+  <path d="M 626 426 C 655 412, 682 392, 704 376" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrBlue)"/>
+
+  <text x="800" y="330" fill="#58a6ff" font-size="10">Beijing − China</text>
+  <text x="800" y="346" fill="#58a6ff" font-size="10">≈ Paris − France</text>
+  <text x="800" y="362" fill="#8b949e" font-size="10">「首都」方向可复用</text>
+
+  <!-- 无关词 -->
+  <circle cx="890" cy="150" r="5" fill="#8b949e"/>
+  <text x="890" y="136" text-anchor="middle" fill="#8b949e" font-size="11">calculus</text>
+  <text x="890" y="170" text-anchor="middle" fill="#8b949e" font-size="10">远离动物簇</text>
+
+  <!-- 右图注 -->
+  <rect x="500" y="524" width="450" height="130" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="516" y="548" fill="#8b949e" font-size="10">cat 的最近邻里是 cats、dog、kitten、pet 等，可用预训练向量直接查证</text>
+  <text x="516" y="570" fill="#8b949e" font-size="10">近邻检索按余弦相似度排序：夹角越小，语义越接近</text>
+  <text x="516" y="592" fill="#8b949e" font-size="10">one-hot 空间里任意两词距离相同；词向量把距离变成了语义信号</text>
+  <text x="516" y="614" fill="#8b949e" font-size="10">模型从未见过词义标注，几何结构全部来自上下文共现统计</text>
+  <text x="516" y="636" fill="#8b949e" font-size="10">限制：每个词只有一个固定向量，一词多义无法在此结构内区分</text>
+</svg>

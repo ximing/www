@@ -1,0 +1,111 @@
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="7" refX="7" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#8c959f"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="600" fill="#fbfcfe" rx="8"/>
+
+  <text x="480" y="36" text-anchor="middle" fill="#1f2328" font-size="17" font-weight="bold">同一批请求，两种消化方式：Node.js 事件循环 vs Jetty 线程池</text>
+  <text x="480" y="57" text-anchor="middle" fill="#57606a" font-size="12">Node.js 0.12（单线程轮询）　对照　Spring Boot 1.x + 内嵌 Jetty 9（每个请求一个线程）</text>
+
+  <!-- ============ 左：Node.js ============ -->
+  <rect x="20" y="76" width="452" height="396" rx="10" fill="#f0f5ff"/>
+  <text x="246" y="103" text-anchor="middle" fill="#1d4ed8" font-size="14" font-weight="bold">Node.js：事件循环（单线程）</text>
+
+  <!-- 请求列 -->
+  <rect x="40" y="126" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="143" text-anchor="middle" fill="#1f2328" font-size="11">R1</text>
+  <rect x="40" y="158" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="175" text-anchor="middle" fill="#1f2328" font-size="11">R2</text>
+  <rect x="40" y="190" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="207" text-anchor="middle" fill="#1f2328" font-size="11">R3</text>
+  <rect x="40" y="222" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="239" text-anchor="middle" fill="#1f2328" font-size="11">R4</text>
+  <rect x="40" y="254" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="271" text-anchor="middle" fill="#1f2328" font-size="11">R5</text>
+  <rect x="40" y="286" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="69" y="303" text-anchor="middle" fill="#1f2328" font-size="11">R6</text>
+  <text x="69" y="120" text-anchor="middle" fill="#57606a" font-size="10">同一批请求</text>
+
+  <!-- 请求 → 事件队列 -->
+  <line x1="98" y1="170" x2="146" y2="170" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="98" y1="234" x2="146" y2="234" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="98" y1="298" x2="146" y2="298" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- 事件队列 -->
+  <rect x="150" y="140" width="100" height="180" rx="6" fill="#dbe7ff"/>
+  <text x="200" y="164" text-anchor="middle" fill="#1d4ed8" font-size="12" font-weight="bold">事件队列</text>
+  <text x="200" y="186" text-anchor="middle" fill="#57606a" font-size="10">回调排队等待</text>
+  <rect x="166" y="200" width="68" height="14" rx="3" fill="#ffffff"/>
+  <rect x="166" y="222" width="68" height="14" rx="3" fill="#ffffff"/>
+  <rect x="166" y="244" width="68" height="14" rx="3" fill="#ffffff"/>
+  <rect x="166" y="266" width="68" height="14" rx="3" fill="#ffffff"/>
+  <rect x="166" y="288" width="68" height="14" rx="3" fill="#ffffff"/>
+
+  <!-- 队列 → 事件循环 -->
+  <line x1="250" y1="230" x2="308" y2="230" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- 事件循环 -->
+  <circle cx="370" cy="230" r="56" fill="#2563eb"/>
+  <text x="370" y="224" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">事件循环</text>
+  <text x="370" y="243" text-anchor="middle" fill="#dbe7ff" font-size="11">唯一线程</text>
+  <text x="370" y="312" text-anchor="middle" fill="#57606a" font-size="11">回调在唯一线程上依次执行，</text>
+  <text x="370" y="329" text-anchor="middle" fill="#57606a" font-size="11">同步代码段执行完之前别的回调插不进来</text>
+
+  <!-- 左侧要点 -->
+  <text x="40" y="360" fill="#1f2328" font-size="11">· 模块级共享变量：同步段内天然安全</text>
+  <text x="40" y="382" fill="#1f2328" font-size="11">· 但同一时刻全服务只有这一个线程在干活</text>
+  <text x="40" y="404" fill="#1f2328" font-size="11">· 回调里跑重 CPU / 阻塞调用 ⇒ 所有请求排队</text>
+
+  <!-- ============ 右：Jetty ============ -->
+  <rect x="488" y="76" width="452" height="396" rx="10" fill="#effaf1"/>
+  <text x="714" y="103" text-anchor="middle" fill="#1a7f37" font-size="14" font-weight="bold">Jetty 9：线程池（每个请求一个线程）</text>
+
+  <!-- 请求列 -->
+  <rect x="508" y="126" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="143" text-anchor="middle" fill="#1f2328" font-size="11">R1</text>
+  <rect x="508" y="158" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="175" text-anchor="middle" fill="#1f2328" font-size="11">R2</text>
+  <rect x="508" y="190" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="207" text-anchor="middle" fill="#1f2328" font-size="11">R3</text>
+  <rect x="508" y="222" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="239" text-anchor="middle" fill="#1f2328" font-size="11">R4</text>
+  <rect x="508" y="254" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="271" text-anchor="middle" fill="#1f2328" font-size="11">R5</text>
+  <rect x="508" y="286" width="58" height="24" rx="4" fill="#ffffff"/>
+  <text x="537" y="303" text-anchor="middle" fill="#1f2328" font-size="11">R6</text>
+  <text x="537" y="120" text-anchor="middle" fill="#57606a" font-size="10">同一批请求</text>
+
+  <!-- 请求 → 线程池 -->
+  <line x1="566" y1="170" x2="612" y2="170" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="566" y1="234" x2="612" y2="234" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="566" y1="298" x2="612" y2="298" stroke="#8c959f" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- 线程池 -->
+  <rect x="616" y="126" width="300" height="210" rx="8" fill="#d9efe0"/>
+  <text x="766" y="150" text-anchor="middle" fill="#1a7f37" font-size="12" font-weight="bold">QueuedThreadPool（线程池）</text>
+  <text x="766" y="167" text-anchor="middle" fill="#57606a" font-size="10">请求绑定线程，全程由该线程处理</text>
+
+  <rect x="636" y="178" width="260" height="30" rx="4" fill="#ffffff"/>
+  <text x="766" y="197" text-anchor="middle" fill="#1f2328" font-size="11">线程 1　→　处理 R1</text>
+  <rect x="636" y="218" width="260" height="30" rx="4" fill="#ffffff"/>
+  <text x="766" y="237" text-anchor="middle" fill="#1f2328" font-size="11">线程 2　→　处理 R2</text>
+  <rect x="636" y="258" width="260" height="30" rx="4" fill="#ffffff"/>
+  <text x="766" y="277" text-anchor="middle" fill="#1f2328" font-size="11">线程 3　→　处理 R3</text>
+  <rect x="636" y="298" width="260" height="30" rx="4" fill="#ffffff"/>
+  <text x="766" y="317" text-anchor="middle" fill="#1f2328" font-size="11">线程 4　→　处理 R4</text>
+
+  <text x="766" y="354" text-anchor="middle" fill="#57606a" font-size="11">R5、R6 在队列中等空闲线程</text>
+
+  <!-- 右侧要点 -->
+  <text x="508" y="382" fill="#1f2328" font-size="11">· 多个请求在多个核上真正并行</text>
+  <text x="508" y="404" fill="#1f2328" font-size="11">· 线程在 IO 上阻塞只挂住自己，别的线程照跑</text>
+  <text x="508" y="426" fill="#1f2328" font-size="11">· 单例 Bean 的成员变量被所有线程共享 ⇒ 要自己保证安全</text>
+
+  <!-- ============ 底部结论 ============ -->
+  <rect x="20" y="492" width="920" height="80" rx="10" fill="#fff4e5"/>
+  <text x="480" y="524" text-anchor="middle" fill="#1f2328" font-size="13">同一个成员变量：Node.js 里永远只有一个线程碰它，怎么写都安全；</text>
+  <text x="480" y="548" text-anchor="middle" fill="#1f2328" font-size="13">Java 里它被所有请求线程并发读写，必须自己保证线程安全——这就是转 Java 后的第一课。</text>
+</svg>

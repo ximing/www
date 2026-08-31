@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 410" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <!-- Left: Configuration -->
+  <rect x="20" y="30" width="250" height="300" rx="6" fill="#ffffff" stroke="#57606a" stroke-width="1.2"/>
+  <text x="145" y="56" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2328">Configuration（src/state.ts）</text>
+  <text x="36" y="82" font-size="12" fill="#57606a">fields 数组（按序装配）</text>
+
+  <g font-size="12.5" font-family="Menlo, Consolas, monospace">
+    <rect x="36" y="92" width="218" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="46" y="109" fill="#1f2328">0  doc</text>
+    <rect x="36" y="124" width="218" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="46" y="141" fill="#1f2328">1  selection</text>
+    <rect x="36" y="156" width="218" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="46" y="173" fill="#1f2328">2  storedMarks</text>
+    <rect x="36" y="188" width="218" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="46" y="205" fill="#1f2328">3  scrollToSelection</text>
+    <rect x="36" y="220" width="218" height="26" rx="4" fill="#fff8e1" stroke="#bf8700"/>
+    <text x="46" y="237" fill="#1f2328">4  "history$"</text>
+    <text x="152" y="237" font-size="11" font-family="-apple-system, 'PingFang SC', sans-serif" fill="#9a6700">history 插件</text>
+    <rect x="36" y="252" width="218" height="26" rx="4" fill="#fff8e1" stroke="#bf8700"/>
+    <text x="46" y="269" fill="#1f2328">5  "counter$"</text>
+    <text x="152" y="269" font-size="11" font-family="-apple-system, 'PingFang SC', sans-serif" fill="#9a6700">自定义插件</text>
+  </g>
+
+  <text x="36" y="302" font-size="11.5" fill="#57606a">前 4 个是内置字段（baseFields），</text>
+  <text x="36" y="318" font-size="11.5" fill="#57606a">插件字段按插件数组顺序追加</text>
+
+  <!-- Right: EditorState instance -->
+  <rect x="470" y="30" width="270" height="300" rx="6" fill="#ffffff" stroke="#57606a" stroke-width="1.2"/>
+  <text x="605" y="56" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2328">EditorState 实例</text>
+  <text x="486" y="82" font-size="12" fill="#57606a">字段值直接写成实例属性</text>
+
+  <g font-size="12.5" font-family="Menlo, Consolas, monospace">
+    <rect x="486" y="92" width="238" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="496" y="109" fill="#1f2328">doc: Node</text>
+    <rect x="486" y="124" width="238" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="496" y="141" fill="#1f2328">selection: Selection</text>
+    <rect x="486" y="156" width="238" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="496" y="173" fill="#1f2328">storedMarks: Mark[] | null</text>
+    <rect x="486" y="188" width="238" height="26" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="496" y="205" fill="#1f2328">scrollToSelection: number</text>
+    <rect x="486" y="220" width="238" height="26" rx="4" fill="#fff8e1" stroke="#bf8700"/>
+    <text x="496" y="237" fill="#1f2328">"history$": HistoryState</text>
+    <rect x="486" y="252" width="238" height="26" rx="4" fill="#fff8e1" stroke="#bf8700"/>
+    <text x="496" y="269" fill="#1f2328">"counter$": number</text>
+  </g>
+
+  <text x="486" y="302" font-size="11.5" fill="#57606a">属性名就是字段名，</text>
+  <text x="486" y="318" font-size="11.5" fill="#57606a">插件字段名就是 key 字符串</text>
+
+  <!-- Arrows -->
+  <g stroke="#57606a" stroke-width="1.1" fill="none">
+    <line x1="254" y1="105" x2="482" y2="105" marker-end="url(#arrow)"/>
+    <line x1="254" y1="137" x2="482" y2="137" marker-end="url(#arrow)"/>
+    <line x1="254" y1="169" x2="482" y2="169" marker-end="url(#arrow)"/>
+    <line x1="254" y1="201" x2="482" y2="201" marker-end="url(#arrow)"/>
+    <line x1="254" y1="233" x2="482" y2="233" marker-end="url(#arrow)"/>
+    <line x1="254" y1="265" x2="482" y2="265" marker-end="url(#arrow)"/>
+  </g>
+  <text x="368" y="88" text-anchor="middle" font-size="11.5" fill="#57606a">init / apply 按此顺序逐个执行</text>
+
+  <!-- Bottom strip -->
+  <rect x="20" y="348" width="720" height="48" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="36" y="369" font-size="12.5" font-family="Menlo, Consolas, monospace" fill="#1f2328">historyKey.getState(state)  ≡  state["history$"]</text>
+  <text x="36" y="387" font-size="11.5" fill="#57606a">key 字符串的三重身份：fields 数组里的字段名 ／ state 实例的属性名 ／ config.pluginsByKey 的索引</text>
+</svg>

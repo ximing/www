@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>markdown：文档与 Markdown 的双向转换 | 一席之地</title><meta name="description" content="prosemirror-markdown 的双向转换机制：MarkdownSerializer 的渲染表与状态机，markdown-it token 流接入 MarkdownParseState 的栈，以及与 DOM 通路的对照。"><meta property="og:title" content="markdown：文档与 Markdown 的双向转换"><meta property="og:description" content="prosemirror-markdown 的双向转换机制：MarkdownSerializer 的渲染表与状态机，markdown-it token 流接入 MarkdownParseState 的栈，以及与 DOM 通路的对照。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="markdown：文档与 Markdown 的双向转换"><meta name="twitter:description" content="prosemirror-markdown 的双向转换机制：MarkdownSerializer 的渲染表与状态机，markdown-it token 流接入 MarkdownParseState 的栈，以及与 DOM 通路的对照。"><meta name="keywords" content="源码分析"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/prosemirror/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《ProseMirror 源码分析》· 第 50 篇 · 共 60 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">markdown：文档与 Markdown 的双向转换</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2018-09-05</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/源码分析/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#源码分析</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>changeset 用 span 表示两份文档之间的差异。本文说明文档与 Markdown 文本之间的转换。prosemirror-markdown 做两件事：把文档序列化成 Markdown 字符串，把 Markdown 字符串解析回文档。参考代码是 prosemirror-markdown 的 6b95bfe，实现集中在三个文件：<code class="language-text">src/to_markdown.ts</code>、<code class="language-text">src/from_markdown.ts</code>、<code class="language-text">src/schema.ts</code>，外加一个只做转发的 <code class="language-text">src/index.ts</code>。</p>
+<p><a href="/post/2017/07-19-ProseMirrorModel%E4%B9%8BDOMSerializer/">第 9 篇的 DOMSerializer</a> 和 <a href="/post/2017/08-02-ProseMirrorModel%E4%B9%8BDOMParser/">第 10 篇的 DOMParser</a> 处理的是 HTML 这条外部格式通路，规则全部挂在 schema 上。Markdown 通路使用独立的序列化和解析配置表，词法分析由 markdown-it 完成。下文分别说明两个方向的实现及其与 DOM 通路的差异。</p>
+<h2 id="系列目录">系列目录<a aria-hidden="true" tabindex="-1" href="#系列目录"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>日期</th><th>标题</th></tr></thead><tbody><tr><td>05-10</td><td><a href="/post/2017/05-10-ProseMirror%E5%BC%80%E7%AF%87%E5%AF%8C%E6%96%87%E6%9C%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%BE/">ProseMirror 源码分析开篇：富文本编辑器到底难在哪</a></td></tr><tr><td>05-17</td><td><a href="/post/2017/05-17-ProseMirror%E4%BB%93%E5%BA%93%E5%85%A8%E6%99%AF%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86/">ProseMirror 仓库全景：22 个包怎么分工</a></td></tr><tr><td>05-24</td><td><a href="/post/2017/05-24-ProseMirror%E8%B7%91%E9%80%9ADemo%E4%B8%8E%E6%96%87%E6%A1%A3JSON%E7%BB%93%E6%9E%84/">跑通一个最小 ProseMirror：先看文档长什么样</a></td></tr><tr><td>06-07</td><td><a href="/post/2017/06-07-ProseMirrorModel%E4%B9%8BNode%E4%B8%8EFragment/">ProseMirror model（上）：Node 与 Fragment，文档树的骨架</a></td></tr><tr><td>06-14</td><td><a href="/post/2017/06-14-ProseMirrorModel%E4%B9%8BMark/">ProseMirror model（中）：Mark，内联格式怎么挂在文本上</a></td></tr><tr><td>06-21</td><td><a href="/post/2017/06-21-ProseMirrorModel%E4%B9%8BSchema%E4%B8%8E%E5%86%85%E5%AE%B9%E8%A1%A8%E8%BE%BE%E5%BC%8F/">ProseMirror model（下）：Schema 与 content expression，文档的类型系统</a></td></tr><tr><td>07-05</td><td><a href="/post/2017/07-05-ProseMirrorModel%E4%B9%8BResolvedPos/">ResolvedPos：一个数字位置怎么变成路径</a></td></tr><tr><td>07-12</td><td><a href="/post/2017/07-12-ProseMirrorModel%E4%B9%8BSlice%E4%B8%8EReplace/">Slice 与 replace：切一块文档出来再塞回去</a></td></tr><tr><td>07-19</td><td><a href="/post/2017/07-19-ProseMirrorModel%E4%B9%8BDOMSerializer/">DOMSerializer：文档怎么变成 DOM 和 HTML</a></td></tr><tr><td>08-02</td><td><a href="/post/2017/08-02-ProseMirrorModel%E4%B9%8BDOMParser/">DOMParser：parseDOM 规则与 HTML 解析</a></td></tr><tr><td>08-09</td><td><a href="/post/2017/08-09-ProseMirrorModel%E4%B9%8BDiff/">findDiffStart / findDiffEnd：两份文档怎么求差</a></td></tr><tr><td>08-16</td><td><a href="/post/2017/08-16-ProseMirrorModel%E6%94%B6%E5%AE%98Node%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95%E5%85%A8%E6%99%AF/">model 收官：Node 上的辅助方法与位置约定总结</a></td></tr><tr><td>09-06</td><td><a href="/post/2017/09-06-ProseMirrorTransform%E4%B9%8BStep%E6%8A%BD%E8%B1%A1/">ProseMirror transform（上）：Step 抽象，所有修改的最小单位</a></td></tr><tr><td>09-20</td><td><a href="/post/2017/09-20-ProseMirrorTransform%E4%B9%8BReplaceStep%E4%B8%8EFitter/">ProseMirror transform（下）：ReplaceStep 与 Fitter，最复杂的一步</a></td></tr><tr><td>10-03</td><td><a href="/post/2017/10-03-ProseMirrorTransform%E4%B9%8BStepMap/">StepMap：一步修改怎么映射每个位置</a></td></tr><tr><td>10-11</td><td><a href="/post/2017/10-11-ProseMirrorTransform%E4%B9%8BMapping%E4%B8%8ERebase/">Mapping：多步映射的链式合并，rebase 的地基</a></td></tr><tr><td>10-18</td><td><a href="/post/2017/10-18-ProseMirrorTransform%E4%B9%8B%E7%BB%93%E6%9E%84%E5%88%A4%E6%96%AD/">structure.ts：split/join/lift/wrap 的可达性判断</a></td></tr><tr><td>10-25</td><td><a href="/post/2017/10-25-ProseMirrorTransform%E4%B9%8BTransform%E7%B1%BB/">Transform 类：构建修改的 API 层</a></td></tr><tr><td>11-08</td><td><a href="/post/2017/11-08-ProseMirrorState%E4%B9%8BEditorState/">ProseMirror state（上）：EditorState，不可变编辑器状态</a></td></tr><tr><td>11-15</td><td><a href="/post/2017/11-15-ProseMirrorState%E4%B9%8BSelection%E4%BD%93%E7%B3%BB/">Selection 体系：四种选区与选区书签</a></td></tr><tr><td>11-22</td><td><a href="/post/2017/11-22-ProseMirrorState%E4%B9%8BTransaction/">Transaction：Transform 加上状态语义</a></td></tr><tr><td>12-06</td><td><a href="/post/2017/12-06-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8A/">Plugin 系统（上）：StateField 与插件状态</a></td></tr><tr><td>12-13</td><td><a href="/post/2017/12-13-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8B/">Plugin 系统（下）：props、appendTransaction 与 filterTransaction</a></td></tr><tr><td>12-20</td><td><a href="/post/2017/12-20-ProseMirrorState%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%8F%92%E4%BB%B6%E7%A4%BA%E4%BE%8B/">state 收官：动手写三个插件验证理解</a></td></tr><tr><td>01-03</td><td><a href="/post/2018/01-03-ProseMirrorView%E4%B9%8BEditorView%E6%80%BB%E8%A7%88/">ProseMirror view（上）：EditorView，状态与 DOM 之间的桥</a></td></tr><tr><td>01-10</td><td><a href="/post/2018/01-10-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8A/">ViewDesc（上）：文档到 DOM 的描述树</a></td></tr><tr><td>01-17</td><td><a href="/post/2018/01-17-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8B/">ViewDesc（下）：增量更新怎么做到只改动的部分</a></td></tr><tr><td>02-07</td><td><a href="/post/2018/02-07-ProseMirrorView%E4%B9%8BDOMObserver%E4%B8%8E%E8%AF%BB%E5%9B%9E/">DOMObserver 与 readDOMChange：浏览器改了 DOM，怎么读回文档</a></td></tr><tr><td>02-14</td><td><a href="/post/2018/02-14-ProseMirrorView%E4%B9%8B%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%AE%A1%E7%BA%BF/">input.ts：从 keydown 到 dispatchTransaction 的输入管线</a></td></tr><tr><td>02-21</td><td><a href="/post/2018/02-21-ProseMirrorView%E4%B9%8B%E9%80%89%E5%8C%BA%E5%90%8C%E6%AD%A5/">选区同步：state 选区与 DOM 选区的双向对齐</a></td></tr><tr><td>02-28</td><td><a href="/post/2018/02-28-ProseMirrorView%E4%B9%8BComposition%E4%B8%8EIME/">Composition 与 IME：中文输入法事件的处理</a></td></tr><tr><td>03-07</td><td><a href="/post/2018/03-07-ProseMirrorView%E4%B9%8BNodeView%E4%B8%8EMarkView/">NodeView 与 MarkView：把渲染权交给你</a></td></tr><tr><td>03-14</td><td><a href="/post/2018/03-14-ProseMirrorView%E4%B9%8BDecoration%E4%BD%93%E7%B3%BB/">Decoration 体系：不修改文档的视觉标注</a></td></tr><tr><td>03-21</td><td><a href="/post/2018/03-21-ProseMirrorView%E4%B9%8B%E5%89%AA%E8%B4%B4%E6%9D%BF/">clipboard：复制粘贴的序列化与解析</a></td></tr><tr><td>04-04</td><td><a href="/post/2018/04-04-ProseMirrorView%E4%B9%8B%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/">domcoords：屏幕坐标与文档位置的双向换算</a></td></tr><tr><td>04-11</td><td><a href="/post/2018/04-11-ProseMirrorView%E4%B9%8B%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%AE%E5%BC%82%E8%A1%A5%E4%B8%81/">browser.ts：浏览器差异补丁集</a></td></tr><tr><td>04-18</td><td><a href="/post/2018/04-18-ProseMirrorView%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%9C%80%E5%B0%8F%E7%BC%96%E8%BE%91%E5%99%A8/">view 收官：不用官方扩展，手写一个最小可用编辑器</a></td></tr><tr><td>05-09</td><td><a href="/post/2018/05-09-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bkeymap/">扩展（上）：keymap，最小的插件</a></td></tr><tr><td>05-16</td><td><a href="/post/2018/05-16-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcommands%E5%91%BD%E4%BB%A4%E4%BD%93%E7%B3%BB/">commands：命令的签名约定与组合器</a></td></tr><tr><td>05-23</td><td><a href="/post/2018/05-23-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bhistory/">history：undo/redo 栈与 rebasing</a></td></tr><tr><td>06-06</td><td><a href="/post/2018/06-06-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Binputrules/">inputrules：「# 空格」变成标题是怎么实现的</a></td></tr><tr><td>06-13</td><td><a href="/post/2018/06-13-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaBasic/">schema-basic：官方基础文档结构</a></td></tr><tr><td>06-20</td><td><a href="/post/2018/06-20-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaList%E4%B8%8E%E5%88%97%E8%A1%A8%E5%91%BD%E4%BB%A4/">schema-list：列表节点与最复杂的一批命令</a></td></tr><tr><td>07-04</td><td><a href="/post/2018/07-04-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bgapcursor/">gapcursor：光标落不进去的地方怎么办</a></td></tr><tr><td>07-11</td><td><a href="/post/2018/07-11-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bdropcursor/">dropcursor：拖拽时的插入位置指示</a></td></tr><tr><td>07-18</td><td><a href="/post/2018/07-18-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bmenu/">menu：菜单栏组件体系</a></td></tr><tr><td>08-01</td><td><a href="/post/2018/08-01-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcollab%E5%8D%8F%E4%BD%9C%E5%8E%9F%E7%90%86/">collab（上）：协作编辑的 rebase 原理</a></td></tr><tr><td>08-08</td><td><a href="/post/2018/08-08-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcollab%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82/">collab（下）：receiveTransaction 与整个收发循环</a></td></tr><tr><td>08-15</td><td><a href="/post/2018/08-15-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bchangeset/">changeset：变更集的计算与展示</a></td></tr><tr><td>09-05</td><td>markdown：文档与 Markdown 的双向转换（本篇）</td></tr></tbody></table></div>
+<h2 id="包的结构">包的结构<a aria-hidden="true" tabindex="-1" href="#包的结构"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p><code class="language-text">src/index.ts</code> 的导出清单很短：schema、MarkdownParser 与 defaultMarkdownParser、ParseSpec 类型、MarkdownSerializer 与 defaultMarkdownSerializer、MarkdownSerializerState。schema.ts 里是一个内置 schema，节点和 schema-basic 那套基本对应，每个节点照样带 parseDOM 和 toDOM，所以它同时支持 DOM 通路；差异有几处：heading 的内容表达式收紧成 (text | image)*，code_block 多一个 params 属性记录 fence 后面的信息串，两种列表多 tight 属性，em 的 parseDOM 额外处理了 font-style 为 normal 时清除 mark 的规则。defaultMarkdownParser 和 defaultMarkdownSerializer 默认都针对这份 schema。两个方向的转换共用 schema 这个概念，但实现上互不相干，只用其中一个方向没有问题。</p>
+<span class="prose-figure prose-figure-svg" style="aspect-ratio:800 / 310"><img src="/linked/78a7f4bd765ede906815cf5d1baed04c-markdown-pipeline.svg" alt="Markdown 双向转换管线" width="800" height="310" loading="lazy" decoding="async" class="prose-img-placeholder"></span>
+<p>图里两行是两条独立管线。序列化方向，MarkdownSerializer 拿 nodes、marks 两张配置表驱动 MarkdownSerializerState，状态机把文档树走一遍，产出字符串。解析方向，markdown-it 先把文本切成线性 token 流，tokenHandlers 把每种 token 映射成 MarkdownParseState 的栈操作，栈收成文档。</p>
+<h2 id="序列化两张表驱动一个状态机">序列化：两张表驱动一个状态机<a aria-hidden="true" tabindex="-1" href="#序列化两张表驱动一个状态机"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>MarkdownSerializer 的构造器收三样东西：nodes 表把节点类型名映射到渲染函数，marks 表把 mark 类型名映射到 MarkSerializerSpec，再加 options（escapeExtraCharacters、hardBreakNodeName、strict）。serialize(content) 先合并构造时的 options 和调用时传入的 options，之后主体只有三行：new 一个 MarkdownSerializerState，调 renderContent 走完文档，返回 state.out。</p>
+<p>节点渲染函数的签名是 (state, node, parent, index) => void，带上 parent 和 index 是因为有些渲染要看相邻节点。defaultMarkdownSerializer 里几个有代表性的：</p>
+<ul>
+<li>blockquote 调 state.wrapBlock(”> ”, null, node, f)。wrapBlock 把 ”> ” 累加进 state.delim，之后每次 write 在行首自动补这个前缀，渲染完恢复旧值。嵌套引用的 ”> > ” 就是 delim 逐层累加出来的。</li>
+<li>code_block 先在内容里用 /`{3,}/ 找最长的连续反引号串（只统计三个及以上的），fence 取得比它再长一个，内容里出现三个连续反引号时围栏就用四个。</li>
+<li>ordered_list 用起始序号加 childCount 推出最大序号的宽度，补齐空格让 “9.” 和 “10.” 的点号对齐。</li>
+<li>image 输出 <code class="language-text">![alt](src "title")</code> 形式，src 里的圆括号、title 里的引号都要转义。</li>
+</ul>
+<p>marks 表的规格是 {open, close, mixable, expelEnclosingWhitespace, escape}，open 和 close 可以是字符串也可以是函数。link 用函数：open 里调 isPlainURL，链接文本恰好等于 href、href 带协议前缀且没有 title 时输出 ”&#x3C;” 走 autolink 形式，否则输出 "<a href="href">"；close 对应输出 ”>” 或 "</a>"。code mark 的 escape: false，内容不转义，包裹用的反引号数量由 backticksFor 按内容里最长反引号串决定，旁边还要视情况补空格。text 节点的渲染是 state.text(node.text, !state.inAutolink)，autolink 内部不转义。</p>
+<p>真正干活的是 MarkdownSerializerState。字段不多：out 是累积输出，delim 是当前行首前缀，closed 记录上一个关闭的块。</p>
+<p>write 里有个小机关：delim 非空且当前处于行首（atBlank，即 out 为空或以换行结尾）时，先把 delim 写进 out 再写内容，嵌套块里每一行的前缀就是这样补上的。text 方法按换行拆行，每行开头调一次无参 write，专门触发这个补前缀逻辑。</p>
+<p>closeBlock 只记录待关闭的块。它不往 out 写任何东西，只是把节点记到 this.closed：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token function">closeBlock</span><span class="token punctuation">(</span>node<span class="token operator">:</span> Node<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>closed <span class="token operator">=</span> node
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>换行推迟到下一次 write 里的 flushClose：先补一个换行结束当前行，再按 size 参数补空行，默认 size 2 即块与块之间空一行。推迟写的好处有两个：最后一个块后面不会多出空行；空行数量可以由下一个块决定。renderList 里两个同类型列表相邻时用 flushClose(3) 多隔一行，tight 列表的列表项之间用 flushClose(1) 只换行不空行。</p>
+<p>内联内容的渲染在 renderInline，这是整个文件最绕的一段。它维护一个 active: Mark[] 表示当前打开的 mark 序列，遍历子节点时逐节点比对：</p>
+<ol>
+<li>先处理 expelEnclosingWhitespace。em 和 strong 都带这个标记，因为 CommonMark 不允许强调标记内包裹空白。文本节点首尾的空白如果落在即将打开或即将关闭的 mark 里，就挪到 mark 外面输出，前导空白先写，尾随空白缓存到 trailing 变量里等 mark 关闭后再写。</li>
+<li>mixable mark 允许重排。em、strong、link 都是 mixable，「<em>a <strong>b</strong></em>」和「<strong>a <em>b</em></strong>」这种开闭顺序可以互换，代码把当前节点的 mark 序列尽量重排成与 active 对齐。看个具体例子：active 是 [strong]，下一个文本节点的 marks 是 [em, strong]，不重排的话公共前缀对不上，得先关 strong、开 em、再开 strong；把节点侧重排成 [strong, em] 之后公共前缀是 1，只需要补开一个 em。</li>
+<li>算 keep，即新旧 mark 序列的公共前缀长度。先循环弹出并关闭 active 尾部，再把新 mark 逐个压入并输出开符号。</li>
+<li>code mark（escape: false）要求处于最内层，整段文本连同反引号一次性写出，中间不做任何转义。</li>
+</ol>
+<p>forEach 走完之后还要手动补调一次 progress(null, 0, parent.childCount)，把还开着的 mark 全部关闭、把缓存的尾随空白写出去，段尾的闭符号全靠这一下。</p>
+<p>esc 函数负责转义。行内转义 ` * \ ~ [ ] _，下划线夹在词中间时不转；行首还要额外处理 ”- ”、”+ ”、”> ”、”#” 开头和 “1.” 这种有序列表开头。hard_break 的渲染也有细节：只有后面还跟着非 hard_break 的兄弟节点时才输出 “\\n”，结尾连续的 hard_break 直接丢弃；renderInline 里还会把结尾 hard_break 上的 mark 剥掉，避免闭符号前紧挨换行触发解析边界情况。</p>
+<p>strict 选项控制两张表覆盖不全时的行为。默认 strict 下，render 遇到没有渲染函数的节点类型直接抛错，getMark 遇到没有规格的 mark 同样抛错。strict: false 时 getMark 返回 blankMark（开闭都是空串），非叶子节点降级为只渲染内容，inline 内容走 renderInline，块级内容走 renderContent 再补 closeBlock。叶子节点在 strict: false 下会被整个丢掉，它没有内容可渲染，自定义的嵌入节点要特别注意这一条。</p>
+<p>默认 marks 表包含 em、strong、link、code 四项，与 schema-basic 的 mark 集对应。自定义 schema 包含未配置的 mark 时，导出会抛错，避免遗漏配置后静默导出。</p>
+<h2 id="解析markdown-it-出-token栈归我们">解析：markdown-it 出 token，栈归我们<a aria-hidden="true" tabindex="-1" href="#解析markdown-it-出-token栈归我们"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>MarkdownParser 的构造器收 schema、tokenizer（一个 markdown-it 实例）和 tokens 表。defaultMarkdownParser 用 MarkdownIt(“commonmark”, {html: false})，即 CommonMark 模式且禁用内联 HTML。</p>
+<p>markdown-it 把文本切成线性 token 数组。块级结构用成对的 xxx_open 和 xxx_close 表示嵌套；内联结构统一装进一个 inline token，它的 children 里再放 text、strong_open、strong_close 这类内联 token；code_inline、code_block、fence 是单 token，内容直接放在 token.content 里。</p>
+<p>tokens 表把 token 名映射到 ParseSpec，一共四种映射：block 对应一个包装块节点，open 开栈帧、close 收帧；node 对应单 token 叶子节点，hr、hardbreak、image 走这条；mark 对应开闭改活动 mark 集合；ignore 直接丢弃。attrs 可以是静态对象，getAttrs(token, tokens, i) 存在时优先，attrs 本身给成函数也会被调用，默认表里多数走 getAttrs。</p>
+<p>noCloseToken: true 告诉生成器这个 token 没有 open/close 对，block 类（code_block、fence）生成的 handler 变成 openNode、addText、closeNode 三连，mark 类（code_inline）变成 openMark、addText、closeMark 三连。markdown-it 给这类 token 的 content 末尾带换行，addText 之前统一过一道 withoutTrailingNewline 去掉。</p>
+<p>tokenHandlers 函数在构造 parser 时把整张表预生成成 handlers 字典，block 类会生成 type_open 和 type_close 两个 handler，另外补三个默认 handler：text 直接加文本，inline 对 children 递归调 parseTokens，softbreak 默认加一个空格。inline 这个递归意味着块级的节点栈和内联的 mark 集合共用同一套状态机，不需要为内联单开一套解析流程。解析时遇到没有 handler 的 token 类型直接抛错。</p>
+<p>MarkdownParseState 的栈是这个文件的核心。栈帧是 {type, attrs, content, marks}，初始栈底是 topNodeType。top() 取栈顶帧，push() 往栈顶帧的 content 塞节点，外面套一个栈非空的守卫。操作集：</p>
+<ul>
+<li>openNode(type, attrs) 压一层新帧；closeNode() 弹帧，用 type.createAndFill(attrs, content) 建成节点塞进新栈顶的 content。</li>
+<li>openMark、closeMark 改栈顶帧的 marks 集合；addText 用当前 marks 建文本节点，顺手调 maybeMerge 把它和前一个 marks 相同的文本节点合并，相邻同格式文本不会碎成多个节点。</li>
+<li>addNode 同样走 createAndFill，失败返回 null 静默丢弃。注意这里不抛错：token 映射出的结构不满足 schema 约束时，这一段内容就没了。</li>
+</ul>
+<p>parse() 跑完所有 token 后还有一行收尾：do { doc = state.closeNode() } while (state.stack.length)，把没闭合的帧全部收掉，最后兜底返回空文档。markdown-it 保证 open/close 配对，这个循环正常只跑一轮收掉 topNode，但写法上对不平衡输入也是安全的。</p>
+<span class="prose-figure prose-figure-svg" style="aspect-ratio:780 / 400"><img src="/linked/4c5745819cfee3a9664f8e9ee373edc0-markdown-parse-stack.svg" alt="MarkdownParseState 的栈变化" width="780" height="400" loading="lazy" decoding="async" class="prose-img-placeholder"></span>
+<p>defaultMarkdownParser 的 tokens 表一共十五项：blockquote、paragraph、list_item、bullet_list、ordered_list、heading、code_block、fence 是 block；hr、image、hardbreak 是 node；em、strong、link、code_inline 是 mark。几个取 attrs 的例子：ordered_list 从 token 上读 start 属性，tight 由 listIsTight 判断（从当前位置往后找第一个非 list_item_open 的 token，看它的 hidden 字段，markdown-it 用这个字段标记 tight 列表里的段落）；heading 的 level 从 tok.tag.slice(1) 来；image 的 alt 取 children[0].content。</p>
+<h2 id="和-dom-通路的对照">和 DOM 通路的对照<a aria-hidden="true" tabindex="-1" href="#和-dom-通路的对照"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>DOMParser 与 MarkdownParser 都将外部格式转换为文档，但规则配置和输入处理方式不同。</p>
+<p>规则的位置。DOMParser 的规则写在 schema 上，每个节点和 mark 自带 parseDOM，DOMSerializer 用同一套 schema 上的 toDOM。Markdown 通路的两张表（序列化的 nodes/marks、解析的 tokens）独立于 schema，构造 serializer 和 parser 时传入。后果是 schema 每加一个自定义节点，Markdown 这边要同步维护两处配置：漏了序列化项，导出时抛错（strict: false 时降级为忽略该节点、只渲染内容）；漏了解析项，输入出现对应语法时抛错。DOM 通路没有这个问题，代价是规则分散在 schema 各处，想换一套 HTML 方言就得动 schema 定义。</p>
+<p>输入的形态。DOMParser 拿到的是浏览器已经解析好的 DOM 树，工作是树到树的规则匹配，难在输入是任意来源的脏 HTML：不合法嵌套、缺少包装节点、上下文不匹配都要当场修，它内部那个上下文栈大半代码在做修复。MarkdownParser 拿到的是 markdown-it 切好的线性 token 流，结构受 CommonMark 约束，open/close 配对有保证，所以它的栈只有压帧、收帧、改 marks 三种操作，没有任何修复逻辑。复杂度没有消失，是转移给了 markdown-it，这也是这个包愿意多一个依赖的原因。</p>
+<p>输出的形态决定序列化的写法。DOMSerializer 输出的是树，schema 上 toDOM 的声明式描述就够用。Markdown 输出是带行首前缀、空行规则、mark 嵌套顺序的文本流，「段落之间空一行但最后一个段落后面不空」这种约束声明式表达不了，所以必须有一个显式状态机：closed 推迟换行，delim 累积行首前缀，active mark 栈管理开闭顺序。</p>
+<p>失败策略也不一样。DOMParser 尽量修复，mark 加不上就丢 mark，节点缺包装就补包装，目标是尽力读出内容。Markdown 通路的默认行为是抛错，addNode 那里静默丢弃已经是它最宽容的部分。</p>
+<p>还有一个对称性问题。DOM 通路的序列化和解析共用 schema 上的声明，toDOM 和 parseDOM 写在同一个节点上，天然容易保持一致。Markdown 通路的两张表分开维护：序列化表里 code_block 的 fence 逻辑是一套代码，解析表里 fence 到 code_block 的映射是另一套代码，两边的一致性没有任何机制保证。这个包的测试用同一个「文本、文档」对同时断言两个方向，parse(text) 要等于文档，serialize(doc) 要等于文本，相当于人工维护 round-trip 的一致性。</p>
+<h2 id="两种通路的适用范围">两种通路的适用范围<a aria-hidden="true" tabindex="-1" href="#两种通路的适用范围"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>DOMParser 适合处理剪贴板和 HTML 导入。输入可能来自网页或富文本工具，包含不合法嵌套、缺少包装节点或上下文不匹配等情况，DOMParser 的修复逻辑可以处理这些输入；规则由 schema 提供。</p>
+<p>prosemirror-markdown 适合以 Markdown 作为存储或交换格式，例如将文档保存为 .md，或与评论系统、静态站点生成器对接。输入和输出受 CommonMark 约束，nodes/marks 配置表决定输出格式。</p>
+<p>自定义节点需要同步维护 schema、序列化表和解析表。可以复制 defaultMarkdownSerializer 的 nodes、marks 以及 defaultMarkdownParser 的 tokens 后修改。使用 markdown-it 插件扩展表格或删除线语法时，也要在 tokens 表和 marks 表中补充对应映射。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="2uU5lF" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/09-05-ProseMirror扩展之markdown/&quot;],&quot;words&quot;:[0,1265],&quot;paragraphs&quot;:[0,53]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1265<!-- --> 字 · <!-- -->53<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2018/08-15-ProseMirror扩展之changeset/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">changeset：变更集的计算与展示</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/09-19-ProseMirror扩展之search/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">search：查找替换插件</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/prosemirror/" class="hover:text-accent transition-colors duration-200">《ProseMirror 源码分析》</a><span>· 第 50 篇 · 共 60 篇</span></div><div class="sm:col-start-1"><a href="/post/2018/08-15-ProseMirror扩展之changeset/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">changeset：变更集的计算与展示</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/09-19-ProseMirror扩展之search/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">search：查找替换插件</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2018/12-19-ProseMirror系列总结/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-19</time></a><a href="/post/2018/12-05-ProseMirror与其他编辑器架构对比/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-05</time></a><a href="/post/2018/11-21-ProseMirror之多包构建工程/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-11-21</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="1pvOq1" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/09-05-ProseMirror扩展之markdown/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="Z4ajeP" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95\&quot;&gt;系列目录&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%8C%85%E7%9A%84%E7%BB%93%E6%9E%84\&quot;&gt;包的结构&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%A4%E5%BC%A0%E8%A1%A8%E9%A9%B1%E5%8A%A8%E4%B8%80%E4%B8%AA%E7%8A%B6%E6%80%81%E6%9C%BA\&quot;&gt;序列化：两张表驱动一个状态机&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E8%A7%A3%E6%9E%90markdown-it-%E5%87%BA-token%E6%A0%88%E5%BD%92%E6%88%91%E4%BB%AC\&quot;&gt;解析：markdown-it 出 token，栈归我们&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%92%8C-dom-%E9%80%9A%E8%B7%AF%E7%9A%84%E5%AF%B9%E7%85%A7\&quot;&gt;和 DOM 通路的对照&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E4%B8%A4%E7%A7%8D%E9%80%9A%E8%B7%AF%E7%9A%84%E9%80%82%E7%94%A8%E8%8C%83%E5%9B%B4\&quot;&gt;两种通路的适用范围&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

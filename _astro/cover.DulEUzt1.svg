@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="55%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.35" cy="0.4" r="0.75">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <rect width="1600" height="600" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="110" cy="520" r="2.5"/><circle cx="170" cy="520" r="2.5"/><circle cx="230" cy="520" r="2.5"/><circle cx="290" cy="520" r="2.5"/><circle cx="350" cy="520" r="2.5"/><circle cx="410" cy="520" r="2.5"/><circle cx="470" cy="520" r="2.5"/><circle cx="530" cy="520" r="2.5"/>
+    <circle cx="110" cy="556" r="2.5"/><circle cx="170" cy="556" r="2.5"/><circle cx="230" cy="556" r="2.5"/><circle cx="290" cy="556" r="2.5"/><circle cx="350" cy="556" r="2.5"/><circle cx="410" cy="556" r="2.5"/><circle cx="470" cy="556" r="2.5"/><circle cx="530" cy="556" r="2.5"/>
+  </g>
+
+  <!-- left typography block -->
+  <text x="108" y="178" fill="#ddd6fe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" letter-spacing="6">NAT TRAVERSAL · REVERSE PROXY</text>
+  <text x="104" y="292" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="96" font-weight="700" letter-spacing="2">NRP</text>
+  <text x="110" y="352" fill="#ede9fe" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="24" letter-spacing="3">内网穿透 · 反向代理</text>
+  <path d="M 110 396 L 340 396" stroke="#ddd6fe" stroke-width="2" opacity="0.6"/>
+  <text x="110" y="436" fill="#ddd6fe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" letter-spacing="2" opacity="0.9">custom domain · HTTPS · WebSocket</text>
+
+  <!-- right NAT tunnel diagram -->
+  <!-- local server box -->
+  <rect x="880" y="232" width="190" height="116" rx="16" fill="#f5f3ff"/>
+  <text x="975" y="280" fill="#5b21b6" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="22" font-weight="600" text-anchor="middle">本地服务</text>
+  <text x="975" y="314" fill="#7c3aed" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" text-anchor="middle">:8080</text>
+
+  <!-- NAT wall -->
+  <g fill="#c4b5fd" opacity="0.8">
+    <rect x="1122" y="178" width="20" height="44" rx="3"/>
+    <rect x="1122" y="238" width="20" height="44" rx="3"/>
+    <rect x="1122" y="298" width="20" height="44" rx="3"/>
+    <rect x="1122" y="358" width="20" height="44" rx="3"/>
+  </g>
+  <text x="1132" y="158" fill="#ddd6fe" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="16" text-anchor="middle" opacity="0.85">NAT</text>
+
+  <!-- proxy node -->
+  <circle cx="1255" cy="290" r="56" fill="#ffffff"/>
+  <circle cx="1255" cy="290" r="38" fill="#7c3aed"/>
+  <path d="M 1240 290 L 1268 290 M 1255 276 L 1271 290 L 1255 304" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- internet cloud -->
+  <g fill="#f5f3ff">
+    <circle cx="1440" cy="262" r="40"/>
+    <circle cx="1486" cy="284" r="33"/>
+    <circle cx="1396" cy="288" r="28"/>
+    <rect x="1394" y="274" width="96" height="36" rx="18"/>
+  </g>
+  <text x="1440" y="298" fill="#5b21b6" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="20" font-weight="600" text-anchor="middle">公网</text>
+
+  <!-- tunnels -->
+  <path d="M 1078 289 L 1188 289" stroke="#fde047" stroke-width="5"/>
+  <path d="M 1172 279 L 1192 289 L 1172 299" stroke="#fde047" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="1078" y="271" fill="#fef9c3" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="13" text-anchor="middle">tunnel</text>
+  <path d="M 1318 310 L 1368 310" stroke="#fde047" stroke-width="5"/>
+  <path d="M 1354 301 L 1372 310 L 1354 319" stroke="#fde047" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 1185 349 L 1084 349" stroke="#ddd6fe" stroke-width="4" stroke-dasharray="8 7" opacity="0.8"/>
+  <path d="M 1098 340 L 1080 349 L 1098 358" stroke="#ddd6fe" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+</svg>

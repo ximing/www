@@ -1,0 +1,59 @@
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#8b949e"/></marker>
+  </defs>
+  <rect width="700" height="400" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">上下文、知识与技能</text>
+  <text x="350" y="46" text-anchor="middle" fill="#8b949e" font-size="11">Selection · Retrieval · Assembly · Provenance</text>
+
+  <rect x="40" y="62" width="300" height="30" rx="4" fill="#3a1a1a" stroke="#f85149" stroke-width="1"/>
+  <text x="190" y="82" text-anchor="middle" fill="#f85149" font-size="12">问题：只有 Token 预算和 AGENTS.md</text>
+
+  <text x="55" y="110" fill="#8b949e" font-size="11">全量装载，窗口被噪声占满</text>
+  <text x="55" y="130" fill="#8b949e" font-size="11">压缩时丢掉决策和未解决问题</text>
+  <text x="55" y="150" fill="#8b949e" font-size="11">全部工具定义一开始就注入</text>
+  <text x="55" y="170" fill="#8b949e" font-size="11">过期经验和错误版本进入上下文</text>
+  <text x="55" y="190" fill="#8b949e" font-size="11">秘密文件和无关目录没有挡住</text>
+
+  <text x="348" y="130" fill="#fd7e14" font-size="16" font-weight="bold">→</text>
+
+  <rect x="360" y="62" width="300" height="30" rx="4" fill="#1a3a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="510" y="82" text-anchor="middle" fill="#3fb950" font-size="12">解决：这一层实际要管的内容</text>
+
+  <text x="375" y="110" fill="#8b949e" font-size="11">Selection / Retrieval</text>
+  <text x="375" y="130" fill="#8b949e" font-size="11">按角色和步骤组装</text>
+  <text x="375" y="150" fill="#8b949e" font-size="11">Provenance / Scope</text>
+  <text x="375" y="170" fill="#8b949e" font-size="11">JIT：Skill 与工具定义按需加载</text>
+  <text x="375" y="190" fill="#8b949e" font-size="11">压缩保留清单 / 稳定前缀缓存</text>
+
+  <rect x="40" y="218" width="620" height="158" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="55" y="240" fill="#e6edf3" font-size="12" font-weight="bold">一次模型调用的上下文路径</text>
+
+  <rect x="55" y="258" width="120" height="48" rx="4" fill="#1a365d" stroke="#2a4a7f" stroke-width="1"/>
+  <text x="115" y="278" text-anchor="middle" fill="#58a6ff" font-size="11">材料</text>
+  <text x="115" y="294" text-anchor="middle" fill="#8b949e" font-size="10">规则 · 文件 · 观察</text>
+
+  <line x1="175" y1="282" x2="198" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="205" y="258" width="120" height="48" rx="4" fill="#3a2a1a" stroke="#5c4228" stroke-width="1"/>
+  <text x="265" y="278" text-anchor="middle" fill="#d29922" font-size="11">Selection</text>
+  <text x="265" y="294" text-anchor="middle" fill="#8b949e" font-size="10">当前角色和步骤</text>
+
+  <line x1="325" y1="282" x2="348" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="355" y="258" width="130" height="48" rx="4" fill="#1a4731" stroke="#236b4a" stroke-width="1"/>
+  <text x="420" y="278" text-anchor="middle" fill="#3fb950" font-size="11">Assembly</text>
+  <text x="420" y="294" text-anchor="middle" fill="#8b949e" font-size="10">常驻 + 按需 + 压缩</text>
+
+  <line x1="485" y1="282" x2="508" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="515" y="258" width="130" height="48" rx="4" fill="#2a1a3a" stroke="#46285c" stroke-width="1"/>
+  <text x="580" y="278" text-anchor="middle" fill="#a371f7" font-size="11">本轮上下文</text>
+  <text x="580" y="294" text-anchor="middle" fill="#8b949e" font-size="10">最小高信号集合</text>
+
+  <text x="55" y="332" fill="#8b949e" font-size="11">层① 的 allowed_paths 限制检索范围。Skill 对象在层⑤，这一层决定何时注入正文。</text>
+  <text x="55" y="350" fill="#8b949e" font-size="11">压缩保留决策、进度、未解决问题和验证方法。原始工具输出外置。</text>
+  <text x="55" y="368" fill="#484f58" font-size="11">观察从哪来：层②。谁在调用：层③。Memory / Skill 存哪：层⑤。</text>
+</svg>

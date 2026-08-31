@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 720" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+  </defs>
+
+  <rect width="1040" height="720" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">中间件把协调问题委托给 ZK/etcd 的分层关系</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">上层中间件只实现「读状态、按状态行动」；选主、成员关系、元数据一致由底层协调服务的共识协议保证</text>
+
+  <!-- ============ 上层：中间件层 ============ -->
+  <rect x="24" y="78" width="992" height="28" rx="4" fill="#eef2ff" stroke="#475569" stroke-width="0.8"/>
+  <text x="520" y="97" font-size="13" font-weight="600" fill="#1f2937" text-anchor="middle">中间件层 — 自己只实现读状态、按状态行动</text>
+
+  <!-- 四个中间件 -->
+  <rect x="44" y="120" width="220" height="76" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.1"/>
+  <text x="154" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Kafka controller</text>
+  <text x="56" y="162" font-size="10" fill="#64748b">· broker 在 ZK 建 /controller</text>
+  <text x="56" y="178" font-size="10" fill="#64748b">  临时节点抢主</text>
+  <text x="56" y="190" font-size="9" fill="#94a3b8">  会话过期 → controller 重选</text>
+
+  <rect x="284" y="120" width="220" height="76" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.1"/>
+  <text x="394" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">ElasticJob</text>
+  <text x="296" y="162" font-size="10" fill="#64748b">· ZK 临时节点选主</text>
+  <text x="296" y="178" font-size="10" fill="#64748b">· 主节点分配分片项写入 ZK</text>
+  <text x="296" y="190" font-size="9" fill="#94a3b8">  failover 靠会话失效触发</text>
+
+  <rect x="524" y="120" width="220" height="76" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.1"/>
+  <text x="634" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Leaf 雪花模式</text>
+  <text x="536" y="162" font-size="10" fill="#64748b">· ZK 持久顺序节点分配</text>
+  <text x="536" y="178" font-size="10" fill="#64748b">  workerId（序号即机器位）</text>
+  <text x="536" y="190" font-size="9" fill="#94a3b8">  节点保留，序号不回收</text>
+
+  <rect x="764" y="120" width="232" height="76" rx="5" fill="#ffffff" stroke="#475569" stroke-width="1.1"/>
+  <text x="880" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Dubbo 注册中心（早期）</text>
+  <text x="776" y="162" font-size="10" fill="#64748b">· provider/consumer 在 ZK</text>
+  <text x="776" y="178" font-size="10" fill="#64748b">  建临时节点注册地址</text>
+  <text x="776" y="190" font-size="9" fill="#94a3b8">  临时节点列表即成员关系</text>
+
+  <!-- 委托箭头 + 标签 -->
+  <line x1="154" y1="196" x2="320" y2="280" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="394" y1="196" x2="360" y2="280" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="634" y1="196" x2="660" y2="280" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="880" y1="196" x2="700" y2="280" stroke="#475569" stroke-width="1.3" marker-end="url(#arr)"/>
+
+  <rect x="380" y="232" width="280" height="26" rx="13" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+  <text x="520" y="250" font-size="11" fill="#475569" text-anchor="middle">委托：选主 / 成员关系 / 元数据一致</text>
+
+  <!-- ============ 下层：协调服务层 ============ -->
+  <rect x="24" y="278" width="992" height="28" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="0.8"/>
+  <text x="520" y="297" font-size="13" font-weight="600" fill="#15803d" text-anchor="middle">协调服务层 — ZooKeeper / etcd（3 或 5 个节点）</text>
+
+  <!-- ZK / etcd 节点 -->
+  <rect x="80" y="324" width="120" height="40" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.1"/>
+  <text x="140" y="349" font-size="11" fill="#1f2937" text-anchor="middle">节点 1（leader）</text>
+
+  <rect x="240" y="324" width="120" height="40" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.1"/>
+  <text x="300" y="349" font-size="11" fill="#1f2937" text-anchor="middle">节点 2（follower）</text>
+
+  <rect x="400" y="324" width="120" height="40" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.1"/>
+  <text x="460" y="349" font-size="11" fill="#1f2937" text-anchor="middle">节点 3（follower）</text>
+
+  <text x="600" y="340" font-size="11" font-weight="600" fill="#15803d">共识协议</text>
+  <text x="600" y="358" font-size="10" fill="#64748b">ZAB（ZK）/ Raft（etcd）</text>
+
+  <!-- 共识三件事 -->
+  <rect x="80" y="384" width="200" height="64" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="92" y="404" font-size="11" font-weight="600" fill="#15803d">选主</text>
+  <text x="92" y="422" font-size="9" fill="#475569">leader 由多数派认可</text>
+  <text x="92" y="438" font-size="9" fill="#475569">3 节点容忍 1 故障，5 节点容忍 2</text>
+
+  <rect x="300" y="384" width="200" height="64" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="312" y="404" font-size="11" font-weight="600" fill="#15803d">日志复制</text>
+  <text x="312" y="422" font-size="9" fill="#475569">leader 发写 → follower ack</text>
+  <text x="312" y="438" font-size="9" fill="#475569">多数派确认后 commit</text>
+
+  <rect x="520" y="384" width="200" height="64" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="532" y="404" font-size="11" font-weight="600" fill="#15803d">多数派 quorum</text>
+  <text x="532" y="422" font-size="9" fill="#475569">两多数派必有交集</text>
+  <text x="532" y="438" font-size="9" fill="#475569">已提交日志不丢（safety）</text>
+
+  <!-- 数据模型与租约 -->
+  <rect x="740" y="384" width="256" height="64" rx="5" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="752" y="404" font-size="11" font-weight="600" fill="#1d4ed8">数据模型与存活绑定</text>
+  <text x="752" y="422" font-size="9" fill="#475569">ZK：临时节点绑会话，过期即删</text>
+  <text x="752" y="438" font-size="9" fill="#475569">etcd：lease 绑 key，失联 TTL 到即删</text>
+
+  <!-- ============ 底部：边界 ============ -->
+  <rect x="24" y="476" width="992" height="220" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="500" font-size="12" font-weight="600" fill="#1f2937">协调服务的边界：为什么不能当数据库用</text>
+
+  <text x="40" y="524" font-size="10" font-weight="600" fill="#92400e">写入不快</text>
+  <text x="120" y="524" font-size="10" fill="#475569">每条写要多数派确认 + 落盘，吞吐受 RTT 限制。3 节点每次写至少 2 节点持久化。</text>
+
+  <text x="40" y="548" font-size="10" font-weight="600" fill="#92400e">不适合大对象</text>
+  <text x="140" y="548" font-size="10" fill="#475569">ZK 单 znode 默认 1MB 上限，etcd 默认 1.5MB（3.3）。存的是元数据指针，不是业务内容。</text>
+
+  <text x="40" y="572" font-size="10" font-weight="600" fill="#92400e">不适合高频读写</text>
+  <text x="140" y="572" font-size="10" fill="#475569">ZK 默认读走 follower 本地（可能旧值），强一致读要 sync；高频读通常在客户端做本地缓存。</text>
+
+  <text x="40" y="596" font-size="10" font-weight="600" fill="#92400e">集群规模固定</text>
+  <text x="140" y="596" font-size="10" fill="#475569">3 或 5 节点，再多不增加容错只增加写延迟。偶数节点无收益。</text>
+
+  <text x="40" y="620" font-size="10" font-weight="600" fill="#92400e">CP 取舍</text>
+  <text x="120" y="620" font-size="10" fill="#475569">少数派分区不可写。注册中心等可用性敏感场景常用 AP 方案（见本系列第 12 篇）。</text>
+
+  <line x1="40" y1="640" x2="1000" y2="640" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="660" font-size="10" font-weight="600" fill="#1f2937">故障相关性</text>
+  <text x="40" y="678" font-size="9" fill="#475569">· ZK 集群不可用 → 所有依赖它的中间件都无法选主/成员变更（Kafka 无法选 controller、ElasticJob 无法重分片、Leaf 雪花新实例无法启动）。</text>
+  <text x="40" y="692" font-size="9" fill="#475569">· 一次会话超时同时影响多个中间件：这是上层中间件故障行为的关键触发条件。</text>
+</svg>

@@ -1,0 +1,595 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>仓库 AI 标准化改造：标准、评估与验证方法 | 一席之地</title><meta name="description" content="结合覆盖上百个仓库的 AI-Ready 批量评估与两组受控消融实验，沿 Agent 的任务路径整理仓库 AI 标准化改造的五个阶段、11 个评估维度、权重推导与操作指南，以及用真实任务验证改造收益的方法。"><meta property="og:title" content="仓库 AI 标准化改造：标准、评估与验证方法"><meta property="og:description" content="结合覆盖上百个仓库的 AI-Ready 批量评估与两组受控消融实验，沿 Agent 的任务路径整理仓库 AI 标准化改造的五个阶段、11 个评估维度、权重推导与操作指南，以及用真实任务验证改造收益的方法。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="仓库 AI 标准化改造：标准、评估与验证方法"><meta name="twitter:description" content="结合覆盖上百个仓库的 AI-Ready 批量评估与两组受控消融实验，沿 Agent 的任务路径整理仓库 AI 标准化改造的五个阶段、11 个评估维度、权重推导与操作指南，以及用真实任务验证改造收益的方法。"><meta name="keywords" content="AICoding"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/ai-coding/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《AI Coding 工程实践》· 第 4 篇 · 共 16 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">仓库 AI 标准化改造：标准、评估与验证方法</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2026-01-20</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/ai-coding/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#AICoding</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>将 AI 编码工具接入仓库后，Agent 仍需要系统边界、改动模块、不可违反的业务规则和验证方式等信息，才能稳定交付需求。缺少这些信息时，Agent 仍能搜索和生成代码，但参考实现选择、领域术语理解和完成条件判断的结果会发生波动。</p>
+<p>仓库 AI 标准化改造要做的，是把影响 Agent 判断的条件拆成可逐条检查的标准，再用真实任务检验改造是否减少了错误路径、人工返工和结果波动。评估分数衡量的是信息完整度，不能直接当作改造目标。</p>
+<p>改造流程包括定义仓库应向 AI 提供的信息、按统一口径评估缺口、按优先级实施改造，并通过真实任务验证正确性和稳定性。评估时应检查这些信息是否帮助 Agent 提高任务交付质量。</p>
+<h2 id="ai-ready-解决的是什么问题">AI-Ready 解决的是什么问题<a aria-hidden="true" tabindex="-1" href="#ai-ready-解决的是什么问题"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>AI 在仓库中完成一个需求，要沿一条任务路径经过五个阶段，每个阶段都有必须回答的问题：</p>
+<ol>
+<li><strong>定位</strong>：需求属于哪个系统、哪个模块，哪些文件不在改动范围内，沿哪条调用链找到实现位置？</li>
+<li><strong>理解</strong>：需求中的业务概念、状态约束和禁止行为具体指什么？</li>
+<li><strong>实施</strong>：参照哪个已有模式落地改动，现有代码能否作为可靠样例？</li>
+<li><strong>验证</strong>：改动后运行哪些检查，凭什么判断结果达到验收要求？</li>
+<li><strong>维护</strong>：本次任务中的经验如何更新到仓库，已有信息如何随代码演进保持有效？</li>
+</ol>
+<p>后文的评估维度、改造动作和实验设计均按这五个阶段的信息供给展开。</p>
+<p>传统研发依靠开发者的项目经验、口头沟通和历史记忆完成这些判断。Agent 默认拿不到这些背景，只能从当前会话和仓库内容中推断。改造的目标，是把其中可以稳定书写的部分转化为可访问、可验证、可维护的工程资产。</p>
+<p>改造的目标是减少结果波动，文档数量本身不构成目标。内容过期、路径不明或范围含糊的文档会误导模型；后文的注释消融实验说明了这一点。</p>
+<p>一次覆盖上百个内部仓库的批量评估显示，没有任何仓库达到 80 分。这表明，参与评估的仓库尚未具备让 Agent 独立完成常规任务所需的完整信息条件。</p>
+<h2 id="任务路径上的五个阶段与-11-个评估维度">任务路径上的五个阶段与 11 个评估维度<a aria-hidden="true" tabindex="-1" href="#任务路径上的五个阶段与-11-个评估维度"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>评估框架沿这条任务路径展开：每个阶段 Agent 要回答的问题，回答质量取决于该阶段的信息供给。11 个评估维度按其所支撑的阶段归类。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>Agent 要回答的问题</th><th>支撑维度</th><th>缺信息时的典型表现</th></tr></thead><tbody><tr><td>1 定位</td><td>需求该落到哪个仓库、哪个模块，沿哪条调用链？</td><td>D1 仓库定位、D2 导航、D3 架构文档</td><td>找错仓库或模块，改 A 坏 B</td></tr><tr><td>2 理解</td><td>需求中的概念、约束和禁止行为具体指什么？</td><td>D7 业务领域建模、D8 编码规范</td><td>违反隐含规则，靠猜理解术语</td></tr><tr><td>3 实施</td><td>现有代码能否作为可靠参照，改动如何落地？</td><td>D4 可读性、D5 可维护性、D6 可扩展性、D9 AI 协作</td><td>模仿错误参考实现，引发连锁破坏</td></tr><tr><td>4 验证</td><td>改完运行什么，凭什么判断达到验收？</td><td>D10 测试验证</td><td>无法自证，全部依赖人工 Review</td></tr><tr><td>5 维护</td><td>本次经验如何更新，已有信息如何保持有效？</td><td>D11 上下文维护</td><td>每轮重新提供信息，文档随迭代失效</td></tr></tbody></table></div>
+<p>代码质量（D4 至 D6）是实施阶段的输入条件，不单独构成一个阶段：Agent 会将存量代码作为实现样例，代码的可读性和技术债会影响实施阶段的产出质量。各阶段也不严格按先后执行，Agent 实际执行时会在定位和理解之间反复跳转；表格描述的是信息发挥作用的环节，未规定执行顺序。</p>
+<p>跨边界信息主要服务于定位和理解两个阶段，也常在仓库中缺失。Agent 只能直接读取当前仓库的代码，无法从单个仓库推导仓库之间的连接方式和外部领域概念的对应关系：前端包括跨 Bundle、跨仓库的跳转协议和路由约定，后端包括微服务之间的接口契约和领域知识映射。定位阶段的系统拓扑应说明本仓库与外部的连接方式，理解阶段的领域建模应覆盖跨微服务的领域知识；缺少这些信息时，Agent 无法确认跨仓需求另一端的语义。</p>
+<h3 id="评分标准权重证据与等级">评分标准：权重、证据与等级<a aria-hidden="true" tabindex="-1" href="#评分标准权重证据与等级"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>11 个维度用于批量扫描和形成改造清单，采用 100 分加权评分。下表编号沿用评估体系的原始顺序，所属阶段列标明该维度在任务路径上的作用位置。权重给出两套：先验权重是按 Agent 在陌生仓库中的典型失败模式做出的专家估计，推导权重按下一小节的方法从结果指标反推。以下是一种可落地的评分细则示例：每个维度先按证据评出 0、25、50、75 或 100 分，再乘以权重。单项得分必须能追溯到仓库中的文件、配置、CI 记录或可运行命令，不能只依据评估者的主观判断；具体分档粒度可以按团队自身的评估工具调整，不必与此完全一致。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>编号</th><th>维度</th><th>所属阶段</th><th align="right">先验权重</th><th align="right">推导权重</th><th>满分证据</th></tr></thead><tbody><tr><td>D1</td><td>仓库定位准确性</td><td>定位</td><td align="right">7%</td><td align="right">9%</td><td>有业务边界、服务画像、跨仓集成方式（跳转协议、RPC、消息）和不负责范围</td></tr><tr><td>D2</td><td>仓库导航完整性</td><td>定位</td><td align="right">9%</td><td align="right">12%</td><td>入口文件按任务路由架构、领域、规则和测试资料；关键资料从入口两跳内可达，链接可检查</td></tr><tr><td>D3</td><td>架构文档完整性</td><td>定位</td><td align="right">10%</td><td align="right">10%</td><td>模块职责、关键调用链、核心 API 的设计意图和重要 ADR 可定位</td></tr><tr><td>D4</td><td>代码可读性</td><td>实施</td><td align="right">9%</td><td align="right">10%</td><td>名称表达职责和范围；关键逻辑可局部理解；无已知误导性注释</td></tr><tr><td>D5</td><td>代码可维护性</td><td>实施</td><td align="right">9%</td><td align="right">12%</td><td>职责边界清楚；高耦合、大类和技术债有治理计划或明确隔离</td></tr><tr><td>D6</td><td>代码可扩展性</td><td>实施</td><td align="right">5%</td><td align="right">7%</td><td>扩展点、接口职责和适用模式有说明，新增实现不需要修改无关模块</td></tr><tr><td>D7</td><td>业务领域建模</td><td>理解</td><td align="right">13%</td><td align="right">9%</td><td>术语、状态流转、边界条件、枚举语义和跨微服务领域知识可定位</td></tr><tr><td>D8</td><td>编码规范遵守度</td><td>理解</td><td align="right">9%</td><td align="right">8%</td><td>有项目约束、禁止行为和安全要求；可自动检查的部分已进入 CI</td></tr><tr><td>D9</td><td>AI 协作友好度</td><td>实施</td><td align="right">7%</td><td align="right">9%</td><td>任务工作流、上下文分层规则、历史案例和非标准需求的决策方式可用</td></tr><tr><td>D10</td><td>测试验证</td><td>验证</td><td align="right">14%</td><td align="right">10%</td><td>本地可运行的构建、测试和静态检查；CI 对关键质量项设置阻断门禁</td></tr><tr><td>D11</td><td>上下文维护</td><td>沉淀</td><td align="right">8%</td><td align="right">4%</td><td>上下文更新流程、案例归档和失效检测已定义触发时机与责任人</td></tr></tbody></table></div>
+<p>评分等级可统一解释为：0 分表示没有发现可用证据；25 分表示存在零散材料但无法支持典型任务；50 分表示覆盖主要路径但有明显空白或内容未验证；75 分表示覆盖主要路径且能够在任务中使用；100 分表示覆盖完整、可自动检查，并且维护机制已实际运行。</p>
+<p>总分可用于划分改造阶段：低于 50 分时，仓库缺少 Agent 完成常规任务所需的基础信息；50 至 59 分时，材料零散，不足以支撑完整任务；60 至 79 分时，部分任务已具备协作条件，但仍需按薄弱维度补齐；80 分及以上时，信息、验证和维护机制相对完整。等级不能替代任务实验。即使总分较高，验证阶段缺失（D10 很低）的仓库仍不适合让 Agent 在无人工保护的情况下提交改动；定位（D2）或理解（D7）薄弱时，跨模块和规则密集型需求也应优先安排人工复核。</p>
+<p>同样是 60 分的两个仓库，可能一个缺领域规则，另一个缺测试入口，它们对不同类型任务的影响并不相同。只追求总分，会引导团队去补齐容易计数的文档，忽略真实任务中的定位、理解和验证问题。</p>
+<h3 id="权重如何推导先定结果指标再按影响反推">权重如何推导：先定结果指标，再按影响反推<a aria-hidden="true" tabindex="-1" href="#权重如何推导先定结果指标再按影响反推"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>权重不应在设计评分表时直接指定，它应该是推导出来的，且顺序固定：先由任务路径确定维度（上一节已完成），再定义“高质量交付”由哪些可测量的结果指标构成，最后按每个维度对结果指标的影响程度分配权重。维度先于权重，权重来自影响。</p>
+<p>第一步，把交付质量拆成四个可测量指标。占比是可调整的假设，反映团队对各项结果的重视程度：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>结果指标</th><th>测量方式</th><th align="right">默认占比</th></tr></thead><tbody><tr><td>正确性</td><td>一次做对的比例、验收通过率</td><td align="right">40%</td></tr><tr><td>稳定性</td><td>同一任务多轮执行的方差</td><td align="right">20%</td></tr><tr><td>成本</td><td>会话轮次、token 消耗、耗时</td><td align="right">20%</td></tr><tr><td>人工介入</td><td>Review 修改量、返工轮次</td><td align="right">20%</td></tr></tbody></table></div>
+<p>第二步，评估每个维度对四项指标的影响档位。判断依据是机制分析加已有的实验证据：导航直接决定搜索轮次（成本），死代码和相似候选造成实现选择的随机性（稳定性），业务规则缺失造成的错误只能靠人兜底（人工介入）：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>正确性</th><th>稳定性</th><th>成本</th><th>人工介入</th></tr></thead><tbody><tr><td>D1 仓库定位准确性</td><td>高</td><td>中</td><td>低</td><td>中</td></tr><tr><td>D2 仓库导航完整性</td><td>高</td><td>高</td><td>高</td><td>中</td></tr><tr><td>D3 架构文档完整性</td><td>高</td><td>中</td><td>中</td><td>中</td></tr><tr><td>D4 代码可读性</td><td>高</td><td>中</td><td>中</td><td>中</td></tr><tr><td>D5 代码可维护性</td><td>高</td><td>高</td><td>中</td><td>高</td></tr><tr><td>D6 代码可扩展性</td><td>中</td><td>低</td><td>低</td><td>中</td></tr><tr><td>D7 业务领域建模</td><td>中</td><td>中</td><td>低</td><td>高</td></tr><tr><td>D8 编码规范遵守度</td><td>中</td><td>低</td><td>低</td><td>高</td></tr><tr><td>D9 AI 协作友好度</td><td>中</td><td>中</td><td>高</td><td>中</td></tr><tr><td>D10 测试验证</td><td>中</td><td>中</td><td>中</td><td>高</td></tr><tr><td>D11 上下文维护</td><td>低</td><td>低</td><td>低</td><td>低</td></tr></tbody></table></div>
+<p>第三步，将高、中、低按 3、2、1 取值，按结果指标占比加权并归一化到 100，即得上表中的推导权重。</p>
+<p>先验权重的定法值得单独说明。它按 Agent 在陌生仓库中的典型失败模式分配预算：改错位置（定位）、误解业务规则（理解）、模仿错误或过期样例（实施）、无法自证（验证）、经验不回流（沉淀）。与原始评估体系的权重（D7 最高为 14%、D2 仅 6%）相比，本文的先验把文档类维度下调、把代码治理和验证上调，依据是两个判断：Agent 的第一输入是代码而不是文档；文本规则对输出的约束力弱于可执行检查。</p>
+<p>D2（9% 到 12%）和 D5（9% 到 12%）的推导权重上升最多：导航同时影响定位正确率和搜索成本，死代码与重复实现同时影响正确性和稳定性。D7（13% 到 9%）、D10（14% 到 10%）和 D11（8% 到 4%）下降最多：D7 的较高先验仅适用于跨仓依赖较重的仓库；D10 的先验包含了无人值守交付的门槛作用，而推导矩阵只按单次任务计分，未覆盖这一作用；D11 对单次任务的四项指标几乎没有直接影响。其余维度的推导值与先验值接近。两组消融实验也得到相近的优先级：导航在翻单实验中对应最高的得分提升，清理死代码是单项代码治理中收益最大的措施，领域知识库在单仓任务中的边际贡献有限。先验权重、推导权重和实验结果一致的维度可以继续使用；存在差异的维度应在下一轮实验中校准。</p>
+<p>按阶段聚合后，先验权重的分布为实施 30%、定位 26%、理解 22%、验证 14%、沉淀 8%；推导权重的分布为实施 38%、定位 31%、理解 17%、验证 10%、沉淀 4%。推导结果提高了实施和定位的占比，降低了文档理解和维护机制的占比。D11 的 4% 来自单次任务视角；上下文维护影响的是建设成果随时间失效的速度，应单独分配长期预算。D7 的影响档位随任务类型变化，跨仓需求占比较高的仓库应提高其权重。评分采用加法，任务效果却受前置条件限制：定位出错时，后续阶段得分较高也无法修正任务路径，线性权重表无法表示这一关系。</p>
+<p>维度拆分本身遵循“可检查、可执行”原则：每个维度对应独立的证据来源和治理动作，不追求语义上的纯净分类。有两处边界值得留意。一是 D9 与 D11 在历史案例上存在重叠：D11 是产生案例的机制，D9 是案例的存量可用性，评估时应区分“机制是否存在”和“产物是否足够”。二是 D4 至 D6 沿用了人读代码的质量分类；对 Agent 而言真正起作用的变量是“样例是否会被模仿”和“扩展点是否可见”，保留三分是因为命名治理、耦合治理和扩展点文档是三件不同的工作。</p>
+<p>权重需要随实验结果更新。校准过程为：设定先验权重，按结果指标推导权重，通过消融实验测量各维度的影响，再据此更新权重和改造顺序。后文“用消融实验验证改造收益”一节给出实验设计；测得的维度贡献应更新到本节的权重表。权重表用于定义信息完备度，实验用于确定改造优先级。</p>
+<h2 id="为定位阶段提供仓库导航">为定位阶段提供仓库导航<a aria-hidden="true" tabindex="-1" href="#为定位阶段提供仓库导航"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>定位阶段应先建设入口：Agent 从仓库入口出发，应能以较少跳转找到完成任务所需的资料。项目说明无需过长。</p>
+<p>一个仓库级入口文件可以是 <code class="language-text">AGENTS.md</code>、<code class="language-text">CLAUDE.md</code> 或团队使用工具对应的规则文件。它应当保持短小，并提供明确路由：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token title important"><span class="token punctuation">#</span> 仓库协作入口</span>
+
+<span class="token title important"><span class="token punctuation">##</span> 系统边界</span>
+
+<span class="token list punctuation">-</span> 本仓库负责：订单履约状态编排。
+<span class="token list punctuation">-</span> 不负责：库存扣减、支付结算；这些能力通过下游服务调用。
+
+<span class="token title important"><span class="token punctuation">##</span> 任务路由</span>
+
+<span class="token table"><span class="token table-header-row"><span class="token punctuation">|</span><span class="token table-header important"> 任务                 </span><span class="token punctuation">|</span><span class="token table-header important"> 先阅读                     </span><span class="token punctuation">|</span>
+</span><span class="token table-line"><span class="token punctuation">|</span> <span class="token punctuation">--------------------</span> <span class="token punctuation">|</span> <span class="token punctuation">--------------------------</span> <span class="token punctuation">|</span>
+</span><span class="token table-data-rows"><span class="token punctuation">|</span><span class="token table-data"> 理解模块与调用链     </span><span class="token punctuation">|</span><span class="token table-data"> docs/architecture.md       </span><span class="token punctuation">|</span>
+<span class="token punctuation">|</span><span class="token table-data"> 修改状态机和领域规则 </span><span class="token punctuation">|</span><span class="token table-data"> docs/domain/order-state.md </span><span class="token punctuation">|</span>
+<span class="token punctuation">|</span><span class="token table-data"> 编码约束             </span><span class="token punctuation">|</span><span class="token table-data"> docs/rules/coding.md       </span><span class="token punctuation">|</span>
+<span class="token punctuation">|</span><span class="token table-data"> 编写和运行测试       </span><span class="token punctuation">|</span><span class="token table-data"> docs/testing.md            </span><span class="token punctuation">|</span>
+</span></span>
+<span class="token title important"><span class="token punctuation">##</span> 验证</span>
+
+pnpm typecheck &#x26;&#x26; pnpm test</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>入口文件承担的是导航职责，不应堆入所有业务知识。导航验收至少包括四项：能说明仓库负责和不负责什么；能路由到架构、领域、规则和测试四类资料；关键资料从入口出发两次跳转以内可到达；路由中的本地路径、命令和链接可自动检查。大仓库可以将局部规则放在子目录，按任务或路径加载；生成代码、构建产物和 vendor 目录也应排除在主要上下文之外。这样能缩短检索路径，也避免 Agent 到不相关模块中寻找参考代码。</p>
+<p>导航质量影响改动位置的选择。在一组翻单任务的对照实验中，信息完整组更快且更稳定地找到正确实现方式；缺少导航和上下文的组经常从错误案例开始，选中正确实现框架的成功率约为 20%。第一轮清理废弃代码（删除 687 个不再使用的 Java 文件）后，这一成功率提升到约 70%。导航改造需要配合代码治理：入口路由指向的模块中若仍有大量相似但已失效的实现，Agent 仍可能选错参考实现。</p>
+<p>清理也可能带来损失。被删除的历史代码中包含此前翻单需求的实现，信息完整组在清理后代码采纳率从第一轮的 85% 降至 60%。单项改造可能改善一个薄弱环节，也可能影响另一个原本较好的环节；分数与效果不存在单调线性关系，应依据多轮迭代后的结果判断，不能只看单轮波动。随后一轮基于接口和抽象类的代码重构将采纳率提高到 80%；再经过需求描述、知识库和编码约束的多轮优化后，该场景下信息完整组的采纳率稳定在 90% 以上，个别 PR 评审未发现问题，两组的框架选择正确率均接近 100%。</p>
+<h2 id="领域知识记录代码无法表达的信息">领域知识记录代码无法表达的信息<a aria-hidden="true" tabindex="-1" href="#领域知识记录代码无法表达的信息"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>理解阶段依赖的主要材料是领域知识库。它常见的误区是把代码已经表达的流程再用自然语言复述一遍。在单仓、边界清晰的任务中，模型从代码结构里就能读出大量信息；重复描述既占用上下文长度，还可能制造互相矛盾的版本。</p>
+<p>知识库的增量价值集中在代码本身无法可靠推出的信息上：</p>
+<ul>
+<li>跨仓或跨服务的调用契约、数据归属和领域边界，例如前端的跨 Bundle 跳转协议与路由约定、后端微服务之间的领域概念对应关系。</li>
+<li>业务术语、枚举值的业务含义、状态流转和时效约束。</li>
+<li>无法从类型定义看出的边界条件和例外处理。</li>
+<li>出于技术或合规原因的禁止行为。</li>
+<li>关键架构决策的取舍原因，以及历史需求中可复用的实现模式。</li>
+</ul>
+<p>例如，<code class="language-text">PENDING(0)</code> 只说明一个枚举值存在，说明不了它在什么条件下允许迁移、是否允许回退、是否影响下游计费。这类规则应紧贴领域模型或状态机文档维护，并由入口文件路由到对应位置。</p>
+<p>编码规范也应尽量转成可执行检查。文本规则适合说明意图和例外，格式化、类型检查、依赖限制、安全扫描和架构边界校验则应进入 CI。否则 Agent 即使读懂了规范，也无法在本地获得足够快、足够确定的反馈。</p>
+<h2 id="存量代码作为实现上下文">存量代码作为实现上下文<a aria-hidden="true" tabindex="-1" href="#存量代码作为实现上下文"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>实施阶段的输入包括文档和存量代码。AI 会将检索到的现有代码作为实现样例。死代码、重复实现、混淆命名和职责不清的模块会使搜索结果出现多个候选路径。模型无法直接判断哪个版本已经废弃，可能模仿检索到的旧实现，因此存量代码质量会限制生成结果。</p>
+<p>因此，AI 标准化改造不能只补说明文件，还需要做与日常工程质量同标准的治理：</p>
+<ul>
+<li>删除已废弃且不再需要兼容的代码，或清晰标记迁移边界。</li>
+<li>合并表达同一业务概念的重复实现，减少相似候选。</li>
+<li>优先修复类、方法和字段的命名，使名称直接表达职责和适用范围。</li>
+<li>对扩展点、SPI 注册、Builder 配置等结构上不易发现的位置补充导航性说明。</li>
+<li>清除过期或范围不完整的注释，避免其成为错误的强信号。</li>
+</ul>
+<p>注释的影响需要结合实验说明。一组基于真实合同服务仓库的消融实验以一次真实需求变更（新增一种费率模式）的影响面分析为任务，覆盖 10 个业务场景、22 个标准修改点，每组独立运行 3 轮。保留全部信息的基线组平均分为 47.0，标准差约为 7.1；移除全部注释的组平均分为 47.5，标准差约为 0.8。这组数据推不出“不要写注释”的结论，注释的价值取决于位置、密度和准确性。</p>
+<p>在扩展点隐蔽、逻辑分散的场景，注释可以帮助模型发现注册点和配置位置；在多渠道并存、多条链路并列的场景，某条路径上过细的注释会牵引模型沿该路径持续推理，遗漏注释稀疏但同样需要修改的路径。这一实验中出现过三种具体的负向机制。一是渠道吸附：当某个渠道的注释明显比其他渠道详尽时，模型会被吸附在该渠道的上下文里定位问题，即便真正需要改动的是另一个渠道；去掉注释后，模型转而依靠命名和代码结构，三轮反而都做出了正确判断。二是链路挤占：同一场景下若干条并列实现链路中，注释最完整的一条拿走了大部分注意力，模型沿这条路径推理到底后就误判任务已经完成，漏掉了注释稀疏的并列链路。三是旧类复用倾向：当某个存量类的功能被注释描述得很完整时，模型容易得出“已有逻辑可以复用”的结论，给出扩展旧类而非新建实现的错误方案。高质量的注释应声明能力边界，避免混入其他渠道的历史背景，并让并列链路的说明密度大致对称。</p>
+<p>这组实验中，命名消融造成的平均分损失在三个信息维度中最大：混淆命名后，平均得分从 47.0 降至 45.0。拆分子项后，命名消融主要降低“能否定位到正确位置”的得分，对“能否描述改造语义”影响有限。命名影响模型定位实现的位置，注释和领域信息影响它在定位后对改造语义的描述。领域知识库在单仓影响面分析中的边际贡献较小，因为模型直接阅读代码已可完成定位和语义理解；其增量价值在单仓代码无法覆盖的跨仓交互契约、服务拓扑和跨服务领域边界。三个信息维度同时移除时，平均分损失大于逐项损失之和，说明名称、代码结构和领域信息会相互验证。全消融组还出现过一种表现：信息缺失严重时，模型将唯一能够确认的一条业务约束重复用于几乎所有场景。改造时应为这些信息提供最低限度的覆盖，不能只依赖某一种资料。</p>
+<h2 id="可执行验证与上下文维护">可执行验证与上下文维护<a aria-hidden="true" tabindex="-1" href="#可执行验证与上下文维护"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="验证阶段的测试标准">验证阶段的测试标准<a aria-hidden="true" tabindex="-1" href="#验证阶段的测试标准"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>验证阶段（D10）的目标是让 Agent 在提交前获得可重复的反馈，而不是只保存一份测试说明。仓库至少应满足以下标准：</p>
+<ul>
+<li>从干净工作区开始，开发依赖、环境变量样例和启动步骤可定位。</li>
+<li>入口文件列出快速检查和完整回归两组命令，并说明各自的适用范围。</li>
+<li>核心业务规则至少有自动化测试覆盖；边界场景、失败路径和兼容性约束不能只留在人工经验中。</li>
+<li>类型检查、格式化、静态扫描和测试中可自动执行的检查进入 CI；阻断条件应与团队的风险等级对应。</li>
+<li>需求验收条件可以映射到测试、断言、构建物或明确的人工核对项。</li>
+</ul>
+<p>如果 Agent 无法在仓库内运行测试、静态检查或构建，它的输出就只能依赖人工 Review 发现问题。对 AI 协作而言，测试体系除了保障质量，还承担模型反馈接口的职责。</p>
+<h3 id="上下文维护标准">上下文维护标准<a aria-hidden="true" tabindex="-1" href="#上下文维护标准"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>文档与规则同样会过期。一次性补齐入口文件、领域文档和案例库，只能完成初始建设；代码、接口和业务流程继续变化之后，旧上下文会重新成为干扰。</p>
+<p>维护阶段的上下文维护（D11）至少需要定义四个要素：触发时机、更新对象、校验方式和责任人。可将下列事件设为触发点：新增或删除模块、接口契约变更、领域状态或术语变更、新增禁止行为、测试命令变化，以及复杂需求交付。每次触发后，应明确更新导航、架构、领域、规则或案例中的哪一项；复杂需求应保存需求、设计、实现和验证证据的对应关系。定期检查入口链接、命令和架构描述是否仍然有效，并为关键仓库指定维护责任人。对可以自动判断的项目，例如链接失效、规则路径变化、文档未覆盖新增模块，可以直接放进 CI。</p>
+<h2 id="用消融实验验证改造收益">用消融实验验证改造收益<a aria-hidden="true" tabindex="-1" href="#用消融实验验证改造收益"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>标准提供改造方向，实验回答“这项改动是否改善了目标任务”。一个基本的验证设计可以分为五步。</p>
+<h3 id="1-选择真实且可评分的任务">1. 选择真实且可评分的任务<a aria-hidden="true" tabindex="-1" href="#1-选择真实且可评分的任务"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>任务应覆盖仓库中常见的开发模式，例如新增领域状态、修改跨模块调用链、增加一个扩展实现。将期望修改点、正确调用链和验收条件整理为 Ground Truth，但不要暴露给执行任务的 Agent。</p>
+<h3 id="2-固定输入与执行环境">2. 固定输入与执行环境<a aria-hidden="true" tabindex="-1" href="#2-固定输入与执行环境"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>除待测维度外，模型版本、提示词、任务描述、分支、工具和执行权限尽量保持一致。代码快照一旦生成，应在多轮实验中复用，避免每次运行的仓库状态不同。</p>
+<h3 id="3-构造基线和消融组">3. 构造基线和消融组<a aria-hidden="true" tabindex="-1" href="#3-构造基线和消融组"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>可以保留全信息基线组，再按阶段分别移除单项信息，例如定位阶段的导航、理解阶段的领域知识、实施阶段的命名与注释、验证阶段的测试入口；同时设置全消融组观察最低基线。每次只改变一个因素，才有机会将差异归因到该因素。</p>
+<h3 id="4-同时记录正确性和稳定性">4. 同时记录正确性和稳定性<a aria-hidden="true" tabindex="-1" href="#4-同时记录正确性和稳定性"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>不要只看一次运行是否得到高分。至少重复多轮，记录均值、方差、成本和人工修正量。对影响面分析类任务，可以分开评分：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>指标</th><th>要回答的问题</th></tr></thead><tbody><tr><td>定位深度</td><td>是否从入口沿调用链找到真正需要修改的实现位置？</td></tr><tr><td>改造语义</td><td>是否说明了符合业务约束的具体改动，而不是泛化地“增加分支”？</td></tr><tr><td>验证结果</td><td>是否运行了应运行的检查，失败能否定位和修复？</td></tr><tr><td>采纳成本</td><td>产物需要多少人工修改、Review 和返工？</td></tr><tr><td>稳定性</td><td>多轮结果的方差是否处于可接受范围？</td></tr></tbody></table></div>
+<p>接入自动化工作流时，应优先评估多轮结果是否达到可预期质量。结果偶尔得分很高、偶尔完全走错路径的仓库，仍需要较多人工复核。</p>
+<h3 id="5-根据-bad-case-更新标准">5. 根据 Bad Case 更新标准<a aria-hidden="true" tabindex="-1" href="#5-根据-bad-case-更新标准"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>实验失败需要按 Agent 的搜索、阅读和工具调用路径归因：是找错仓库、误选相似实现、缺少业务约束，还是没有可运行的验证命令。将可重复出现的失败转成具体改造项或规则，并在下一轮使用相同任务验证效果。</p>
+<p>评估发现缺口后，改造补充信息或清理干扰，再通过实验验证任务结果；Bad Case 用于调整标准与上下文。权重还应按业务类型调整：跨服务需求更依赖系统边界和契约，规则密集型需求更依赖领域建模，重构任务更依赖代码结构、测试和架构约束。</p>
+<h2 id="按阶段实施仓库改造">按阶段实施仓库改造<a aria-hidden="true" tabindex="-1" href="#按阶段实施仓库改造"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>下表将改造动作组织为操作流程。存量仓库无需一开始追求 11 个维度全部满分，应先解决定位、理解、实施、验证和维护中的主要缺口。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>步骤</th><th>对应阶段</th><th>核心产出物</th><th>验收方式</th></tr></thead><tbody><tr><td>0 打分定基线</td><td>全流程</td><td>基线评分、基准任务档案</td><td>得分有证据，任务可复跑</td></tr><tr><td>1 入口与导航</td><td>定位</td><td>入口文件与路由</td><td>两跳可达，链接可检查</td></tr><tr><td>2 清理代码干扰</td><td>实施</td><td>代码治理 PR</td><td>不再误选废弃实现</td></tr><tr><td>3 沉淀领域知识</td><td>理解</td><td>领域、规则、架构文档</td><td>只记代码推不出的信息</td></tr><tr><td>4 可执行验证</td><td>验证</td><td>验证命令组与 CI 门禁</td><td>Agent 能自证修正</td></tr><tr><td>5 保鲜机制</td><td>沉淀</td><td>更新流程与责任人</td><td>触发后有明确更新动作</td></tr><tr><td>6 实验迭代</td><td>全流程</td><td>实验报告、更新的权重</td><td>基准任务指标持续改善</td></tr></tbody></table></div>
+<h3 id="第-0-步建立评分基线并选定基准任务">第 0 步：建立评分基线并选定基准任务<a aria-hidden="true" tabindex="-1" href="#第-0-步建立评分基线并选定基准任务"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>先用评分表对仓库打分，记录各维度得分和对应证据；再选取 1 至 2 个高频、有代表性的真实需求作为基准任务，整理期望修改点和验收条件作为 Ground Truth，不暴露给执行任务的 Agent。后续每一项改造的效果都用同一套基准任务衡量，避免凭感觉判断进退。</p>
+<h3 id="第-1-步建立入口与导航">第 1 步：建立入口与导航<a aria-hidden="true" tabindex="-1" href="#第-1-步建立入口与导航"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>创建入口文件（<code class="language-text">AGENTS.md</code>、<code class="language-text">CLAUDE.md</code> 或工具对应的规则文件），写清系统边界、任务路由表和验证命令，为每个顶层目录写一行职责说明，并排除构建产物和生成代码。路由指向的架构、领域、规则、测试四类资料可以先建立骨架再逐步充实。该步骤通常以小时计。验收标准：关键资料从入口两跳内可达，链接和命令可自动检查，Agent 使用基准任务试跑时能找到正确模块。</p>
+<h3 id="第-2-步清理代码中的错误参考实现">第 2 步：清理代码中的错误参考实现<a aria-hidden="true" tabindex="-1" href="#第-2-步清理代码中的错误参考实现"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>删除或隔离废弃代码，合并重复实现，修复高流量路径上的混淆命名，为隐蔽扩展点补导航性注释，清掉过期注释。验收标准：基准任务试跑时，Agent 不再选中已废弃的参考实现。注意清理可能误伤：混在死代码里的历史需求实现要先确认无人依赖；清理后短期指标可能回落，按多轮终态判断。</p>
+<h3 id="第-3-步记录代码无法表达的领域知识">第 3 步：记录代码无法表达的领域知识<a aria-hidden="true" tabindex="-1" href="#第-3-步记录代码无法表达的领域知识"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>由领域专家梳理术语表、枚举语义、状态流转、隐含规则和禁止行为，架构文档补充设计意图和关键调用链，跨仓契约单独成章，全部挂到入口路由下。这一步以人周计，是人力最重、也最依赖人的一步；内容可以由 AI 辅助起草，但正确性必须由专家确认。验收标准：只记录代码无法可靠推出的信息，每条规则能定位到对应代码位置，基准任务中 Agent 不再违反已记录的禁止行为。</p>
+<h3 id="第-4-步接入可执行验证">第 4 步：接入可执行验证<a aria-hidden="true" tabindex="-1" href="#第-4-步接入可执行验证"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>保证干净环境下一条命令完成构建和测试，把类型检查、格式化、静态扫描和关键测试接入 CI 并设置阻断门禁，把验收条件映射为自动化检查或明确的人工核对项，验证命令写入入口文件。验收标准：Agent 在任务中能自行运行验证并根据失败结果修正，无人工介入时 CI 能拦住已知类别的错误。</p>
+<h3 id="第-5-步维护上下文">第 5 步：维护上下文<a aria-hidden="true" tabindex="-1" href="#第-5-步维护上下文"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>定义触发时机（模块增删、契约变更、规则新增、复杂需求交付）、更新对象、校验方式和责任人；可自动检查的项目（死链、路由失效、新增模块未被文档覆盖）放进 CI；复杂需求按需求、设计、实现、验证的对应关系归档为案例。验收标准：触发事件发生后有明确的更新动作，入口文件内容定期核对仍然有效。</p>
+<h3 id="第-6-步通过基准任务迭代">第 6 步：通过基准任务迭代<a aria-hidden="true" tabindex="-1" href="#第-6-步通过基准任务迭代"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>按前文“用消融实验验证改造收益”的方法运行基线与消融对照，分析 Bad Case 并归因到具体维度，据此确定下一项投入；每轮改造后复跑基准任务，比较正确性、稳定性、成本和人工介入四项结果指标。验收标准：基准任务的多轮结果改善，权重表按实测影响更新。</p>
+<h3 id="角色分工与常见问题">角色分工与常见问题<a aria-hidden="true" tabindex="-1" href="#角色分工与常见问题"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>改造不只是文档工作：知识梳理依赖领域专家，代码治理依赖仓库 owner，上下文维护依赖明确的责任人。实验中出现过以下问题：</p>
+<ul>
+<li>入口文件一次写得太长太全，反而降低指令遵循率；应保持短小，知识按需分层路由。</li>
+<li>提供给 Agent 的资料过大时会被截断，截断后的内容会造成错误的需求理解，进而产生错误代码。</li>
+<li>实验前先检查基准分支是否被污染，否则对照结论不成立。</li>
+<li>单次实验不可信，关键结论至少重复多轮并关注方差。</li>
+<li>不只看单轮波动：清理误伤造成的短期回落不代表方向错误，按终态判断。</li>
+</ul>
+<p>仓库中的代码和需求持续变化，AI-Ready 信息也需要持续维护。应通过具体任务判断改造效果：Agent 走错路径的次数是否下降，产物是否更容易验证，以及多轮运行的结果是否保持可预测。若这些指标没有改善，评分体系不能证明改造有效。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="ZoGDkh" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/01-20-ai-ready-repo/&quot;],&quot;words&quot;:[0,1289],&quot;paragraphs&quot;:[0,116]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1289<!-- --> 字 · <!-- -->116<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2026/01-01-ai-coding/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">一年多使用 AI Coding 的一些思考</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2026/02-02-superpowers/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Ralph 与 Superpowers 的区别：循环外调参与流程内把关</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/ai-coding/" class="hover:text-accent transition-colors duration-200">《AI Coding 工程实践》</a><span>· 第 4 篇 · 共 16 篇</span></div><div class="sm:col-start-1"><a href="/post/2025/12-12-AICoding概念综述/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">AICoding概念综述</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2026/02-02-superpowers/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Ralph 与 Superpowers 的区别：循环外调参与流程内把关</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2026/08-15-google-open-knowledge-format/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Google OKF：面向 AI 知识资产的 Markdown 交换格式</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-08-15</time></a><a href="/post/2026/07-31-claude-engineering-evolution/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Anthropic Claude 工程化演进分析</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-31</time></a><a href="/post/2026/07-11-pi-claude-session-context/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Pi agent-core harness 与 Claude Code 的 Session 和 Context 对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-11</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="2eOOE3" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/01-20-ai-ready-repo/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="Z15zq8O" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#ai-ready-%E8%A7%A3%E5%86%B3%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98\&quot;&gt;AI-Ready 解决的是什么问题&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%BB%BB%E5%8A%A1%E8%B7%AF%E5%BE%84%E4%B8%8A%E7%9A%84%E4%BA%94%E4%B8%AA%E9%98%B6%E6%AE%B5%E4%B8%8E-11-%E4%B8%AA%E8%AF%84%E4%BC%B0%E7%BB%B4%E5%BA%A6\&quot;&gt;任务路径上的五个阶段与 11 个评估维度&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E8%AF%84%E5%88%86%E6%A0%87%E5%87%86%E6%9D%83%E9%87%8D%E8%AF%81%E6%8D%AE%E4%B8%8E%E7%AD%89%E7%BA%A7\&quot;&gt;评分标准：权重、证据与等级&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%9D%83%E9%87%8D%E5%A6%82%E4%BD%95%E6%8E%A8%E5%AF%BC%E5%85%88%E5%AE%9A%E7%BB%93%E6%9E%9C%E6%8C%87%E6%A0%87%E5%86%8D%E6%8C%89%E5%BD%B1%E5%93%8D%E5%8F%8D%E6%8E%A8\&quot;&gt;权重如何推导：先定结果指标，再按影响反推&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%B8%BA%E5%AE%9A%E4%BD%8D%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BE%9B%E4%BB%93%E5%BA%93%E5%AF%BC%E8%88%AA\&quot;&gt;为定位阶段提供仓库导航&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E9%A2%86%E5%9F%9F%E7%9F%A5%E8%AF%86%E8%AE%B0%E5%BD%95%E4%BB%A3%E7%A0%81%E6%97%A0%E6%B3%95%E8%A1%A8%E8%BE%BE%E7%9A%84%E4%BF%A1%E6%81%AF\&quot;&gt;领域知识记录代码无法表达的信息&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%AD%98%E9%87%8F%E4%BB%A3%E7%A0%81%E4%BD%9C%E4%B8%BA%E5%AE%9E%E7%8E%B0%E4%B8%8A%E4%B8%8B%E6%96%87\&quot;&gt;存量代码作为实现上下文&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%8F%AF%E6%89%A7%E8%A1%8C%E9%AA%8C%E8%AF%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%B4%E6%8A%A4\&quot;&gt;可执行验证与上下文维护&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E9%AA%8C%E8%AF%81%E9%98%B6%E6%AE%B5%E7%9A%84%E6%B5%8B%E8%AF%95%E6%A0%87%E5%87%86\&quot;&gt;验证阶段的测试标准&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E4%B8%8A%E4%B8%8B%E6%96%87%E7%BB%B4%E6%8A%A4%E6%A0%87%E5%87%86\&quot;&gt;上下文维护标准&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E7%94%A8%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C%E9%AA%8C%E8%AF%81%E6%94%B9%E9%80%A0%E6%94%B6%E7%9B%8A\&quot;&gt;用消融实验验证改造收益&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#1-%E9%80%89%E6%8B%A9%E7%9C%9F%E5%AE%9E%E4%B8%94%E5%8F%AF%E8%AF%84%E5%88%86%E7%9A%84%E4%BB%BB%E5%8A%A1\&quot;&gt;1. 选择真实且可评分的任务&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#2-%E5%9B%BA%E5%AE%9A%E8%BE%93%E5%85%A5%E4%B8%8E%E6%89%A7%E8%A1%8C%E7%8E%AF%E5%A2%83\&quot;&gt;2. 固定输入与执行环境&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#3-%E6%9E%84%E9%80%A0%E5%9F%BA%E7%BA%BF%E5%92%8C%E6%B6%88%E8%9E%8D%E7%BB%84\&quot;&gt;3. 构造基线和消融组&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#4-%E5%90%8C%E6%97%B6%E8%AE%B0%E5%BD%95%E6%AD%A3%E7%A1%AE%E6%80%A7%E5%92%8C%E7%A8%B3%E5%AE%9A%E6%80%A7\&quot;&gt;4. 同时记录正确性和稳定性&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#5-%E6%A0%B9%E6%8D%AE-bad-case-%E6%9B%B4%E6%96%B0%E6%A0%87%E5%87%86\&quot;&gt;5. 根据 Bad Case 更新标准&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E6%8C%89%E9%98%B6%E6%AE%B5%E5%AE%9E%E6%96%BD%E4%BB%93%E5%BA%93%E6%94%B9%E9%80%A0\&quot;&gt;按阶段实施仓库改造&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-0-%E6%AD%A5%E5%BB%BA%E7%AB%8B%E8%AF%84%E5%88%86%E5%9F%BA%E7%BA%BF%E5%B9%B6%E9%80%89%E5%AE%9A%E5%9F%BA%E5%87%86%E4%BB%BB%E5%8A%A1\&quot;&gt;第 0 步：建立评分基线并选定基准任务&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-1-%E6%AD%A5%E5%BB%BA%E7%AB%8B%E5%85%A5%E5%8F%A3%E4%B8%8E%E5%AF%BC%E8%88%AA\&quot;&gt;第 1 步：建立入口与导航&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-2-%E6%AD%A5%E6%B8%85%E7%90%86%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E9%94%99%E8%AF%AF%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0\&quot;&gt;第 2 步：清理代码中的错误参考实现&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-3-%E6%AD%A5%E8%AE%B0%E5%BD%95%E4%BB%A3%E7%A0%81%E6%97%A0%E6%B3%95%E8%A1%A8%E8%BE%BE%E7%9A%84%E9%A2%86%E5%9F%9F%E7%9F%A5%E8%AF%86\&quot;&gt;第 3 步：记录代码无法表达的领域知识&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-4-%E6%AD%A5%E6%8E%A5%E5%85%A5%E5%8F%AF%E6%89%A7%E8%A1%8C%E9%AA%8C%E8%AF%81\&quot;&gt;第 4 步：接入可执行验证&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-5-%E6%AD%A5%E7%BB%B4%E6%8A%A4%E4%B8%8A%E4%B8%8B%E6%96%87\&quot;&gt;第 5 步：维护上下文&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%AC%AC-6-%E6%AD%A5%E9%80%9A%E8%BF%87%E5%9F%BA%E5%87%86%E4%BB%BB%E5%8A%A1%E8%BF%AD%E4%BB%A3\&quot;&gt;第 6 步：通过基准任务迭代&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E8%A7%92%E8%89%B2%E5%88%86%E5%B7%A5%E4%B8%8E%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98\&quot;&gt;角色分工与常见问题&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

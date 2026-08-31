@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9d174d"/>
+      <stop offset="55%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="90" cy="72" r="2.5"/><circle cx="192" cy="72" r="2.5"/><circle cx="294" cy="72" r="2.5"/><circle cx="396" cy="72" r="2.5"/><circle cx="498" cy="72" r="2.5"/><circle cx="600" cy="72" r="2.5"/><circle cx="702" cy="72" r="2.5"/><circle cx="804" cy="72" r="2.5"/><circle cx="906" cy="72" r="2.5"/><circle cx="1008" cy="72" r="2.5"/><circle cx="1110" cy="72" r="2.5"/>
+    <circle cx="90" cy="828" r="2.5"/><circle cx="192" cy="828" r="2.5"/><circle cx="294" cy="828" r="2.5"/><circle cx="396" cy="828" r="2.5"/><circle cx="498" cy="828" r="2.5"/><circle cx="600" cy="828" r="2.5"/><circle cx="702" cy="828" r="2.5"/><circle cx="804" cy="828" r="2.5"/><circle cx="906" cy="828" r="2.5"/><circle cx="1008" cy="828" r="2.5"/><circle cx="1110" cy="828" r="2.5"/>
+  </g>
+
+  <!-- canvas -->
+  <rect x="330" y="150" width="540" height="420" rx="14" fill="#fdf2f8" opacity="0.16"/>
+
+  <!-- photo glyph: sun + mountains -->
+  <circle cx="445" cy="245" r="26" fill="#fbcfe8" opacity="0.8"/>
+  <path d="M 360 520 L 490 380 L 570 470 L 660 350 L 810 520 Z" fill="#fbcfe8" opacity="0.45"/>
+
+  <!-- brush stroke -->
+  <path d="M 380 500 C 450 380 520 480 590 350 C 640 260 710 330 762 282" stroke="#fbcfe8" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.95"/>
+
+  <!-- dashed selection with handles -->
+  <rect x="360" y="190" width="320" height="240" rx="8" fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="14 10"/>
+  <g fill="#ffffff">
+    <rect x="351" y="181" width="18" height="18" rx="4"/>
+    <rect x="671" y="181" width="18" height="18" rx="4"/>
+    <rect x="351" y="421" width="18" height="18" rx="4"/>
+    <rect x="671" y="421" width="18" height="18" rx="4"/>
+  </g>
+
+  <!-- mosaic hint -->
+  <g fill="#fbcfe8" opacity="0.75">
+    <rect x="950" y="200" width="26" height="26" rx="3"/>
+    <rect x="982" y="200" width="26" height="26" rx="3" opacity="0.5"/>
+    <rect x="950" y="232" width="26" height="26" rx="3" opacity="0.5"/>
+    <rect x="982" y="232" width="26" height="26" rx="3"/>
+  </g>
+
+  <!-- palette swatches -->
+  <g>
+    <circle cx="468" cy="630" r="11" fill="#ffffff"/>
+    <circle cx="512" cy="630" r="11" fill="#fbcfe8"/>
+    <circle cx="556" cy="630" r="11" fill="#f9a8d4"/>
+    <circle cx="600" cy="630" r="11" fill="#fde047"/>
+    <circle cx="644" cy="630" r="11" fill="#93c5fd"/>
+    <circle cx="688" cy="630" r="11" fill="#86efac"/>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="752" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">Fabric Photo</text>
+  <text x="600" y="808" fill="#fbcfe8" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="6">CANVAS 图片编辑器</text>
+</svg>

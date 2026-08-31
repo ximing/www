@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- old state -->
+  <rect x="30" y="30" width="170" height="120" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="115" y="50" text-anchor="middle" font-size="13" fill="#2c4a73">旧 state</text>
+  <text x="42" y="72" font-size="11" fill="#2c4a73">doc</text>
+  <text x="42" y="90" font-size="11" fill="#2c4a73">selection</text>
+  <text x="42" y="108" font-size="11" fill="#2c4a73">storedMarks</text>
+  <text x="42" y="126" font-size="11" fill="#2c4a73">插件字段（按 key 挂载）</text>
+  <text x="42" y="144" font-size="10" fill="#777">config：schema / plugins 共享</text>
+
+  <!-- transaction -->
+  <rect x="30" y="200" width="170" height="110" fill="#f3ecdf" stroke="#a5854a"/>
+  <text x="115" y="220" text-anchor="middle" font-size="13" fill="#6b4c22">transaction</text>
+  <text x="42" y="242" font-size="11" fill="#6b4c22">steps / doc / before</text>
+  <text x="42" y="260" font-size="11" fill="#6b4c22">selection</text>
+  <text x="42" y="278" font-size="11" fill="#6b4c22">storedMarks</text>
+  <text x="42" y="296" font-size="11" fill="#6b4c22">meta</text>
+
+  <!-- filterTransaction -->
+  <rect x="260" y="70" width="150" height="44" fill="#fdfdfd" stroke="#666"/>
+  <text x="335" y="88" text-anchor="middle" font-size="12" fill="#333">filterTransaction</text>
+  <text x="335" y="104" text-anchor="middle" font-size="10" fill="#777">任一插件否决即作废</text>
+
+  <!-- applyInner -->
+  <rect x="470" y="70" width="150" height="44" fill="#fdfdfd" stroke="#666"/>
+  <text x="545" y="88" text-anchor="middle" font-size="12" fill="#333">applyInner</text>
+  <text x="545" y="104" text-anchor="middle" font-size="10" fill="#777">逐字段重建新实例</text>
+
+  <!-- new state -->
+  <rect x="470" y="170" width="170" height="100" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="555" y="190" text-anchor="middle" font-size="13" fill="#2c4a73">新 state</text>
+  <text x="482" y="212" font-size="11" fill="#2c4a73">doc = tr.doc</text>
+  <text x="482" y="230" font-size="11" fill="#2c4a73">selection = tr.selection</text>
+  <text x="482" y="248" font-size="11" fill="#2c4a73">插件字段各自 apply</text>
+
+  <!-- appendTransaction loop -->
+  <rect x="260" y="220" width="150" height="60" fill="#fdfdfd" stroke="#666"/>
+  <text x="335" y="240" text-anchor="middle" font-size="12" fill="#333">appendTransaction 循环</text>
+  <text x="335" y="256" text-anchor="middle" font-size="10" fill="#777">插件追加 tr，逐轮重算</text>
+  <text x="335" y="272" text-anchor="middle" font-size="10" fill="#777">seen 记录每个插件已见数量</text>
+
+  <!-- arrows -->
+  <line x1="200" y1="90" x2="260" y2="90" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M 200 205 L 235 205 L 235 100 L 260 100" fill="none" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="227" y="170" font-size="10" fill="#555" transform="rotate(-90 227 170)">rootTr 先过过滤</text>
+  <line x1="200" y1="255" x2="248" y2="255" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="224" y="247" text-anchor="middle" font-size="10" fill="#555">trs[0]</text>
+
+  <line x1="410" y1="92" x2="470" y2="92" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="545" y1="114" x2="545" y2="170" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <line x1="410" y1="250" x2="470" y2="235" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="440" y="232" text-anchor="middle" font-size="10" fill="#555">追加 tr</text>
+
+  <path d="M 555 270 L 555 330 L 335 330 L 335 280" fill="none" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="445" y="322" text-anchor="middle" font-size="10" fill="#555">newState 回到循环入口，直到一轮没有新 transaction</text>
+
+  <!-- veto -->
+  <path d="M 335 114 L 335 170 L 130 170 L 130 150" fill="none" stroke="#a54a4a" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="232" y="162" text-anchor="middle" font-size="10" fill="#a54a4a">否决：返回原 state</text>
+</svg>

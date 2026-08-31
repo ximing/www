@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>menu：菜单栏组件体系 | 一席之地</title><meta name="description" content="prosemirror-menu 的 MenuElement 协议、MenuItem 的 run/select/enable/active 四件套、Dropdown 组合、menubar 插件的 floating 模式，以及这套 UI 层为什么留在核心之外。"><meta property="og:title" content="menu：菜单栏组件体系"><meta property="og:description" content="prosemirror-menu 的 MenuElement 协议、MenuItem 的 run/select/enable/active 四件套、Dropdown 组合、menubar 插件的 floating 模式，以及这套 UI 层为什么留在核心之外。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="menu：菜单栏组件体系"><meta name="twitter:description" content="prosemirror-menu 的 MenuElement 协议、MenuItem 的 run/select/enable/active 四件套、Dropdown 组合、menubar 插件的 floating 模式，以及这套 UI 层为什么留在核心之外。"><meta name="keywords" content="源码分析"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/prosemirror/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《ProseMirror 源码分析》· 第 46 篇 · 共 60 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">menu：菜单栏组件体系</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2018-07-18</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/源码分析/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#源码分析</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>此前的扩展包分别处理按键、命令、撤销、输入规则、文档结构和光标位置，基本不负责界面呈现。prosemirror-menu 是系列中的 UI 包，用于将 commands 体系中的命令组织为工具栏。包不大，src 下三个实现文件：menu.ts 定义菜单元素体系，menubar.ts 负责插件装配，icons.ts 处理图标，另有一个只做导出的 index.ts。参考代码是 prosemirror-menu 的 4f015c6；顺带引用的 prosemirror-commands、prosemirror-history 分别是 52a84a8、445409b。</p>
+<h2 id="系列目录">系列目录<a aria-hidden="true" tabindex="-1" href="#系列目录"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>日期</th><th>标题</th></tr></thead><tbody><tr><td>05-10</td><td><a href="/post/2017/05-10-ProseMirror%E5%BC%80%E7%AF%87%E5%AF%8C%E6%96%87%E6%9C%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%BE/">ProseMirror 源码分析开篇：富文本编辑器到底难在哪</a></td></tr><tr><td>05-17</td><td><a href="/post/2017/05-17-ProseMirror%E4%BB%93%E5%BA%93%E5%85%A8%E6%99%AF%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86/">ProseMirror 仓库全景：22 个包怎么分工</a></td></tr><tr><td>05-24</td><td><a href="/post/2017/05-24-ProseMirror%E8%B7%91%E9%80%9ADemo%E4%B8%8E%E6%96%87%E6%A1%A3JSON%E7%BB%93%E6%9E%84/">跑通一个最小 ProseMirror：先看文档长什么样</a></td></tr><tr><td>06-07</td><td><a href="/post/2017/06-07-ProseMirrorModel%E4%B9%8BNode%E4%B8%8EFragment/">ProseMirror model（上）：Node 与 Fragment，文档树的骨架</a></td></tr><tr><td>06-14</td><td><a href="/post/2017/06-14-ProseMirrorModel%E4%B9%8BMark/">ProseMirror model（中）：Mark，内联格式怎么挂在文本上</a></td></tr><tr><td>06-21</td><td><a href="/post/2017/06-21-ProseMirrorModel%E4%B9%8BSchema%E4%B8%8E%E5%86%85%E5%AE%B9%E8%A1%A8%E8%BE%BE%E5%BC%8F/">ProseMirror model（下）：Schema 与 content expression，文档的类型系统</a></td></tr><tr><td>07-05</td><td><a href="/post/2017/07-05-ProseMirrorModel%E4%B9%8BResolvedPos/">ResolvedPos：一个数字位置怎么变成路径</a></td></tr><tr><td>07-12</td><td><a href="/post/2017/07-12-ProseMirrorModel%E4%B9%8BSlice%E4%B8%8EReplace/">Slice 与 replace：切一块文档出来再塞回去</a></td></tr><tr><td>07-19</td><td><a href="/post/2017/07-19-ProseMirrorModel%E4%B9%8BDOMSerializer/">DOMSerializer：文档怎么变成 DOM 和 HTML</a></td></tr><tr><td>08-02</td><td><a href="/post/2017/08-02-ProseMirrorModel%E4%B9%8BDOMParser/">DOMParser：parseDOM 规则与 HTML 解析</a></td></tr><tr><td>08-09</td><td><a href="/post/2017/08-09-ProseMirrorModel%E4%B9%8BDiff/">findDiffStart / findDiffEnd：两份文档怎么求差</a></td></tr><tr><td>08-16</td><td><a href="/post/2017/08-16-ProseMirrorModel%E6%94%B6%E5%AE%98Node%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95%E5%85%A8%E6%99%AF/">model 收官：Node 上的辅助方法与位置约定总结</a></td></tr><tr><td>09-06</td><td><a href="/post/2017/09-06-ProseMirrorTransform%E4%B9%8BStep%E6%8A%BD%E8%B1%A1/">ProseMirror transform（上）：Step 抽象，所有修改的最小单位</a></td></tr><tr><td>09-20</td><td><a href="/post/2017/09-20-ProseMirrorTransform%E4%B9%8BReplaceStep%E4%B8%8EFitter/">ProseMirror transform（下）：ReplaceStep 与 Fitter，最复杂的一步</a></td></tr><tr><td>10-03</td><td><a href="/post/2017/10-03-ProseMirrorTransform%E4%B9%8BStepMap/">StepMap：一步修改怎么映射每个位置</a></td></tr><tr><td>10-11</td><td><a href="/post/2017/10-11-ProseMirrorTransform%E4%B9%8BMapping%E4%B8%8ERebase/">Mapping：多步映射的链式合并，rebase 的地基</a></td></tr><tr><td>10-18</td><td><a href="/post/2017/10-18-ProseMirrorTransform%E4%B9%8B%E7%BB%93%E6%9E%84%E5%88%A4%E6%96%AD/">structure.ts：split/join/lift/wrap 的可达性判断</a></td></tr><tr><td>10-25</td><td><a href="/post/2017/10-25-ProseMirrorTransform%E4%B9%8BTransform%E7%B1%BB/">Transform 类：构建修改的 API 层</a></td></tr><tr><td>11-08</td><td><a href="/post/2017/11-08-ProseMirrorState%E4%B9%8BEditorState/">ProseMirror state（上）：EditorState，不可变编辑器状态</a></td></tr><tr><td>11-15</td><td><a href="/post/2017/11-15-ProseMirrorState%E4%B9%8BSelection%E4%BD%93%E7%B3%BB/">Selection 体系：四种选区与选区书签</a></td></tr><tr><td>11-22</td><td><a href="/post/2017/11-22-ProseMirrorState%E4%B9%8BTransaction/">Transaction：Transform 加上状态语义</a></td></tr><tr><td>12-06</td><td><a href="/post/2017/12-06-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8A/">Plugin 系统（上）：StateField 与插件状态</a></td></tr><tr><td>12-13</td><td><a href="/post/2017/12-13-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8B/">Plugin 系统（下）：props、appendTransaction 与 filterTransaction</a></td></tr><tr><td>12-20</td><td><a href="/post/2017/12-20-ProseMirrorState%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%8F%92%E4%BB%B6%E7%A4%BA%E4%BE%8B/">state 收官：动手写三个插件验证理解</a></td></tr><tr><td>01-03</td><td><a href="/post/2018/01-03-ProseMirrorView%E4%B9%8BEditorView%E6%80%BB%E8%A7%88/">ProseMirror view（上）：EditorView，状态与 DOM 之间的桥</a></td></tr><tr><td>01-10</td><td><a href="/post/2018/01-10-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8A/">ViewDesc（上）：文档到 DOM 的描述树</a></td></tr><tr><td>01-17</td><td><a href="/post/2018/01-17-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8B/">ViewDesc（下）：增量更新怎么做到只改动的部分</a></td></tr><tr><td>02-07</td><td><a href="/post/2018/02-07-ProseMirrorView%E4%B9%8BDOMObserver%E4%B8%8E%E8%AF%BB%E5%9B%9E/">DOMObserver 与 readDOMChange：浏览器改了 DOM，怎么读回文档</a></td></tr><tr><td>02-14</td><td><a href="/post/2018/02-14-ProseMirrorView%E4%B9%8B%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%AE%A1%E7%BA%BF/">input.ts：从 keydown 到 dispatchTransaction 的输入管线</a></td></tr><tr><td>02-21</td><td><a href="/post/2018/02-21-ProseMirrorView%E4%B9%8B%E9%80%89%E5%8C%BA%E5%90%8C%E6%AD%A5/">选区同步：state 选区与 DOM 选区的双向对齐</a></td></tr><tr><td>02-28</td><td><a href="/post/2018/02-28-ProseMirrorView%E4%B9%8BComposition%E4%B8%8EIME/">Composition 与 IME：中文输入法事件的处理</a></td></tr><tr><td>03-07</td><td><a href="/post/2018/03-07-ProseMirrorView%E4%B9%8BNodeView%E4%B8%8EMarkView/">NodeView 与 MarkView：把渲染权交给你</a></td></tr><tr><td>03-14</td><td><a href="/post/2018/03-14-ProseMirrorView%E4%B9%8BDecoration%E4%BD%93%E7%B3%BB/">Decoration 体系：不修改文档的视觉标注</a></td></tr><tr><td>03-21</td><td><a href="/post/2018/03-21-ProseMirrorView%E4%B9%8B%E5%89%AA%E8%B4%B4%E6%9D%BF/">clipboard：复制粘贴的序列化与解析</a></td></tr><tr><td>04-04</td><td><a href="/post/2018/04-04-ProseMirrorView%E4%B9%8B%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/">domcoords：屏幕坐标与文档位置的双向换算</a></td></tr><tr><td>04-11</td><td><a href="/post/2018/04-11-ProseMirrorView%E4%B9%8B%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%AE%E5%BC%82%E8%A1%A5%E4%B8%81/">browser.ts：浏览器差异补丁集</a></td></tr><tr><td>04-18</td><td><a href="/post/2018/04-18-ProseMirrorView%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%9C%80%E5%B0%8F%E7%BC%96%E8%BE%91%E5%99%A8/">view 收官：不用官方扩展，手写一个最小可用编辑器</a></td></tr><tr><td>05-09</td><td><a href="/post/2018/05-09-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bkeymap/">扩展（上）：keymap，最小的插件</a></td></tr><tr><td>05-16</td><td><a href="/post/2018/05-16-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcommands%E5%91%BD%E4%BB%A4%E4%BD%93%E7%B3%BB/">commands：命令的签名约定与组合器</a></td></tr><tr><td>05-23</td><td><a href="/post/2018/05-23-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bhistory/">history：undo/redo 栈与 rebasing</a></td></tr><tr><td>06-06</td><td><a href="/post/2018/06-06-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Binputrules/">inputrules：「# 空格」变成标题是怎么实现的</a></td></tr><tr><td>06-13</td><td><a href="/post/2018/06-13-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaBasic/">schema-basic：官方基础文档结构</a></td></tr><tr><td>06-20</td><td><a href="/post/2018/06-20-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaList%E4%B8%8E%E5%88%97%E8%A1%A8%E5%91%BD%E4%BB%A4/">schema-list：列表节点与最复杂的一批命令</a></td></tr><tr><td>07-04</td><td><a href="/post/2018/07-04-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bgapcursor/">gapcursor：光标落不进去的地方怎么办</a></td></tr><tr><td>07-11</td><td><a href="/post/2018/07-11-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bdropcursor/">dropcursor：拖拽时的插入位置指示</a></td></tr><tr><td>07-18</td><td>menu：菜单栏组件体系（本篇）</td></tr></tbody></table></div>
+<h2 id="menuelementrender-一次update-每次">MenuElement：render 一次，update 每次<a aria-hidden="true" tabindex="-1" href="#menuelementrender-一次update-每次"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>menu.ts 开头的 MenuElement 接口是整个包的地基：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">MenuElement</span> <span class="token punctuation">{</span>
+  <span class="token function">render</span><span class="token punctuation">(</span>pm<span class="token operator">:</span> EditorView<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">{</span>dom<span class="token operator">:</span> HTMLElement<span class="token punctuation">,</span> <span class="token function-variable function">update</span><span class="token operator">:</span> <span class="token punctuation">(</span>state<span class="token operator">:</span> EditorState<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token builtin">boolean</span><span class="token punctuation">,</span> focusable<span class="token operator">?</span><span class="token operator">:</span> HTMLElement<span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>协议分两段。render 在编辑器挂载时调一次，产出 DOM 和一个 update 函数；之后每次 state 更新，工具栏拿着新 state 逐个调 update。update 返回 false 表示这个元素在当前状态下整个隐藏，返回 true 表示仍然可见。接口注释里特意写明：能放进菜单结构的不止包内几个类，任何满足这个接口的对象都行。focusable 可选，元素希望焦点落在内部某个节点上时单独给出，默认用 dom。</p>
+<p>这个两段式和编辑器自身的更新周期对齐。第 25 篇讲 EditorView 时说过，每次 dispatch 产生新 state，view 更新 DOM，插件的 view 方法返回的对象跟着收到一次 update 调用。菜单把「这次 state 下我该长什么样」的计算全部收进 update，render 只跑一次，避免每次状态变化都重建 DOM。</p>
+<span class="prose-figure prose-figure-svg" style="aspect-ratio:760 / 372"><img src="/linked/7c92e014770f9e96613e045e88367d7f-menu-update-pipeline.svg" alt="menu 的两段式管线" width="760" height="372" loading="lazy" decoding="async" class="prose-img-placeholder"></span>
+<h2 id="menuitemrunselectenableactive-四件套">MenuItem：run、select、enable、active 四件套<a aria-hidden="true" tabindex="-1" href="#menuitemrunselectenableactive-四件套"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>最常用的元素是 MenuItem，一个点击后执行命令的按钮。spec 里和状态打交道的字段有四个，分工明确：</p>
+<ul>
+<li>run(state, dispatch, view, event)：点击时执行，签名就是命令签名（第 39 篇），多数情况直接把 commands 包的命令填进来。</li>
+<li>select(state)：这项当前是否适用，返回 false 时整个按钮隐藏。joinUpItem 的 select 是 state => joinUp(state)，光标上方没有可合并的块时按钮直接不出现。</li>
+<li>enable(state)：是否可用，返回 false 时按钮保留但置灰。undoItem 用 enable：state => undo(state)，没有可撤销历史时按钮灰着但不消失，位置保持稳定。</li>
+<li>active(state)：是否处于激活态，典型用法是加粗按钮在光标位于加粗文本内时高亮。</li>
+</ul>
+<p>select 表示该项是否适用于当前选区，enable 表示适用时是否可以执行。select 为 false 时隐藏项目，enable 为 false 时保留项目并置灰。</p>
+<p>select 与 enable 的实现都是把同一个命令再调一遍。命令不带 dispatch 调用时不产生任何修改，只返回可行性布尔值，这是 commands 篇讲过的 dry run 约定。菜单层没有自己重写「能不能撤销」「能不能合并」的判断，全部复用命令本身。</p>
+<p>spec 里其余字段管外观。MenuItemSpec 上 run 是唯一必填的函数；render、icon、label 三个 DOM 来源至少给一个，render 完全自定义，icon 走 icons.ts，label 生成一个纯文本按钮，主要给 Dropdown 里的条目用。title 出现在鼠标悬停提示上，可以是字符串或函数，函数版拿当前 state 算，可以随状态改提示文案。class 和 css 原样附加到 DOM 上，留给应用层微调样式。</p>
+<p>render(view) 里做的事（menu.ts MenuItem.render）：DOM 来源按优先级取 spec.render、spec.icon、spec.label，三者都没有就抛 RangeError。事件处理有两个细节。一是 mousedown 上 preventDefault，按下按钮时不触发浏览器的焦点转移，编辑器焦点不会被抢走。二是 click 里的一段焦点记账：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token keyword">let</span> setFocus <span class="token operator">=</span> document<span class="token punctuation">.</span>activeElement <span class="token operator">==</span> dom <span class="token operator">||</span> document<span class="token punctuation">.</span>activeElement <span class="token operator">==</span> view<span class="token punctuation">.</span>dom
+spec<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span>view<span class="token punctuation">.</span>state<span class="token punctuation">,</span> view<span class="token punctuation">.</span>dispatch<span class="token punctuation">,</span> view<span class="token punctuation">,</span> e<span class="token punctuation">)</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>setFocus <span class="token operator">&#x26;&#x26;</span> document<span class="token punctuation">.</span>activeElement <span class="token operator">==</span> dom<span class="token punctuation">)</span> view<span class="token punctuation">.</span><span class="token function">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>点击前焦点在按钮或编辑器上，命令执行完焦点还停在按钮上，就把焦点还给编辑器，用户能接着打字。disabled 的按钮在 click 开头直接拦掉。</p>
+<p>update(state) 是四件套的另一半，每次 state 更新时跑：select 为假就 display: none 并返回 false；enable 为假加 ProseMirror-menu-disabled 类和 aria-disabled；active 为真（且当前可用）加 ProseMirror-menu-active 类和 aria-pressed。状态同步只动 class 和属性，不碰 DOM 结构。</p>
+<p>翻译也在这里接。title 和 label 都过一遍 translate 函数，它读 view 的 translate prop（(view as any)._props.translate），应用层挂了翻译函数，整份菜单文本一起生效。</p>
+<h2 id="预置-item-与命令的复用">预置 item 与命令的复用<a aria-hidden="true" tabindex="-1" href="#预置-item-与命令的复用"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>menu.ts 末尾提供了预置 item：joinUpItem、liftItem、selectParentNodeItem 使用 select，undoItem、redoItem 使用 enable，图标来自同文件的 icons 表。两个工厂函数如下。</p>
+<p>wrapItem(nodeType, options) 构造「把选区包进某类节点」的按钮，run 和 select 都来自 wrapIn(nodeType, options.attrs) 生成的命令。</p>
+<p>blockTypeItem(nodeType, options) 构造「切换文本块类型」的按钮，段落和标题互切走的就是它。先造好 setBlockType 命令，run 直接用，enable 是 command(state) 的 dry run，active 需要额外判断当前块是不是已经是目标类型：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token function">active</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> <span class="token punctuation">{</span>$from<span class="token punctuation">,</span> to<span class="token punctuation">,</span> node<span class="token punctuation">}</span> <span class="token operator">=</span> state<span class="token punctuation">.</span>selection <span class="token keyword">as</span> NodeSelection
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">)</span> <span class="token keyword">return</span> node<span class="token punctuation">.</span><span class="token function">hasMarkup</span><span class="token punctuation">(</span>nodeType<span class="token punctuation">,</span> options<span class="token punctuation">.</span>attrs<span class="token punctuation">)</span>
+  <span class="token keyword">return</span> to <span class="token operator">&#x3C;=</span> $from<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&#x26;&#x26;</span> $from<span class="token punctuation">.</span>parent<span class="token punctuation">.</span><span class="token function">hasMarkup</span><span class="token punctuation">(</span>nodeType<span class="token punctuation">,</span> options<span class="token punctuation">.</span>attrs<span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>NodeSelection 选中了节点整体就看节点本身的 markup，否则看光标所在父块。to &#x3C;= $from.end() 排除了选区跨块的情况，跨块时不算激活。hasMarkup 同时比较类型和 attrs，标题 level 不同不算同一个状态，所以 H1 按钮在光标位于 H2 内时不会高亮。</p>
+<h2 id="dropdown-与-rendergrouped组合规则">Dropdown 与 renderGrouped：组合规则<a aria-hidden="true" tabindex="-1" href="#dropdown-与-rendergrouped组合规则"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>Dropdown 把一组元素收进一个下拉按钮。render 时 renderDropdownItems 把子项逐个渲染，每项包成 li（role: menuitem），整体放进一个 ul（role: menu），同时把各子项的 update 收进一个数组。这份子菜单 DOM 在 render 阶段就建好，点按钮时 expand 把它包进一个 div.ProseMirror-menu-dropdown-menu 挂到按钮旁边，按钮上同步维护 aria-haspopup 和 aria-expanded。聚合 update 的返回值是「至少有一项可见」：每项 update 返回 false 时对应的 li 一起隐藏，全部隐藏时整个下拉返回 false。</p>
+<p>关闭逻辑有三路：点按钮自己切换；展开后往 window 上挂 click 监听，收到菜单外的事件就关，markMenuEvent 与 isMenuEvent 用 100 毫秒时间窗加事件目标的包含关系判断「这个点击是不是菜单自己产生的」，避免打开菜单的那次点击冒泡到 window 又把它关掉；子项 focusout 后延迟 20 毫秒检查焦点是否还在菜单内，不在就关。20 毫秒的延迟是给焦点转移留的窗口，焦点从一项移到另一项会先触发一次 focusout。</p>
+<p>键盘支持跟着展开走。e.detail === 0 判定这次点击是键盘触发的（Enter 激活按钮没有坐标，detail 为 0），展开后焦点移到第一个可见子项。方向键用 keyboardMoveFocus 在可见项间循环，findFocusableIndex 跳过 display: none 的项；Escape 关闭并把焦点还给按钮。DropdownSubmenu 是向右展开的子菜单变体，ArrowRight 打开，Escape 或 ArrowLeft 收起，结构相同，不展开讲。</p>
+<p>renderGrouped(view, content) 负责把嵌套数组拍平成工具栏内容：内层每个数组是一组，组内每项外面包 span.ProseMirror-menuitem，组与组之间插一个 separator。它同样返回 {dom, update, focusables}，update 的组合规则分三层：</p>
+<ul>
+<li>单项 update 返回 false，对应的 span 隐藏；</li>
+<li>一组全部隐藏，这一组的 combineUpdates 返回 false；</li>
+<li>separator 只在左右两侧都有可见组时显示，组空了分隔符跟着消失，不会留下两条挨着的竖线。</li>
+</ul>
+<p>Dropdown 自己的 update 也遵守同一条规则：子项全隐藏时整个下拉按钮隐藏。false 的语义从单个 item 一路传播到工具栏顶层，任何一级「没东西可显示」都会正确收缩。</p>
+<p>应用层组织菜单时面对的是同一个嵌套数组：每个内层数组对应工具栏上的一段，段间分隔符由 renderGrouped 自动补上；Dropdown 和 DropdownSubmenu 可以当普通元素放进任何一层数组，菜单结构因此是纯数据，组合规则全部由这两个函数承担。</p>
+<h2 id="menubar-插件包裹floating-与焦点管理">menubar 插件：包裹、floating 与焦点管理<a aria-hidden="true" tabindex="-1" href="#menubar-插件包裹floating-与焦点管理"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>menubar.ts 的 menuBar(options) 是这个包对外的主要入口，返回一个普通插件，全部逻辑在插件的 view 方法里 new 一个 MenuBarView。这回答了「一条工具栏怎么挂到编辑器上」：不修改 EditorView 本身，用插件 view 的生命周期接管。</p>
+<p>构造函数先做 DOM 包裹：建一个 div.ProseMirror-menubar-wrapper，里面放 div.ProseMirror-menubar（role: toolbar），菜单条的 ariaControlsElements 指向 editorView.dom，声明它对编辑区域的控制关系；然后用 replaceChild 把 editorView.dom 从原父节点里换出来塞进 wrapper，options.position 决定菜单条在编辑器之前还是之后。renderGrouped 返回的 focusables 也在这里收集下来，供后面的键盘导航使用。插件销毁时 destroy 做反向操作，把 editorView.dom 换回原地，DOM 结构恢复原样。</p>
+<p>update() 在每次 state 变化时被调，做三件事。一是根节点检查：editorView.root 变了（比如编辑器被挪进 shadow root），用 renderGrouped 重渲染整份内容。二是调 contentUpdate(state) 走上一节那条更新链，同时留意焦点：当前聚焦的项这次被隐藏了，用 findFocusableIndex 把焦点挪到下一个可见项。三是高度记账：非 floating 模式下记录菜单条出现过的最大高度并设成 minHeight，按钮随状态显隐导致菜单高度变化时，下面的编辑器不跟着上下跳；宽度变化时清零重新记账。</p>
+<p>floating: true 开启浮动模式：编辑器被部分滚出视口时，菜单条切到 position: fixed 钉在视口顶部。updateFloat 拿 wrapper 的 getBoundingClientRect 判断：editorRect.top 小于参考 top 且 editorRect.bottom 还够放菜单（offsetHeight 加 10 像素余量）就进入浮动，否则复原。进入浮动时菜单条脱离文档流，原位置会塌，所以插一个等高的 spacer div 占位。滚动监听挂在 getAllWrapping 返回的所有祖先加 window 上，编辑器放进任何一层可滚动容器都能感知；wrapper 从文档里摘掉后监听器自行移除。isIOS() 用 userAgent 把 iOS 排除在 floating 之外，注释没写原因，iOS Safari 对 fixed 定位的滚动处理一直不稳是公开的问题。</p>
+<p>浮动状态下 update 改走 updateScrollCursor：取当前 DOM 选区的矩形，选区被钉在顶部的菜单条盖住时，找最近的可滚动祖先把内容往下滚一段，让光标露出来。这是浮动工具栏特有的问题：菜单钉住不动，输入位置可能滚到它底下。</p>
+<p>键盘方面菜单条整体是一个 toolbar：所有可聚焦项用 roving tabindex，只有当前项 tabindex 为 0，其余为 -1，Tab 把焦点带进工具栏一次，左右方向键在项间移动，与 Dropdown 内部的垂直导航共用 keyboardMoveFocus。</p>
+<h2 id="icons三种形态与-symbol-复用">icons：三种形态与 symbol 复用<a aria-hidden="true" tabindex="-1" href="#icons三种形态与-symbol-复用"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>getIcon(root, icon) 的 icon 参数是三选一的联合类型（menu.ts 导出为 IconSpec）：{path, width, height} 给 SVG 路径，{text, css} 给一段文本，{dom} 直接给一个 DOM 节点；返回值统一是 button.ProseMirror-icon。</p>
+<p>SVG 分支做了去重。hashPath 对 path 字符串算一个 32 位哈希，图标 id 是 pm-icon- 加哈希的十六进制。buildSVG 在文档里维护一个隐藏的 svg#ProseMirror-icon-collection，第一次用到某个 path 时在里面建一个 symbol（viewBox 取自 width/height），按钮里只放一个 svg 加 use 指过去。同一个图标出现多次，路径数据只存一份。use 的 href 有个细节：引用值先用 /([^#]*)/ 从 location 里剥掉 hash 再拼上 #id，拼成完整的文档内地址。页面里有 base 标签时，裸的 fragment 引用会相对 base 解析，指不到当前文档的 symbol，这里提前把基址补全。</p>
+<p>文本分支最简单：span 里放 textContent，css 直接附加。menu.ts 的 icons 表里 selectParentNode 就用的文本形态，字符是 ⬚（U+2B1A）加粗。dom 分支 cloneNode(true) 一份塞进按钮。</p>
+<p>icons 表本身是十二个常用图标的集合（join、lift、selectParentNode、undo、redo、strong、em、code、link、bulletList、orderedList、blockquote），供预置 item 和应用层取用，不是必须使用的约定。</p>
+<h2 id="menu-与核心包的边界">menu 与核心包的边界<a aria-hidden="true" tabindex="-1" href="#menu-与核心包的边界"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>menu 位于核心四层之外：它依赖 view、state、commands 和 history，是命令体系的使用方。model、transform、state、view 不需要知道编辑器是否配置工具栏。</p>
+<p>menu 使用公开接口挂载 DOM、同步状态、执行命令和读取翻译配置：插件的 view 方法、update 回调、命令签名和 view props。MenuElement 的 render/update 协议对应编辑器的一次渲染和后续状态更新。其他 UI 实现也可以通过命令的 dry run 计算 enable 与 active。</p>
+<p>该包提供 DOM 工具栏及焦点、键盘导航和浮动定位等交互实现。select、enable、active 和分组分隔符将命令状态映射为界面状态；菜单项、顺序和图标仍由应用层配置。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="Zmzbwn" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/07-18-ProseMirror扩展之menu/&quot;],&quot;words&quot;:[0,1125],&quot;paragraphs&quot;:[0,52]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1125<!-- --> 字 · <!-- -->52<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2018/07-11-ProseMirror扩展之dropcursor/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">dropcursor：拖拽时的插入位置指示</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/07-25-rpc框架的代价/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">RPC 框架：像本地调用一样调远程的代价</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/prosemirror/" class="hover:text-accent transition-colors duration-200">《ProseMirror 源码分析》</a><span>· 第 46 篇 · 共 60 篇</span></div><div class="sm:col-start-1"><a href="/post/2018/07-11-ProseMirror扩展之dropcursor/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">dropcursor：拖拽时的插入位置指示</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/08-01-ProseMirror扩展之collab协作原理/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">collab（上）：协作编辑的 rebase 原理</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2018/12-19-ProseMirror系列总结/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-19</time></a><a href="/post/2018/12-05-ProseMirror与其他编辑器架构对比/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-05</time></a><a href="/post/2018/11-21-ProseMirror之多包构建工程/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-11-21</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="Z1Hd8VE" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/07-18-ProseMirror扩展之menu/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="1IVKEx" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95\&quot;&gt;系列目录&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#menuelementrender-%E4%B8%80%E6%AC%A1update-%E6%AF%8F%E6%AC%A1\&quot;&gt;MenuElement：render 一次，update 每次&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#menuitemrunselectenableactive-%E5%9B%9B%E4%BB%B6%E5%A5%97\&quot;&gt;MenuItem：run、select、enable、active 四件套&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E9%A2%84%E7%BD%AE-item-%E4%B8%8E%E5%91%BD%E4%BB%A4%E7%9A%84%E5%A4%8D%E7%94%A8\&quot;&gt;预置 item 与命令的复用&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#dropdown-%E4%B8%8E-rendergrouped%E7%BB%84%E5%90%88%E8%A7%84%E5%88%99\&quot;&gt;Dropdown 与 renderGrouped：组合规则&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#menubar-%E6%8F%92%E4%BB%B6%E5%8C%85%E8%A3%B9floating-%E4%B8%8E%E7%84%A6%E7%82%B9%E7%AE%A1%E7%90%86\&quot;&gt;menubar 插件：包裹、floating 与焦点管理&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#icons%E4%B8%89%E7%A7%8D%E5%BD%A2%E6%80%81%E4%B8%8E-symbol-%E5%A4%8D%E7%94%A8\&quot;&gt;icons：三种形态与 symbol 复用&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#menu-%E4%B8%8E%E6%A0%B8%E5%BF%83%E5%8C%85%E7%9A%84%E8%BE%B9%E7%95%8C\&quot;&gt;menu 与核心包的边界&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

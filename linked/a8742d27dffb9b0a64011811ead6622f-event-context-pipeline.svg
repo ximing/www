@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="600" viewBox="0 0 980 600" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/>
+    </marker>
+    <marker id="arrowP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c53c4"/>
+    </marker>
+  </defs>
+  <rect width="980" height="600" fill="#ffffff"/>
+
+  <!-- 第一段：事件到 lane -->
+  <text x="20" y="28" fill="#1f3a6e" font-size="13" font-weight="700">事件链：这次更新拿哪条 lane</text>
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="20" y="40" width="215" height="52" rx="8" fill="#eef4ff" stroke="#4a7ddb" stroke-width="1.5"/>
+    <text x="127" y="61" fill="#1f3a6e" font-weight="600">原生 click</text>
+    <text x="127" y="79" fill="#5b6b8c" font-size="11">冒泡到 root 容器</text>
+
+    <rect x="255" y="40" width="215" height="52" rx="8" fill="#eef4ff" stroke="#4a7ddb" stroke-width="1.5"/>
+    <text x="362" y="55" fill="#1f3a6e" font-weight="600">dispatchDiscreteEvent</text>
+    <text x="362" y="71" fill="#5b6b8c" font-size="11">setCurrentUpdatePriority(Discrete)</text>
+    <text x="362" y="85" fill="#5b6b8c" font-size="11">transition 清零</text>
+
+    <rect x="490" y="40" width="215" height="52" rx="8" fill="#eef4ff" stroke="#4a7ddb" stroke-width="1.5"/>
+    <text x="597" y="61" fill="#1f3a6e" font-weight="600">onClick 回调执行</text>
+    <text x="597" y="79" fill="#5b6b8c" font-size="11">回调里调用 setState</text>
+
+    <rect x="725" y="40" width="235" height="52" rx="8" fill="#eef4ff" stroke="#4a7ddb" stroke-width="1.5"/>
+    <text x="842" y="61" fill="#1f3a6e" font-weight="600">requestUpdateLane</text>
+    <text x="842" y="79" fill="#5b6b8c" font-size="11">取到 DiscreteEventPriority = SyncLane</text>
+
+    <line x1="235" y1="66" x2="253" y2="66" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="470" y1="66" x2="488" y2="66" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="705" y1="66" x2="723" y2="66" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 第二段：渲染与 bailout -->
+  <text x="725" y="132" fill="#7a5410" font-size="13" font-weight="700">渲染：lane 标记与 bailout 检查</text>
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="725" y="144" width="235" height="52" rx="8" fill="#fff7e6" stroke="#d99a2b" stroke-width="1.5"/>
+    <text x="842" y="165" fill="#7a5410" font-weight="600">scheduleUpdateOnFiber</text>
+    <text x="842" y="183" fill="#8a6d33" font-size="11">fiber.lanes 标记，childLanes 冒泡到 root</text>
+
+    <rect x="490" y="144" width="215" height="52" rx="8" fill="#fff7e6" stroke="#d99a2b" stroke-width="1.5"/>
+    <text x="597" y="165" fill="#7a5410" font-weight="600">beginWork 逐层下钻</text>
+    <text x="597" y="183" fill="#8a6d33" font-size="11">每个 fiber 先查自身 lanes</text>
+
+    <rect x="255" y="144" width="215" height="52" rx="8" fill="#fff7e6" stroke="#d99a2b" stroke-width="1.5"/>
+    <text x="362" y="159" fill="#7a5410" font-weight="600">bailoutOnAlreadyFinishedWork</text>
+    <text x="362" y="175" fill="#8a6d33" font-size="11">childLanes 不命中 renderLanes</text>
+    <text x="362" y="189" fill="#8a6d33" font-size="11">则整棵子树跳过</text>
+
+    <line x1="842" y1="92" x2="842" y2="142" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="725" y1="170" x2="707" y2="170" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="490" y1="170" x2="472" y2="170" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 第三段：Context 传播 -->
+  <text x="20" y="290" fill="#452a7a" font-size="13" font-weight="700">Context 传播链：把 lane 送到每个 consumer</text>
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="20" y="302" width="215" height="52" rx="8" fill="#f2ecfb" stroke="#7c53c4" stroke-width="1.5"/>
+    <text x="127" y="323" fill="#452a7a" font-weight="600">Provider value 变化</text>
+    <text x="127" y="341" fill="#6a5a8c" font-size="11">is() 比较新旧 value，不同</text>
+
+    <rect x="255" y="302" width="215" height="52" rx="8" fill="#f2ecfb" stroke="#7c53c4" stroke-width="1.5"/>
+    <text x="362" y="317" fill="#452a7a" font-weight="600">propagateContextChange_eager</text>
+    <text x="362" y="333" fill="#6a5a8c" font-size="11">深度优先遍历子树</text>
+    <text x="362" y="347" fill="#6a5a8c" font-size="11">dependencies 链表匹配 consumer</text>
+
+    <rect x="490" y="302" width="215" height="52" rx="8" fill="#f2ecfb" stroke="#7c53c4" stroke-width="1.5"/>
+    <text x="597" y="317" fill="#452a7a" font-weight="600">consumer.lanes 合并 renderLanes</text>
+    <text x="597" y="333" fill="#6a5a8c" font-size="11">scheduleWorkOnParentPath</text>
+    <text x="597" y="347" fill="#6a5a8c" font-size="11">childLanes 沿 return 冒泡</text>
+
+    <rect x="725" y="302" width="235" height="52" rx="8" fill="#f2ecfb" stroke="#7c53c4" stroke-width="1.5"/>
+    <text x="842" y="323" fill="#452a7a" font-weight="600">consumer 重新渲染</text>
+    <text x="842" y="341" fill="#6a5a8c" font-size="11">readContext 读到新的 _currentValue</text>
+
+    <line x1="235" y1="328" x2="253" y2="328" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="470" y1="328" x2="488" y2="328" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="705" y1="328" x2="723" y2="328" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- 会合点：childLanes -->
+  <path d="M 597 300 L 597 240 L 362 240 L 362 198" fill="none" stroke="#7c53c4" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrowP)"/>
+  <g text-anchor="middle">
+    <rect x="385" y="216" width="190" height="26" rx="13" fill="#ffffff" stroke="#7c53c4" stroke-width="1"/>
+    <text x="480" y="233" fill="#452a7a" font-size="11.5">childLanes 是两边共同的判据</text>
+  </g>
+
+  <!-- 底部说明 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="140" y="420" width="700" height="96" rx="8" fill="#f7f8fa" stroke="#c9d2e0" stroke-width="1"/>
+    <text x="490" y="446" fill="#3c4a63" font-weight="600">事件系统回答「这次更新拿哪条 lane」，Context 传播回答「这条 lane 怎么送到该更新的 fiber」</text>
+    <text x="490" y="470" fill="#5b6b8c" font-size="11">传播阶段提前写好 consumer 的 lanes 与祖先路径的 childLanes，中间层即使 props 未变，</text>
+    <text x="490" y="488" fill="#5b6b8c" font-size="11">bailout 查到 childLanes 命中也会 cloneChildFibers 继续下钻，memo 比较不会吞掉 context 变更</text>
+  </g>
+
+  <text x="490" y="560" text-anchor="middle" fill="#888" font-size="12">点击事件 → 事件优先级 → Lane → bailout → Context 传播（master @ 2021-08-19，.new fork）</text>
+</svg>

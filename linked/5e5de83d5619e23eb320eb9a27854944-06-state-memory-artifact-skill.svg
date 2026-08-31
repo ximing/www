@@ -1,0 +1,41 @@
+<svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="s2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a2a"/><stop offset="100%" stop-color="#285c42"/></linearGradient>
+    <linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#5c4228"/></linearGradient>
+  </defs>
+  <rect width="700" height="440" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">四种不同概念：State / Memory / Artifact / Skill</text>
+  <text x="350" y="46" text-anchor="middle" fill="#f85149" font-size="11">它们不属于同一类，不能放在同一层</text>
+
+  <!-- State -->
+  <rect x="40" y="62" width="620" height="80" rx="6" fill="url(#s1)" opacity="0.8"/>
+  <text x="55" y="82" fill="#58a6ff" font-size="13" font-weight="bold">Task State 任务状态</text>
+  <text x="55" y="100" fill="#8b949e" font-size="11">服务目标：断点续跑、并发协作、流程一致性</text>
+  <text x="55" y="118" fill="#8b949e" font-size="11">包括：当前计划 / 已完成步骤 / Pending TODO / 当前分支 / 已执行测试 / 子 Agent 状态 / 失败次数 / Lease</text>
+  <text x="55" y="136" fill="#484f58" font-size="11">不是什么：这不是 Memory。状态回答的是「正在做到哪里」，不是「过去学到了什么」。</text>
+
+  <!-- Memory -->
+  <rect x="40" y="150" width="620" height="80" rx="6" fill="url(#s2)" opacity="0.8"/>
+  <text x="55" y="170" fill="#3fb950" font-size="13" font-weight="bold">Memory 长期记忆</text>
+  <text x="55" y="188" fill="#8b949e" font-size="11">服务目标：跨任务复用经验</text>
+  <text x="55" y="206" fill="#8b949e" font-size="11">包括：用户偏好 / 项目约定 / 历史失败经验 / 某类任务最佳策略 / 模块负责人 / 架构知识 / 已验证经验规律</text>
+  <text x="55" y="224" fill="#484f58" font-size="11">不是什么：这不是当前任务的进度记录。记忆是「持久化的经验」，不是「正在做的事」。</text>
+
+  <!-- Artifact -->
+  <rect x="40" y="238" width="620" height="80" rx="6" fill="url(#s3)" opacity="0.8"/>
+  <text x="55" y="258" fill="#a371f7" font-size="13" font-weight="bold">Artifact 产物</text>
+  <text x="55" y="276" fill="#8b949e" font-size="11">服务目标：记录本次任务生产的成果</text>
+  <text x="55" y="294" fill="#8b949e" font-size="11">包括：代码 Diff / 计划文档 / 测试报告 / 构建产物 / 截图 / 失败日志 / 验证报告 / Episode Package</text>
+  <text x="55" y="312" fill="#484f58" font-size="11">不是什么：这不是 Memory。产物有版本、来源、生命周期和权限，是一次执行的结果。</text>
+
+  <!-- Skill -->
+  <rect x="40" y="326" width="620" height="80" rx="6" fill="url(#s4)" opacity="0.8"/>
+  <text x="55" y="346" fill="#d29922" font-size="13" font-weight="bold">Skill 技能</text>
+  <text x="55" y="364" fill="#8b949e" font-size="11">服务目标：Agent 能做什么以及怎么做</text>
+  <text x="55" y="382" fill="#8b949e" font-size="11">包括：操作指南 / Prompt / 脚本 / 工具组合 / 触发条件 / 输入输出 Schema / 验证方法</text>
+  <text x="55" y="400" fill="#484f58" font-size="11">不是什么：可版本化的程序化能力包，不是 Memory 的子集。</text>
+</svg>

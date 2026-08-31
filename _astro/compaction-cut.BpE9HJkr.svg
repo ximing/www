@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 520" font-family="system-ui, sans-serif">
+  <text x="420" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#1f1e1c">compaction：token 预算、安全切割点与 split turn 二次摘要</text>
+
+  <!-- 保留区高亮 -->
+  <rect x="52" y="232" width="272" height="128" rx="8" fill="#fdf0ea"/>
+
+  <!-- 左侧：entry 序列（上旧下新） -->
+  <text x="60" y="58" font-size="11" fill="#a8a39a">旧 ↑</text>
+
+  <rect x="60" y="66" width="250" height="34" rx="6" fill="#f4f2ee"/>
+  <text x="185" y="88" text-anchor="middle" font-size="12.5" fill="#4a463f">message · user</text>
+
+  <rect x="60" y="108" width="250" height="34" rx="6" fill="#f4f2ee"/>
+  <text x="185" y="130" text-anchor="middle" font-size="12.5" fill="#4a463f">message · assistant（含 toolCall）</text>
+
+  <rect x="60" y="150" width="250" height="34" rx="6" fill="#f4f2ee"/>
+  <text x="185" y="172" text-anchor="middle" font-size="12.5" fill="#4a463f">toolResult</text>
+
+  <rect x="60" y="192" width="250" height="34" rx="6" fill="#f4f2ee"/>
+  <text x="185" y="214" text-anchor="middle" font-size="12.5" fill="#4a463f">message · user（turn 2 起点）</text>
+
+  <rect x="60" y="238" width="250" height="34" rx="6" fill="#faf9f7" stroke="#d8d4cc"/>
+  <text x="185" y="260" text-anchor="middle" font-size="12.5" fill="#4a463f">message · assistant（含 toolCall）</text>
+
+  <rect x="60" y="280" width="250" height="34" rx="6" fill="#faf9f7" stroke="#d8d4cc"/>
+  <text x="185" y="302" text-anchor="middle" font-size="12.5" fill="#4a463f">toolResult</text>
+
+  <rect x="60" y="322" width="250" height="34" rx="6" fill="#faf9f7" stroke="#d8d4cc"/>
+  <text x="185" y="344" text-anchor="middle" font-size="12.5" fill="#4a463f">message · assistant</text>
+
+  <text x="60" y="382" font-size="11" fill="#a8a39a">新 ↓　保留区：从尾部累加 keepRecentTokens 预算（默认 20000）</text>
+
+  <!-- 禁止切割标记：assistant(toolCall) 与 toolResult 之间 -->
+  <text x="330" y="150" font-size="12" fill="#b5512f">✗ 不能在此切：保留侧会出现孤儿 toolResult</text>
+
+  <!-- 切割线 -->
+  <line x1="52" y1="232" x2="324" y2="232" stroke="#d97757" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="330" y="228" font-size="12" fill="#b5512f">切割点：firstKeptEntry = 下方 assistant</text>
+  <text x="330" y="196" font-size="12" fill="#6e6a63">落在 turn 中间 → isSplitTurn</text>
+
+  <!-- 右侧：两次摘要汇入 compaction entry -->
+  <rect x="520" y="66" width="290" height="62" rx="8" fill="#f4f2ee"/>
+  <text x="665" y="90" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4a463f">历史部分 → 增量摘要</text>
+  <text x="665" y="112" text-anchor="middle" font-size="11.5" fill="#6e6a63">有 previousSummary 时用 UPDATE prompt</text>
+
+  <rect x="520" y="152" width="290" height="62" rx="8" fill="#f4f2ee"/>
+  <text x="665" y="176" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4a463f">turn 前缀 → 二次摘要</text>
+  <text x="665" y="198" text-anchor="middle" font-size="11.5" fill="#6e6a63">专用 TURN_PREFIX prompt</text>
+
+  <g stroke="#a8a39a" stroke-width="1.5" fill="#a8a39a">
+    <line x1="310" y1="120" x2="514" y2="90"/><polygon points="520,89 512,86 513,94"/>
+    <line x1="324" y1="209" x2="514" y2="183"/><polygon points="520,182 512,179 513,187"/>
+    <line x1="620" y1="128" x2="620" y2="252"/><polygon points="620,258 616,250 624,250"/>
+    <line x1="710" y1="214" x2="710" y2="252"/><polygon points="710,258 706,250 714,250"/>
+  </g>
+
+  <rect x="520" y="258" width="290" height="88" rx="8" fill="#fdf0ea" stroke="#d97757" stroke-width="1.5"/>
+  <text x="665" y="282" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b5512f">compaction entry（落盘，历史不删）</text>
+  <text x="665" y="304" text-anchor="middle" font-size="11.5" fill="#4a463f">summary + firstKeptEntryId + tokensBefore</text>
+  <text x="665" y="326" text-anchor="middle" font-size="11.5" fill="#4a463f">文件账本：&lt;read-files&gt; / &lt;modified-files&gt;</text>
+
+  <rect x="520" y="380" width="290" height="56" rx="8" fill="#f4f2ee"/>
+  <text x="665" y="403" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4a463f">retainedTail 保留尾部</text>
+  <text x="665" y="423" text-anchor="middle" font-size="11.5" fill="#6e6a63">原样进入压缩后的 context</text>
+
+  <g stroke="#a8a39a" stroke-width="1.5" fill="#a8a39a">
+    <line x1="324" y1="296" x2="514" y2="404"/><polygon points="520,406 512,405 515,398"/>
+  </g>
+
+  <!-- 摘要请求成本隔离注释 -->
+  <text x="520" y="470" font-size="11.5" fill="#6e6a63">摘要请求：独立 sessionId + cacheRetention "none"，</text>
+  <text x="520" y="490" font-size="11.5" fill="#6e6a63">不污染主会话的 prompt cache 计价</text>
+</svg>
