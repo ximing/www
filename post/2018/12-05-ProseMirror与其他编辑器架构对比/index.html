@@ -1,0 +1,389 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比 | 一席之地</title><meta name="description" content="从文档模型、更新模型、合法性校验、扩展机制四层对比 ProseMirror 与 Draft.js、Slate、Quill 的结构差异，ProseMirror 侧逐条对应本系列前 58 篇拆过的机制。"><meta property="og:title" content="ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比"><meta property="og:description" content="从文档模型、更新模型、合法性校验、扩展机制四层对比 ProseMirror 与 Draft.js、Slate、Quill 的结构差异，ProseMirror 侧逐条对应本系列前 58 篇拆过的机制。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比"><meta name="twitter:description" content="从文档模型、更新模型、合法性校验、扩展机制四层对比 ProseMirror 与 Draft.js、Slate、Quill 的结构差异，ProseMirror 侧逐条对应本系列前 58 篇拆过的机制。"><meta name="keywords" content="源码分析"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/prosemirror/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《ProseMirror 源码分析》· 第 59 篇 · 共 60 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2018-12-05</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/源码分析/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#源码分析</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>此前已分析核心四包及其扩展。本篇将 ProseMirror 与 Draft.js、Slate、Quill 对比，考察相同问题在不同架构中的实现。对比范围包括文档存储、修改表达、合法性校验和扩展机制。</p>
+<p>ProseMirror 侧的论断对应本系列已分析的机制；其他三者仅采用公开文档和源码可确认的机制事实，不推测内部实现，也不作优劣排名。ProseMirror 侧参考代码为 <code class="language-text">prosemirror-model</code> 的 6264de0、<code class="language-text">prosemirror-transform</code> 的 662b7a9、<code class="language-text">prosemirror-state</code> 的 ffad5d9。</p>
+<h2 id="系列目录">系列目录<a aria-hidden="true" tabindex="-1" href="#系列目录"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>日期</th><th>标题</th></tr></thead><tbody><tr><td>05-10</td><td><a href="/post/2017/05-10-ProseMirror%E5%BC%80%E7%AF%87%E5%AF%8C%E6%96%87%E6%9C%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%BE/">ProseMirror 源码分析开篇：富文本编辑器到底难在哪</a></td></tr><tr><td>05-17</td><td><a href="/post/2017/05-17-ProseMirror%E4%BB%93%E5%BA%93%E5%85%A8%E6%99%AF%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86/">ProseMirror 仓库全景：22 个包怎么分工</a></td></tr><tr><td>05-24</td><td><a href="/post/2017/05-24-ProseMirror%E8%B7%91%E9%80%9ADemo%E4%B8%8E%E6%96%87%E6%A1%A3JSON%E7%BB%93%E6%9E%84/">跑通一个最小 ProseMirror：先看文档长什么样</a></td></tr><tr><td>06-07</td><td><a href="/post/2017/06-07-ProseMirrorModel%E4%B9%8BNode%E4%B8%8EFragment/">ProseMirror model（上）：Node 与 Fragment，文档树的骨架</a></td></tr><tr><td>06-14</td><td><a href="/post/2017/06-14-ProseMirrorModel%E4%B9%8BMark/">ProseMirror model（中）：Mark，内联格式怎么挂在文本上</a></td></tr><tr><td>06-21</td><td><a href="/post/2017/06-21-ProseMirrorModel%E4%B9%8BSchema%E4%B8%8E%E5%86%85%E5%AE%B9%E8%A1%A8%E8%BE%BE%E5%BC%8F/">ProseMirror model（下）：Schema 与 content expression，文档的类型系统</a></td></tr><tr><td>07-05</td><td><a href="/post/2017/07-05-ProseMirrorModel%E4%B9%8BResolvedPos/">ResolvedPos：一个数字位置怎么变成路径</a></td></tr><tr><td>07-12</td><td><a href="/post/2017/07-12-ProseMirrorModel%E4%B9%8BSlice%E4%B8%8EReplace/">Slice 与 replace：切一块文档出来再塞回去</a></td></tr><tr><td>07-19</td><td><a href="/post/2017/07-19-ProseMirrorModel%E4%B9%8BDOMSerializer/">DOMSerializer：文档怎么变成 DOM 和 HTML</a></td></tr><tr><td>08-02</td><td><a href="/post/2017/08-02-ProseMirrorModel%E4%B9%8BDOMParser/">DOMParser：parseDOM 规则与 HTML 解析</a></td></tr><tr><td>08-09</td><td><a href="/post/2017/08-09-ProseMirrorModel%E4%B9%8BDiff/">findDiffStart / findDiffEnd：两份文档怎么求差</a></td></tr><tr><td>08-16</td><td><a href="/post/2017/08-16-ProseMirrorModel%E6%94%B6%E5%AE%98Node%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95%E5%85%A8%E6%99%AF/">model 收官：Node 上的辅助方法与位置约定总结</a></td></tr><tr><td>09-06</td><td><a href="/post/2017/09-06-ProseMirrorTransform%E4%B9%8BStep%E6%8A%BD%E8%B1%A1/">ProseMirror transform（上）：Step 抽象，所有修改的最小单位</a></td></tr><tr><td>09-20</td><td><a href="/post/2017/09-20-ProseMirrorTransform%E4%B9%8BReplaceStep%E4%B8%8EFitter/">ProseMirror transform（下）：ReplaceStep 与 Fitter，最复杂的一步</a></td></tr><tr><td>10-03</td><td><a href="/post/2017/10-03-ProseMirrorTransform%E4%B9%8BStepMap/">StepMap：一步修改怎么映射每个位置</a></td></tr><tr><td>10-11</td><td><a href="/post/2017/10-11-ProseMirrorTransform%E4%B9%8BMapping%E4%B8%8ERebase/">Mapping：多步映射的链式合并，rebase 的地基</a></td></tr><tr><td>10-18</td><td><a href="/post/2017/10-18-ProseMirrorTransform%E4%B9%8B%E7%BB%93%E6%9E%84%E5%88%A4%E6%96%AD/">structure.ts：split/join/lift/wrap 的可达性判断</a></td></tr><tr><td>10-25</td><td><a href="/post/2017/10-25-ProseMirrorTransform%E4%B9%8BTransform%E7%B1%BB/">Transform 类：构建修改的 API 层</a></td></tr><tr><td>11-08</td><td><a href="/post/2017/11-08-ProseMirrorState%E4%B9%8BEditorState/">ProseMirror state（上）：EditorState，不可变编辑器状态</a></td></tr><tr><td>11-15</td><td><a href="/post/2017/11-15-ProseMirrorState%E4%B9%8BSelection%E4%BD%93%E7%B3%BB/">Selection 体系：四种选区与选区书签</a></td></tr><tr><td>11-22</td><td><a href="/post/2017/11-22-ProseMirrorState%E4%B9%8BTransaction/">Transaction：Transform 加上状态语义</a></td></tr><tr><td>12-06</td><td><a href="/post/2017/12-06-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8A/">Plugin 系统（上）：StateField 与插件状态</a></td></tr><tr><td>12-13</td><td><a href="/post/2017/12-13-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8B/">Plugin 系统（下）：props、appendTransaction 与 filterTransaction</a></td></tr><tr><td>12-20</td><td><a href="/post/2017/12-20-ProseMirrorState%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%8F%92%E4%BB%B6%E7%A4%BA%E4%BE%8B/">state 收官：动手写三个插件验证理解</a></td></tr><tr><td>01-03</td><td><a href="/post/2018/01-03-ProseMirrorView%E4%B9%8BEditorView%E6%80%BB%E8%A7%88/">ProseMirror view（上）：EditorView，状态与 DOM 之间的桥</a></td></tr><tr><td>01-10</td><td><a href="/post/2018/01-10-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8A/">ViewDesc（上）：文档到 DOM 的描述树</a></td></tr><tr><td>01-17</td><td><a href="/post/2018/01-17-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8B/">ViewDesc（下）：增量更新怎么做到只改动的部分</a></td></tr><tr><td>02-07</td><td><a href="/post/2018/02-07-ProseMirrorView%E4%B9%8BDOMObserver%E4%B8%8E%E8%AF%BB%E5%9B%9E/">DOMObserver 与 readDOMChange：浏览器改了 DOM，怎么读回文档</a></td></tr><tr><td>02-14</td><td><a href="/post/2018/02-14-ProseMirrorView%E4%B9%8B%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%AE%A1%E7%BA%BF/">input.ts：从 keydown 到 dispatchTransaction 的输入管线</a></td></tr><tr><td>02-21</td><td><a href="/post/2018/02-21-ProseMirrorView%E4%B9%8B%E9%80%89%E5%8C%BA%E5%90%8C%E6%AD%A5/">选区同步：state 选区与 DOM 选区的双向对齐</a></td></tr><tr><td>02-28</td><td><a href="/post/2018/02-28-ProseMirrorView%E4%B9%8BComposition%E4%B8%8EIME/">Composition 与 IME：中文输入法事件的处理</a></td></tr><tr><td>03-07</td><td><a href="/post/2018/03-07-ProseMirrorView%E4%B9%8BNodeView%E4%B8%8EMarkView/">NodeView 与 MarkView：把渲染权交给你</a></td></tr><tr><td>03-14</td><td><a href="/post/2018/03-14-ProseMirrorView%E4%B9%8BDecoration%E4%BD%93%E7%B3%BB/">Decoration 体系：不修改文档的视觉标注</a></td></tr><tr><td>03-21</td><td><a href="/post/2018/03-21-ProseMirrorView%E4%B9%8B%E5%89%AA%E8%B4%B4%E6%9D%BF/">clipboard：复制粘贴的序列化与解析</a></td></tr><tr><td>04-04</td><td><a href="/post/2018/04-04-ProseMirrorView%E4%B9%8B%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/">domcoords：屏幕坐标与文档位置的双向换算</a></td></tr><tr><td>04-11</td><td><a href="/post/2018/04-11-ProseMirrorView%E4%B9%8B%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%AE%E5%BC%82%E8%A1%A5%E4%B8%81/">browser.ts：浏览器差异补丁集</a></td></tr><tr><td>04-18</td><td><a href="/post/2018/04-18-ProseMirrorView%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%9C%80%E5%B0%8F%E7%BC%96%E8%BE%91%E5%99%A8/">view 收官：不用官方扩展，手写一个最小可用编辑器</a></td></tr><tr><td>05-09</td><td><a href="/post/2018/05-09-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bkeymap/">扩展（上）：keymap，最小的插件</a></td></tr><tr><td>05-16</td><td><a href="/post/2018/05-16-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcommands%E5%91%BD%E4%BB%A4%E4%BD%93%E7%B3%BB/">commands：命令的签名约定与组合器</a></td></tr><tr><td>05-23</td><td><a href="/post/2018/05-23-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bhistory/">history：undo/redo 栈与 rebasing</a></td></tr><tr><td>06-06</td><td><a href="/post/2018/06-06-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Binputrules/">inputrules：「# 空格」变成标题是怎么实现的</a></td></tr><tr><td>06-13</td><td><a href="/post/2018/06-13-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaBasic/">schema-basic：官方基础文档结构</a></td></tr><tr><td>06-20</td><td><a href="/post/2018/06-20-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaList%E4%B8%8E%E5%88%97%E8%A1%A8%E5%91%BD%E4%BB%A4/">schema-list：列表节点与最复杂的一批命令</a></td></tr><tr><td>07-04</td><td><a href="/post/2018/07-04-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bgapcursor/">gapcursor：光标落不进去的地方怎么办</a></td></tr><tr><td>07-11</td><td><a href="/post/2018/07-11-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bdropcursor/">dropcursor：拖拽时的插入位置指示</a></td></tr><tr><td>07-18</td><td><a href="/post/2018/07-18-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bmenu/">menu：菜单栏组件体系</a></td></tr><tr><td>08-01</td><td><a href="/post/2018/08-01-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcollab%E5%8D%8F%E4%BD%9C%E5%8E%9F%E7%90%86/">collab（上）：协作编辑的 rebase 原理</a></td></tr><tr><td>08-08</td><td><a href="/post/2018/08-08-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcollab%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82/">collab（下）：receiveTransaction 与整个收发循环</a></td></tr><tr><td>08-15</td><td><a href="/post/2018/08-15-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bchangeset/">changeset：变更集的计算与展示</a></td></tr><tr><td>09-05</td><td><a href="/post/2018/09-05-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bmarkdown/">markdown：文档与 Markdown 的双向转换</a></td></tr><tr><td>09-19</td><td><a href="/post/2018/09-19-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bsearch/">search：查找替换插件</a></td></tr><tr><td>10-03</td><td><a href="/post/2018/10-03-ProseMirror%E8%A1%A8%E6%A0%BC%E4%B8%93%E9%A2%98%E4%B8%8ATableMap/">表格专题（上）：表格 schema 与 TableMap</a></td></tr><tr><td>10-10</td><td><a href="/post/2018/10-10-ProseMirror%E8%A1%A8%E6%A0%BC%E4%B8%93%E9%A2%98%E4%B8%ADCellSelection/">表格专题（中）：CellSelection，矩形的选区</a></td></tr><tr><td>10-17</td><td><a href="/post/2018/10-17-ProseMirror%E8%A1%A8%E6%A0%BC%E4%B8%93%E9%A2%98%E4%B8%8B%E7%BC%96%E8%BE%91%E5%91%BD%E4%BB%A4/">表格专题（下）：addColumn/mergeCells 等编辑命令</a></td></tr><tr><td>10-24</td><td><a href="/post/2018/10-24-ProseMirror%E8%A1%A8%E6%A0%BC%E4%B9%8Bcolumnresizing/">columnresizing：列宽拖拽的实现</a></td></tr><tr><td>11-07</td><td><a href="/post/2018/11-07-ProseMirror%E4%B9%8BexampleSetup%E8%A3%85%E9%85%8D/">example-setup：官方起手式是怎么装配的</a></td></tr><tr><td>11-14</td><td><a href="/post/2018/11-14-ProseMirror%E4%B9%8BtestBuilder/">test-builder：测试文档怎么写得像代码</a></td></tr><tr><td>11-21</td><td><a href="/post/2018/11-21-ProseMirror%E4%B9%8B%E5%A4%9A%E5%8C%85%E6%9E%84%E5%BB%BA%E5%B7%A5%E7%A8%8B/">多包仓库的构建与发布工程</a></td></tr><tr><td>12-05</td><td>ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比（本篇）</td></tr></tbody></table></div>
+<h2 id="同一份文档四种存法">同一份文档，四种存法<a aria-hidden="true" tabindex="-1" href="#同一份文档四种存法"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>拿一份样本文档对照：一个标题、一段含加粗文字的正文、一个无序列表项。</p>
+<span class="prose-figure prose-figure-svg" style="aspect-ratio:940 / 780"><img src="/linked/5237343fb3b200a40b7db4a9ba369797-editor-models-compare.svg" alt="四种文档模型对比" width="940" height="780" loading="lazy" decoding="async" class="prose-img-placeholder"></span>
+<p>ProseMirror 存的是一棵受 schema 约束的树。块级节点按内容表达式嵌套（第 6 篇），文本只出现在叶子上，加粗这类内联格式是挂在文本节点上的 Mark，不在树上开节点（第 5 篇）。整篇文档的位置用一个扁平整数 pos 编址，每个节点边界各占一个位置（第 7 篇），树的任何一层都能用单个数字定位。</p>
+<p>Slate 存的也是树，但树的形状没有约束。Editor 根节点下是 Element 与 Text 两类节点，Element 的 type 是普通字符串字段，想嵌几层嵌几层，自定义数据直接挂在节点对象上。加粗这类格式是 Text 节点对象上的一个自定义字段，形如 <code class="language-text">{ text: "发布", bold: true }</code>。位置用 Path（从根到节点的下标数组）加 offset 表示。</p>
+<p>Quill 对外暴露的文档模型是 delta：整篇文档摊平成一条线性序列，内容是 insert 的字符串与 embed 对象。字符级格式（加粗、颜色）作为 attributes 挂在对应的 insert 上，行级格式（标题、列表、引用）挂在这一行的换行符上。位置是单一整数 index。Quill 底层用 Parchment 的 blot 树对应 DOM，但 blot 是渲染与格式注册的内部结构，读写文档、表达修改用的都是扁平 delta。</p>
+<p>Draft.js 的 ContentState 是 ContentBlock 的有序表。块与块之间没有父子关系，列表的嵌套层级靠块上的 depth 数值表达。块内格式不进树：每个字符在 characterList 里对应一份 CharacterMetadata，记录这个字符的 inline style 集合和 entityKey。链接、提及这类带数据的格式存进独立的 entityMap，由 entityKey 引用。位置用 block key 加块内 offset 表示。</p>
+<p>顺带对比两个细节。一个是带数据的内联格式怎么存。ProseMirror 用带 attrs 的 Mark，schema-basic 里的 link 就是 href 存在 Mark 上（第 42 篇）。Slate 可以把链接做成 inline Element，把 href 挂在节点上，也可以做成 Text 上的字段。Quill 的 link 是一个值为 URL 的 format。Draft 用 entity，字符只记 key，数据在 entityMap 里。四种存法都能工作，区别在数据和文本的耦合程度。</p>
+<p>另一个是选区的表示。ProseMirror 的选区是 anchor/head 两个 pos，外加 NodeSelection、GapCursor 这类面向结构的选区类型（第 20、44 篇）。Slate 的 Range 是 anchor 和 focus 两个 Point。Quill 的选区退化成 index 加 length，扁平序列上一个区间就够了。Draft 的 SelectionState 用 anchorKey/anchorOffset、focusKey/focusOffset 四个字段。选区表示基本跟着文档编址方式走，结构型选区（矩形单元格选区，第 53 篇）只有树模型里才有存在的必要。</p>
+<p>文档模型的差异主要在嵌套能力和约束强度。ProseMirror 与 Slate 可表达任意深度的结构，因此表格和嵌套列表属于模型本体；Quill 与 Draft 的扁平结构将表格表示为 embed 或 atomic block，内部结构不在模型中展开。ProseMirror 在构造时经 schema 校验（第 6 篇的 <code class="language-text">createChecked</code> 路径）；Slate 在每次变更后通过 <code class="language-text">normalizeNode</code> 修复一致性；Quill 通过 Parchment 格式注册表限定合法属性；Draft 的 Modifier 层较少限制内容一致性，由调用方维持。</p>
+<p>序列化和外部格式的接入方式也跟着模型走。ProseMirror 的文档可以无损转成 JSON（第 3 篇看过它的形状），和 HTML 互转走 DOMSerializer/DOMParser 这对显式的转换层（第 9、10 篇），Markdown 有独立的序列化器（第 50 篇）。Quill 的 delta 本身就是 JSON，读写一体。Slate 的节点就是普通 JSON 对象，序列化约等于 JSON.stringify。Draft 用 convertToRaw/convertFromRaw 在 ContentState 和 RawDraftContentState 之间转换。模型越贴近普通 JSON，存库和传输越省事；模型离 HTML 越远，越需要专门的解析层，这个解析层同时就是粘贴和外部内容的入口（第 34 篇）。</p>
+<h2 id="修改怎么表达">修改怎么表达<a aria-hidden="true" tabindex="-1" href="#修改怎么表达"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>ProseMirror 把一次修改拆成 step 序列。Step 是最小单位，带 apply、invert、getMap 三个接口（第 13 篇）：apply 带失败语义，invert 给出逆操作，getMap 给出这一步对文档里每个位置的映射。Transaction 把一串 step 攒成一次提交（第 21 篇），Mapping 把多步映射链式合并（第 16 篇）。可逆性直接喂给 history 插件（第 40 篇），映射能力直接喂给 collab 的 rebase（第 47 篇）。</p>
+<p>Slate 的修改分两层。上层是 Transforms，setNodes、insertNodes、unwrapNodes 这批 API；落地时全部换算成低阶 operation 对象，insert_text、remove_text、insert_node、set_node、split_node 等，editor.apply 一次应用一个。位置换算有对应物：Path、Point、Range 各自带 transform 方法，按一个 operation 把自己映射到新位置。文档不可变靠 Immer 实现，onChange 拿到的是新值。</p>
+<p>Quill 的修改和文档用同一种格式。delta 的 retain、insert、delete 三个操作既描述文档内容也描述一次改动，updateContents(delta) 应用修改，text-change 事件抛出的也是 delta。Delta 库自带 invert 和 transform，撤销栈存逆 delta，协同按 OT 惯例做变换，操作格式和算法输入的形状完全对齐。</p>
+<p>Draft 的修改入口是 Modifier 上的一批静态方法：insertText、removeRange、setBlockType、applyEntity 等，每个方法吃旧 ContentState 吐新 ContentState。EditorState.push 把新内容连同 changeType（insert-characters、remove-range 这类标签）压进编辑器状态，undo/redo 栈里存的是 EditorState 快照，changeType 用来向外部标注修改来源。</p>
+<p>这一层的结构差异在于映射是不是一等公民。ProseMirror 的每个 step 自带位置映射，链式合并后任意历史位置都能换算到当前文档（第 15、16 篇），这是 collab 插件只用几百行就成立的前提（第 47、48 篇）。Quill 的 transform 是 delta 格式自带的能力。Slate 的 operation 配套 Point.transform 一族，协同库可以直接消费。Draft 的公开层没有操作级映射，栈里存整体快照，要做协同得在更外层自己补。</p>
+<p>还有一个容易漏掉的对比点：修改的元信息怎么流动。ProseMirror 的 Transaction 带 meta 槽位，插件可以往里塞标记、往下游传话（第 21 篇），history 插件的 addToHistory 和 closeHistory 两枚标记就走这条通道，undo 栈的分组与截断靠它们控制（第 40 篇）；appendTransaction 和 filterTransaction 让插件在一次提交的链路上追加修正或行使否决权（第 23 篇）。Quill 在 API 层有 source 参数，user、api、silent 三个取值标注修改来源，text-change 事件原样带出。Draft 的 changeType 起类似作用，写在 EditorState.push 里。Slate 的 operation 对象本身不带元信息字段，要标注来源得自己在编辑器外层约定。撤销、协同、审计这类消费方都吃元信息，这一层的设计决定了它们好不好写。</p>
+<p>也要照实说成本。扁平序列的 invert 和 transform 在数学上好定义，约束树的逆操作必须携带 schema 语义：第 14 篇 Fitter 为 slice 寻找闭合节点序列的那段复杂度，就是这个选择在修改侧的成本。换来的是任何时刻文档都合法，以及 rebase 之后的文档仍然合法。</p>
+<h2 id="合法性在哪个环节保证">合法性在哪个环节保证<a aria-hidden="true" tabindex="-1" href="#合法性在哪个环节保证"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>接着上一节往下落一层。ProseMirror 是改之前拦：step 应用时校验，ReplaceStep 的 slice 要经过 Fitter 找闭合（第 14 篇），非法结构进不了文档，任何时刻拿到的 doc 都满足 schema。Slate 是改完再修：变更先落地，normalizeNode 在每轮变更后检查，发现违规就地修回去，约束以代码形式写在 normalizeNode 里。Quill 靠注册表：在 Parchment 注册过的 format 和 attributor 才有效，解析时未注册的属性被丢弃，白名单即约束。Draft 默认不拦：Modifier 给什么存什么，RichUtils 这类上层工具帮忙维持常见一致性。四种策略对应四种信任模型，区别在约束写在哪、什么时候生效。写插件的人感受最直接：ProseMirror 里非法修改会在 step 应用时以失败的形式弹回来，调用方要处理失败分支；Slate 里插件作者要自己把约束写全；Quill 和 Draft 里大部分约束干脆由使用场景约定。</p>
+<h2 id="扩展怎么挂">扩展怎么挂<a aria-hidden="true" tabindex="-1" href="#扩展怎么挂"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>ProseMirror 的插件是三件套（第 22、23 篇）：StateField 让插件在 state 里存自己的数据，apply 是纯函数，插件状态跟着每次 transaction 重算；props 挂行为（按键、粘贴、点击）；pluginView 让插件接管一块 UI。单个节点的渲染可以整个交出去（NodeView，第 32 篇），不改文档的视觉标注走 Decoration（第 33 篇），协同光标、查找高亮都用这条通道（第 33、51 篇）。行为扩展和渲染扩展是两个独立通道，菜单这类纯 UI 被刻意留在核心之外（第 46 篇）。插件的状态存在 state 内部，和文档、选区一起不可变替换，undo/redo、协作重放时它跟着走，不需要自己处理一致性。</p>
+<p>Slate 的插件是「吃 editor 返回 editor」的函数，靠覆盖实例方法改行为：insertText 管输入、insertData 管粘贴、isVoid 和 isInline 定义节点性质、normalizeNode 写约束。渲染侧用 renderElement 和 renderLeaf 两个 prop 分发。扩展点集中在 editor 一个对象上，改动直接，多个插件覆盖同一个方法时调用顺序要自己链好。</p>
+<p>Quill 走 module 体系：toolbar、keyboard、history、clipboard 都是模块，配置即可装卸，模块的状态由模块实例自己持有；新格式通过 Parchment 注册自定义 blot 或 attributor。扩展面分两块，行为找模块，格式找注册表。</p>
+<p>Draft 的官方扩展面较窄：CompositeDecorator 给 entity 命中的范围配渲染组件，blockRendererFn 给自定义块配组件，keyBindingFn 接快捷键。更完整的能力由社区插件库在外层包出来，插件状态也只能挂在外层 React 组件里。</p>
+<p>对比下来，扩展机制的关键差异在插件状态放哪。ProseMirror 把它收进 state，和文档同生命周期（第 19、22 篇）；其余三家插件状态多在编辑器实例或外层组件上，编辑器内部不替它管一致性。</p>
+<h2 id="模型与浏览器-dom-的关系">模型与浏览器 DOM 的关系<a aria-hidden="true" tabindex="-1" href="#模型与浏览器-dom-的关系"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>四层之外还有一层值得提：模型和 contenteditable DOM 怎么对齐。ProseMirror 维护一棵和文档对应的 ViewDesc 描述树，状态更新时做增量重绘（第 26、27 篇）；浏览器自己改动 DOM 的部分（输入法、部分删除）由 DOMObserver 捕获，readDOMChange 用 diff 对齐读回（第 28 篇）。Quill 的 Parchment blot 树直接贴着 DOM，同样靠 MutationObserver 感知浏览器的改动。Slate 和 Draft 把渲染交给 React，Slate 用 renderElement/renderLeaf 逐节点出组件，Draft 每个 block 一个组件，浏览器行为引发的 DOM 变化在各自的事件层里消化。模型离 DOM 越远，中间这层对齐机制越厚，第 36 篇那批浏览器差异补丁就长在这一层上。</p>
+<h2 id="各自适合的场景">各自适合的场景<a aria-hidden="true" tabindex="-1" href="#各自适合的场景"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>适用范围可由机制推导。包含表格、嵌套列表或自定义块级语义，并需要协同编辑的文档，适合采用 ProseMirror 的 schema 与 step/mapping；tables 专题（第 52~55 篇）和 collab 两篇（第 47、48 篇）分别展开了这两项能力。评论框、消息编辑器等线性内容可使用 Quill 的扁平 delta，并接入 OT 协同。文档结构尚未确定、需要任意嵌套和大量自定义节点行为的 React 项目，可使用 Slate 的自由树和覆盖式插件，并在 <code class="language-text">normalizeNode</code> 中逐步补充约束。仅需块级结构且不需要深层嵌套的 React 项目，可使用 Draft 的扁平块模型。</p>
+<p>这些限制也来自模型本身。扁平模型将表格表示为 embed 或 atomic block 后，排序、跨块选区和单元格内编辑需要在模型外实现。自由树的长期一致性依赖 <code class="language-text">normalizeNode</code>，规则数量会随功能增加，每条规则还需保证收敛。强 schema 在修改时需要承担校验和闭合成本。选型时应先确认文档形态是否属于目标模型直接表达的结构，再评估模型外功能的实现成本。</p>
+<p>下一篇汇总本系列分析的 60 篇内容。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="Z14vv9X" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/12-05-ProseMirror与其他编辑器架构对比/&quot;],&quot;words&quot;:[0,1197],&quot;paragraphs&quot;:[0,37]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1197<!-- --> 字 · <!-- -->37<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2018/11-21-ProseMirror之多包构建工程/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/12-19-ProseMirror系列总结/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/prosemirror/" class="hover:text-accent transition-colors duration-200">《ProseMirror 源码分析》</a><span>· 第 59 篇 · 共 60 篇</span></div><div class="sm:col-start-1"><a href="/post/2018/11-21-ProseMirror之多包构建工程/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/12-19-ProseMirror系列总结/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2018/12-19-ProseMirror系列总结/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-19</time></a><a href="/post/2018/11-21-ProseMirror之多包构建工程/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-11-21</time></a><a href="/post/2018/11-14-ProseMirror之testBuilder/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">test-builder：测试文档怎么写得像代码</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-11-14</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="Z1QrR9U" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/12-05-ProseMirror与其他编辑器架构对比/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="2t3GSQ" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95\&quot;&gt;系列目录&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%90%8C%E4%B8%80%E4%BB%BD%E6%96%87%E6%A1%A3%E5%9B%9B%E7%A7%8D%E5%AD%98%E6%B3%95\&quot;&gt;同一份文档，四种存法&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E4%BF%AE%E6%94%B9%E6%80%8E%E4%B9%88%E8%A1%A8%E8%BE%BE\&quot;&gt;修改怎么表达&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%90%88%E6%B3%95%E6%80%A7%E5%9C%A8%E5%93%AA%E4%B8%AA%E7%8E%AF%E8%8A%82%E4%BF%9D%E8%AF%81\&quot;&gt;合法性在哪个环节保证&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%89%A9%E5%B1%95%E6%80%8E%E4%B9%88%E6%8C%82\&quot;&gt;扩展怎么挂&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%B5%8F%E8%A7%88%E5%99%A8-dom-%E7%9A%84%E5%85%B3%E7%B3%BB\&quot;&gt;模型与浏览器 DOM 的关系&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%90%84%E8%87%AA%E9%80%82%E5%90%88%E7%9A%84%E5%9C%BA%E6%99%AF\&quot;&gt;各自适合的场景&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

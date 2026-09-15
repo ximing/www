@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="470" viewBox="0 0 800 470" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- run root -->
+  <rect x="230" y="18" width="340" height="46" rx="8" fill="#e4e4e7"/>
+  <text x="400" y="46" font-size="13.5" font-weight="600" fill="#18181b" text-anchor="middle">run 现场 · artifacts/&lt;run-id&gt;/ledger/</text>
+
+  <line x1="330" y1="64" x2="245" y2="96" stroke="#52525b" stroke-width="1.6" marker-end="url(#arrow-gray)"/>
+  <line x1="470" y1="64" x2="555" y2="96" stroke="#52525b" stroke-width="1.6" marker-end="url(#arrow-gray)"/>
+
+  <!-- level 2: two ledgers -->
+  <rect x="95" y="100" width="300" height="52" rx="8" fill="#f4f4f5"/>
+  <text x="245" y="122" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">文件级账本 files/*.json</text>
+  <text x="245" y="141" font-size="11.5" fill="#71717a" text-anchor="middle">闭包内每个文件一个终态</text>
+
+  <rect x="405" y="100" width="300" height="52" rx="8" fill="#f4f4f5"/>
+  <text x="555" y="122" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">行级账本 line-maps/*.json</text>
+  <text x="555" y="141" font-size="11.5" fill="#71717a" text-anchor="middle">每个被转码文件一份 line-map</text>
+
+  <line x1="245" y1="152" x2="245" y2="182" stroke="#52525b" stroke-width="1.6" marker-end="url(#arrow-gray)"/>
+  <line x1="555" y1="152" x2="555" y2="182" stroke="#52525b" stroke-width="1.6" marker-end="url(#arrow-gray)"/>
+
+  <!-- file entry card -->
+  <rect x="40" y="186" width="410" height="178" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="60" y="212" font-size="12.5" font-weight="600" fill="#18181b">file: pages/approval/list.vue</text>
+  <text x="60" y="236" font-size="12.5" fill="#3f3f46">disposition: adapted（终态五选一）</text>
+  <text x="60" y="258" font-size="12" fill="#71717a">ported / lib-mapped / adapted / skipped / blocked</text>
+  <text x="60" y="284" font-size="12.5" fill="#3f3f46">evidence: knowledge_id + transforms_applied</text>
+  <text x="60" y="306" font-size="12" fill="#71717a">ported → 目标文件 + 门禁快照引用</text>
+  <text x="60" y="326" font-size="12" fill="#71717a">skipped → 理由 + 决策记录引用</text>
+  <text x="60" y="346" font-size="12" fill="#71717a">blocked → 工单 id；无证据的终态不存在</text>
+
+  <!-- line-map card -->
+  <rect x="470" y="186" width="310" height="178" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="488" y="212" font-size="12.5" font-weight="600" fill="#18181b">total_lines: 251</text>
+  <text x="488" y="236" font-size="12.5" fill="#3f3f46">entries（行块）：</text>
+  <text x="488" y="258" font-size="12" fill="#71717a">1–40 ported</text>
+  <text x="488" y="278" font-size="12" fill="#71717a">41–52 risk-high · ticket_id: T-117</text>
+  <text x="488" y="298" font-size="12" fill="#71717a">53–60 dropped（白名单：注释/空行）</text>
+  <text x="488" y="324" font-size="12.5" fill="#3f3f46">行区间并集 == 文件全集</text>
+  <text x="488" y="346" font-size="12" fill="#71717a">完备性由 dep-analyzer 机械核对</text>
+
+  <!-- roles row -->
+  <rect x="40" y="386" width="740" height="34" rx="8" fill="#f4f4f5"/>
+  <text x="410" y="407" font-size="12" fill="#3f3f46" text-anchor="middle">骨架：dep-analyzer 按 AST 锚点产出　·　填标签：CC 工人　·　核对完备性：dep-analyzer（不信 LLM 自报骨架）</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="432" width="740" height="28" rx="8" fill="#f4f4f5"/>
+  <text x="410" y="450" font-size="12" fill="#3f3f46" text-anchor="middle">更新经 MCP 工具按文件事务落盘（tmp + fsync + rename），与节点生死解耦，崩溃最多丢当前文件</text>
+</svg>

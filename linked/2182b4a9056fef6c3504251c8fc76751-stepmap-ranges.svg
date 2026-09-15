@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="320" viewBox="0 0 640 320" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#666" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <text x="60" y="28" font-size="12" fill="#333">ReplaceStep from=10, to=16, slice.size=3 → ranges = [10, 6, 3]，整段净变化 diff = -3</text>
+
+  <!-- old doc bar -->
+  <text x="60" y="54" font-size="12" fill="#2c4a73">旧文档</text>
+  <text x="268" y="54" text-anchor="middle" font-size="11" fill="#8a3a3a">被替换区间 [10, 16)</text>
+  <rect x="60" y="60" width="352" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+  <rect x="220" y="60" width="96" height="36" fill="#f7e3e3" stroke="#b05a5a"/>
+  <g font-size="11" text-anchor="middle" fill="#333">
+    <line x1="60" y1="96" x2="60" y2="103" stroke="#888"/><text x="60" y="116">0</text>
+    <line x1="188" y1="96" x2="188" y2="103" stroke="#888"/><text x="188" y="116">8</text>
+    <line x1="220" y1="96" x2="220" y2="103" stroke="#888"/><text x="220" y="116">10</text>
+    <line x1="252" y1="96" x2="252" y2="103" stroke="#888"/><text x="252" y="116">12</text>
+    <line x1="316" y1="96" x2="316" y2="103" stroke="#888"/><text x="316" y="116">16</text>
+    <line x1="380" y1="96" x2="380" y2="103" stroke="#888"/><text x="380" y="116">20</text>
+  </g>
+
+  <!-- mapping arrows -->
+  <g stroke="#666" stroke-width="1.2" fill="none">
+    <line x1="188" y1="122" x2="188" y2="204" marker-end="url(#arr)"/>
+    <line x1="252" y1="122" x2="264" y2="204" marker-end="url(#arr)"/>
+    <line x1="316" y1="122" x2="272" y2="204" marker-end="url(#arr)"/>
+    <line x1="380" y1="122" x2="334" y2="204" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- mapping result list -->
+  <g font-size="11" fill="#333">
+    <text x="440" y="108">pos 8 → 8（区间之前，不动）</text>
+    <text x="440" y="130">pos 12 → 13（区间内，assoc=1）</text>
+    <text x="440" y="152">pos 16 → 13（区间右端，side=1）</text>
+    <text x="440" y="174">pos 20 → 17（区间之后，加 diff）</text>
+  </g>
+
+  <!-- new doc bar -->
+  <text x="60" y="204" font-size="12" fill="#2e5a3c">新文档</text>
+  <text x="244" y="204" text-anchor="middle" font-size="11" fill="#2e5a3c">插入内容 [10, 13)</text>
+  <rect x="60" y="210" width="304" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+  <rect x="220" y="210" width="48" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+  <g font-size="11" text-anchor="middle" fill="#333">
+    <line x1="60" y1="246" x2="60" y2="253" stroke="#888"/><text x="60" y="266">0</text>
+    <line x1="188" y1="246" x2="188" y2="253" stroke="#888"/><text x="188" y="266">8</text>
+    <line x1="220" y1="246" x2="220" y2="253" stroke="#888"/><text x="220" y="266">10</text>
+    <line x1="268" y1="246" x2="268" y2="253" stroke="#888"/><text x="268" y="266">13</text>
+    <line x1="332" y1="246" x2="332" y2="253" stroke="#888"/><text x="332" y="266">17</text>
+  </g>
+
+  <!-- side rules -->
+  <g font-size="11" fill="#444">
+    <text x="60" y="294">side 规则：oldSize 为 0 取 assoc；pos==start 取 -1；pos==end 取 1；区间内取 assoc</text>
+    <text x="60" y="312">映射结果 = start + diff + (side &lt; 0 ? 0 : newSize)；区间之外的位置统一 pos + diff</text>
+  </g>
+</svg>

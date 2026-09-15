@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="450" viewBox="0 0 1080 450" font-family="PingFang SC, Microsoft YaHei, Helvetica Neue, sans-serif">
+  <defs>
+    <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- 契约卡片 -->
+  <rect x="60" y="40" width="580" height="360" rx="12" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5"/>
+  <text x="90" y="82" font-size="17" font-weight="600" fill="#1E293B">节点契约：视觉回归</text>
+
+  <!-- 输入 -->
+  <rect x="90" y="110" width="64" height="28" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
+  <text x="122" y="129" font-size="13" font-weight="600" fill="#1D4ED8" text-anchor="middle">输入</text>
+  <text x="175" y="130" font-size="14" fill="#334155" font-family="SF Mono, Menlo, monospace">commit、routes[]、baseline_ref、threshold</text>
+
+  <!-- 输出 -->
+  <rect x="90" y="180" width="64" height="28" rx="6" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1"/>
+  <text x="122" y="199" font-size="13" font-weight="600" fill="#1D4ED8" text-anchor="middle">输出</text>
+  <text x="175" y="200" font-size="14" fill="#334155" font-family="SF Mono, Menlo, monospace">diff_report[]、screenshots[]、status</text>
+
+  <!-- 失败 -->
+  <rect x="90" y="250" width="64" height="28" rx="6" fill="#FEF2F2" stroke="#DC2626" stroke-width="1"/>
+  <text x="122" y="269" font-size="13" font-weight="600" fill="#B91C1C" text-anchor="middle">失败</text>
+  <text x="175" y="270" font-size="14" fill="#334155" font-family="SF Mono, Menlo, monospace">retryable ｜ terminal ｜ needs_human</text>
+
+  <!-- 运行 -->
+  <rect x="90" y="320" width="64" height="28" rx="6" fill="#F8FAFC" stroke="#64748B" stroke-width="1"/>
+  <text x="122" y="339" font-size="13" font-weight="600" fill="#475569" text-anchor="middle">运行</text>
+  <text x="175" y="340" font-size="14" fill="#334155" font-family="SF Mono, Menlo, monospace">timeout、max_attempts、idempotency_key</text>
+
+  <!-- 箭头到验证器 -->
+  <line x1="640" y1="200" x2="712" y2="200" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <text x="676" y="188" font-size="12" fill="#64748B" text-anchor="middle">下游只信结构</text>
+
+  <!-- 独立验证器 -->
+  <rect x="720" y="150" width="300" height="100" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+  <text x="870" y="188" font-size="16" font-weight="600" fill="#92400E" text-anchor="middle">独立验证器</text>
+  <text x="870" y="216" font-size="13" fill="#92400E" text-anchor="middle">按契约做结构校验，缺字段即拒绝</text>
+
+  <text x="350" y="432" font-size="14" fill="#64748B" text-anchor="middle">上游说"完成"，不等于下游必须相信</text>
+</svg>

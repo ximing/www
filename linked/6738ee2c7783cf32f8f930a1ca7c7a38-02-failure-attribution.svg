@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,8 L5,0 L10,8" fill="#8b949e"/></marker>
+    <marker id="arrowDown" markerWidth="10" markerHeight="8" refX="5" refY="4" orient="auto"><path d="M0,0 L5,8 L10,0" fill="#f85149"/></marker>
+  </defs>
+  <rect width="800" height="340" fill="url(#bg)" rx="8"/>
+
+  <!-- Title -->
+  <text x="400" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">失败归因因果链</text>
+
+  <!-- Level 1: Task Failure -->
+  <rect x="300" y="48" width="200" height="36" rx="18" fill="#f85149" opacity="0.2" stroke="#f85149" stroke-width="1.5"/>
+  <text x="400" y="71" text-anchor="middle" fill="#f85149" font-size="13" font-weight="bold">任务失败</text>
+
+  <!-- Arrow down -->
+  <line x1="400" y1="84" x2="400" y2="110" stroke="#f85149" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <!-- Level 2: Step -->
+  <rect x="275" y="110" width="250" height="36" rx="4" fill="#3a1a1a" stroke="#f85149" stroke-width="1"/>
+  <text x="400" y="133" text-anchor="middle" fill="#f85149" font-size="12">在哪一步失败</text>
+
+  <line x1="400" y1="146" x2="400" y2="172" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Level 3: Root Cause Category -->
+  <rect x="170" y="172" width="460" height="36" rx="4" fill="#2a1a3a" stroke="#a371f7" stroke-width="1"/>
+  <text x="400" y="195" text-anchor="middle" fill="#a371f7" font-size="12">是模型判断错误 / 上下文缺失 / 工具能力不足 / 权限 / 环境 / 编排 / 验证规则的问题？</text>
+
+  <line x1="400" y1="208" x2="400" y2="234" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Level 4: Harness Component -->
+  <rect x="200" y="234" width="400" height="36" rx="4" fill="#1a2a3a" stroke="#58a6ff" stroke-width="1"/>
+  <text x="400" y="257" text-anchor="middle" fill="#58a6ff" font-size="12">应该修改哪个 Harness 组件</text>
+
+  <line x1="400" y1="270" x2="400" y2="296" stroke="#fd7e14" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <!-- Level 5: AHE Action -->
+  <rect x="225" y="296" width="350" height="36" rx="4" fill="#3a2a1a" stroke="#d29922" stroke-width="1"/>
+  <text x="400" y="319" text-anchor="middle" fill="#d29922" font-size="12">修改 Prompt / Tool / Skill / Memory / Middleware / Policy</text>
+</svg>

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 660" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="860" height="660" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">版本链 与 RR/RC 的 ReadView 生成时机</text>
+
+  <!-- ===== Panel A: 版本链 ===== -->
+  <text x="30" y="64" font-size="13" font-weight="600" fill="#1f2937">A. 一行的版本链（undo log 串联旧版本）</text>
+
+  <!-- 最新版本 -->
+  <rect x="40" y="82" width="190" height="92" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="52" y="102" font-size="11" fill="#64748b">最新版本（聚簇索引中的当前行）</text>
+  <text x="52" y="122" font-size="12" fill="#1f2937">trx_id = 200</text>
+  <text x="52" y="140" font-size="12" fill="#1f2937">balance = 90</text>
+  <text x="52" y="160" font-size="11" fill="#475569">roll_ptr ──→</text>
+
+  <!-- undo v2 -->
+  <rect x="290" y="82" width="190" height="92" rx="6" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4"/>
+  <text x="302" y="102" font-size="11" fill="#64748b">undo log 旧版本 v2</text>
+  <text x="302" y="122" font-size="12" fill="#1f2937">trx_id = 150</text>
+  <text x="302" y="140" font-size="12" fill="#1f2937">balance = 100</text>
+  <text x="302" y="160" font-size="11" fill="#475569">roll_ptr ──→</text>
+
+  <!-- undo v1 -->
+  <rect x="540" y="82" width="190" height="92" rx="6" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4"/>
+  <text x="552" y="102" font-size="11" fill="#64748b">undo log 旧版本 v1</text>
+  <text x="552" y="122" font-size="12" fill="#1f2937">trx_id = 100</text>
+  <text x="552" y="140" font-size="12" fill="#1f2937">balance = 80</text>
+  <text x="552" y="160" font-size="11" fill="#475569">roll_ptr = null</text>
+
+  <!-- 版本链箭头 -->
+  <line x1="230" y1="151" x2="290" y2="151" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr)"/>
+  <line x1="480" y1="151" x2="540" y2="151" stroke="#64748b" stroke-width="1.3" marker-end="url(#arr)"/>
+  <text x="260" y="142" font-size="10" fill="#64748b">roll_ptr</text>
+  <text x="510" y="142" font-size="10" fill="#64748b">roll_ptr</text>
+
+  <!-- ReadView -->
+  <rect x="40" y="196" width="420" height="104" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="52" y="216" font-size="12" font-weight="600" fill="#1f2937">ReadView（生成时刻的快照基准）</text>
+  <text x="52" y="238" font-size="12" fill="#475569">m_ids = {120, 200}（生成时仍活跃的事务）</text>
+  <text x="52" y="258" font-size="12" fill="#475569">min_trx_id = 120&#160;&#160;max_trx_id = 220</text>
+  <text x="52" y="278" font-size="12" fill="#475569">creator_trx_id = 当前事务自身 id</text>
+  <text x="52" y="294" font-size="11" fill="#16a34a">沿链判断：trx_id=200 在 m_ids 中 → 不可见；trx_id=150 不在 m_ids → 可见（返回 balance=100）</text>
+
+  <!-- ===== Panel B: RR vs RC 时间线 ===== -->
+  <text x="30" y="332" font-size="13" font-weight="600" fill="#1f2937">B. 同一事务内两次快照读，RR 与 RC 的 ReadView 生成时机差异</text>
+
+  <!-- RR 时间线 -->
+  <text x="30" y="360" font-size="12" font-weight="600" fill="#2563eb">RR（可重复读）</text>
+  <line x1="120" y1="386" x2="820" y2="386" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="120" y="406" font-size="11" fill="#64748b">BEGIN</text>
+  <circle cx="120" cy="386" r="4" fill="#2563eb"/>
+
+  <!-- 第一次 SELECT 生成 RV1 -->
+  <circle cx="250" cy="386" r="4" fill="#16a34a"/>
+  <text x="250" y="406" font-size="11" fill="#1f2937" text-anchor="middle">SELECT 1</text>
+  <rect x="225" y="356" width="100" height="22" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="275" y="371" font-size="10" fill="#16a34a" text-anchor="middle">生成 ReadView RV1</text>
+
+  <!-- 事务B提交 -->
+  <circle cx="430" cy="386" r="4" fill="#dc2626"/>
+  <text x="430" y="406" font-size="11" fill="#64748b" text-anchor="middle">另一事务提交</text>
+  <text x="430" y="420" font-size="10" fill="#64748b" text-anchor="middle">（trx_id=200 落盘）</text>
+
+  <!-- 第二次 SELECT 复用 RV1 -->
+  <circle cx="620" cy="386" r="4" fill="#2563eb"/>
+  <text x="620" y="406" font-size="11" fill="#1f2937" text-anchor="middle">SELECT 2</text>
+  <rect x="570" y="356" width="120" height="22" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="630" y="371" font-size="10" fill="#2563eb" text-anchor="middle">复用 RV1（读到旧值）</text>
+
+  <text x="120" y="436" font-size="11" fill="#475569">整个事务只生成一次 ReadView，两次读结果一致；trx_id=200 在生成 RV1 时仍活跃（在 m_ids 中），故不可见。</text>
+
+  <!-- RC 时间线 -->
+  <text x="30" y="478" font-size="12" font-weight="600" fill="#ca8a04">RC（读已提交）</text>
+  <line x1="120" y1="504" x2="820" y2="504" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="120" y="524" font-size="11" fill="#64748b">BEGIN</text>
+  <circle cx="120" cy="504" r="4" fill="#ca8a04"/>
+
+  <!-- 第一次 SELECT 生成 RV2 -->
+  <circle cx="250" cy="504" r="4" fill="#16a34a"/>
+  <text x="250" y="524" font-size="11" fill="#1f2937" text-anchor="middle">SELECT 1</text>
+  <rect x="210" y="474" width="110" height="22" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="265" y="489" font-size="10" fill="#16a34a" text-anchor="middle">生成 ReadView RV2</text>
+
+  <!-- 事务B提交 -->
+  <circle cx="430" cy="504" r="4" fill="#dc2626"/>
+  <text x="430" y="524" font-size="11" fill="#64748b" text-anchor="middle">另一事务提交</text>
+  <text x="430" y="538" font-size="10" fill="#64748b" text-anchor="middle">（trx_id=200 落盘）</text>
+
+  <!-- 第二次 SELECT 生成 RV3 -->
+  <circle cx="620" cy="504" r="4" fill="#ca8a04"/>
+  <text x="620" y="524" font-size="11" fill="#1f2937" text-anchor="middle">SELECT 2</text>
+  <rect x="570" y="474" width="120" height="22" rx="4" fill="#fefce8" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="630" y="489" font-size="10" fill="#ca8a04" text-anchor="middle">生成新 ReadView RV3</text>
+
+  <text x="120" y="554" font-size="11" fill="#475569">每条快照读都生成新 ReadView；RV3 的 max_trx_id 更新，trx_id=200 已提交故可见（读到新值）。</text>
+
+  <!-- 注解 -->
+  <rect x="30" y="582" width="800" height="64" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="46" y="604" font-size="12" font-weight="600" fill="#1f2937">取舍的实现位置</text>
+  <text x="46" y="624" font-size="11" fill="#475569">RR 在第一条快照读生成 ReadView 并复用：换来事务内读一致，代价是读到稍旧的版本，且需间隙锁防幻读。</text>
+  <text x="46" y="640" font-size="11" fill="#475569">RC 每条快照读重新生成：读到更接近最新，代价是同一事务内两次读可能不一致（不可重复读）。</text>
+</svg>

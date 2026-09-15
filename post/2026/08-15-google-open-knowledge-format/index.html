@@ -1,0 +1,808 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>Google OKF：面向 AI 知识资产的 Markdown 交换格式 | 一席之地</title><meta name="description" content="解读 Google Open Knowledge Format（OKF）的目录、文档、溯源、信任、生命周期和可证明计算协议，并讨论其在 AI Native 系统中建设知识生产、检索、执行与治理闭环的实现方式。"><meta property="og:title" content="Google OKF：面向 AI 知识资产的 Markdown 交换格式"><meta property="og:description" content="解读 Google Open Knowledge Format（OKF）的目录、文档、溯源、信任、生命周期和可证明计算协议，并讨论其在 AI Native 系统中建设知识生产、检索、执行与治理闭环的实现方式。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="Google OKF：面向 AI 知识资产的 Markdown 交换格式"><meta name="twitter:description" content="解读 Google Open Knowledge Format（OKF）的目录、文档、溯源、信任、生命周期和可证明计算协议，并讨论其在 AI Native 系统中建设知识生产、检索、执行与治理闭环的实现方式。"><meta name="keywords" content="AICoding"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/ai-coding/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《AI Coding 工程实践》· 第 16 篇 · 共 16 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">Google OKF：面向 AI 知识资产的 Markdown 交换格式</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2026-08-15</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>4 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/ai-coding/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#AICoding</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><div class="lead-card">
+## 总结
+<p><strong>是什么。</strong> Google OKF（Open Knowledge Format）是一个面向 AI 知识资产的 Markdown 交换格式——用目录化的 Markdown 文件 + YAML frontmatter + 普通链接，让表、指标、API、业务规则等知识能被人和 Agent 共用同一份源文件。</p>
+<p><strong>为什么要有。</strong> 当前为 Agent 提供上下文的方案各自残缺：向量 RAG 丢失来源与审核状态，数据目录绑定平台难以迁移，自建 Markdown Wiki 字段不统一无法通用解析。OKF 定义一组所有检索索引、RAG 管道、知识图谱和 Agent 都能读取的<strong>公共源文件格式</strong>，换索引、换模型、换 Agent 时，知识的来源、验证状态、有效期和关系不丢失。</p>
+<p><strong>与现有方案的关键差异。</strong></p>
+<ul>
+<li>唯一必填字段是 <code class="language-text">type</code>，没有中央类型注册表，比数据目录的固定模型、知识图谱的本体约束轻得多。</li>
+<li><code class="language-text">sources</code>、<code class="language-text">generated</code>、<code class="language-text">verified</code>、<code class="language-text">status</code>、<code class="language-text">stale_after</code> 把来源、审核、过期写入可版本管理的源数据，而不再散落在线索引服务的私有元数据里。</li>
+<li>目录 + Markdown 链接同时提供导航图和关系图，比纯 RAG chunk 有结构，比严格知识图谱更易维护。</li>
+<li><code class="language-text">Attested Computation</code> 是 OKF 最差异化的能力：Agent 只能填已声明参数、不能改写 SQL，执行后由确定性 attester 校验 receipt——普通 RAG 和 Wiki 都不提供执行侧的强约束。</li>
+</ul>
+</div>
+<p>2026 年 6 月，Google Cloud 发布了 <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing">Open Knowledge Format（OKF）</a>。OKF 规范一类已经广泛存在但彼此不兼容的做法：将表结构、指标口径、API 约定、运行手册和业务规则写入 Markdown 文件，由人和 Agent 共同维护。</p>
+<p>OKF 不提供知识库产品、向量数据库或 Agent runtime。它定义的是知识交换格式：目录化的 Markdown 文件、少量 YAML frontmatter、普通 Markdown 链接，以及对来源、验证状态、过期时间和受控计算的约定。人工、元数据导出程序和 LLM 都可以生产 OKF；搜索索引、网页阅读器、RAG 管道、MCP Server 和 Agent 都可以消费它。</p>
+<p>本文依据 Google 的发布文章和 <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md">OKF 规范</a>整理。发布文章介绍的是 v0.1；但是截止到我研究的时候仓库中的现行规范已更新到 <strong>v0.2</strong>。v0.2 保留了目录和链接模型，并补充了面向 Agent 维护知识库的 provenance、trust、lifecycle 和 attestation 字段。下文以 v0.2 为准。</p>
+<h2 id="agent-需要可用且可迁移的上下文">Agent 需要可用且可迁移的上下文<a aria-hidden="true" tabindex="-1" href="#agent-需要可用且可迁移的上下文"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>企业知识通常分散在数据目录、Wiki、代码注释、指标平台、工单、共享盘，以及少数熟悉系统的员工经验中。以一个分析问题为例：</p>
+<blockquote>
+<p>“本周活跃用户应该怎样计算？”</p>
+</blockquote>
+<p>要回答这个问题，Agent 需要知道事件表的位置、用户 ID 口径、去重规则、时区、过滤条件、可用表、指标负责人，以及 SQL 是否符合财务或分析团队确认的定义。这些信息可能分别存在于数据目录、dbt 模型、业务文档和历史 SQL 中。</p>
+<p>常见处理方式主要有两种：</p>
+<ol>
+<li><strong>检索原始资料。</strong> 将 Wiki、文档和代码切分后写入搜索或向量索引，回答时再拼接上下文。</li>
+<li><strong>维护产品专用目录。</strong> 数据目录、语义层、知识图谱和 Agent 平台各自维护 API、对象模型和权限模型。</li>
+</ol>
+<p>检索原始资料时，命中文本通常没有明确表达来源、当前性和审核状态。产品专用目录则难以迁移到其他系统。每接入一个新的 Agent，团队都可能要重新实现导出、转换、索引和上下文组装。</p>
+<p>OKF 的范围较窄：先把知识表示为可由 Git 管理、可由普通编辑器打开、可被其他系统导入的文件集合。检索、执行、权限和界面仍由具体系统负责。</p>
+<h2 id="现有方案覆盖的范围">现有方案覆盖的范围<a aria-hidden="true" tabindex="-1" href="#现有方案覆盖的范围"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>为 Agent 提供正确上下文，通常需要解决四个问题：从哪里取得知识、如何将其转成可检索数据、回答时如何选择上下文、以及如何判断内容是否仍然可信。现有方案各自覆盖其中一部分。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>方案</th><th>主要做法</th><th>能解决的问题</th><th>仍然缺少的部分</th></tr></thead><tbody><tr><td>文档加向量 RAG</td><td>切分原始文档，生成 embedding，按查询召回 chunk</td><td>快速为模型补充外部事实</td><td>chunk 通常缺少稳定身份、跨文档关系、来源和审核状态；原文更新后需重建索引</td></tr><tr><td>关键词或全文检索</td><td>建立倒排索引，按词匹配文档或段落</td><td>对术语、产品名和精确短语检索稳定</td><td>无法自动补足语义相近但措辞不同的查询，也不定义知识结构</td></tr><tr><td>数据目录和语义层</td><td>用专用对象模型维护表、字段、指标和血缘</td><td>统一数据资产发现和指标口径</td><td>模型和 API 常绑定特定平台，导出给其他 Agent 时仍需要转换</td></tr><tr><td>知识图谱</td><td>用实体、关系和本体保存知识</td><td>表达显式关系，支持关系查询和推理</td><td>建模和维护成本较高；自然语言说明、运行步骤和长文资料仍需其他载体</td></tr><tr><td>微调</td><td>将稳定知识或行为模式写入模型参数</td><td>减少固定任务中的 prompt 和检索依赖</td><td>更新需要重新训练，无法提供可审计的逐条来源，也难以处理频繁变化的政策</td></tr><tr><td>工具和 API 调用</td><td>Agent 通过函数或 MCP 查询权威系统</td><td>获取实时库存、订单、账户等状态</td><td>API 返回的是当前数据，不负责解释业务规则、关联概念和历史依据</td></tr><tr><td>项目自建 Markdown Wiki</td><td>用 Markdown、frontmatter 和链接维护知识</td><td>文件易读，适合 Git 和 Agent 编辑</td><td>各项目字段、路径、索引和链接规则不同，难以由通用消费者直接解析</td></tr></tbody></table></div>
+<p>实际系统通常组合使用这些方案。例如客服 Agent 通过 API 查询订单状态，通过 RAG 召回退款政策，通过规则引擎控制可执行操作。知识从源系统进入这些组件时，身份、来源、审核状态、有效期和关系常被丢失或重新定义。不同团队还会为同一类文件设计不同的 frontmatter、目录和导出程序。</p>
+<p>OKF 为这一层定义公共约定，并为表、指标、API、政策和运行手册提供可被向量检索、知识图谱和数据目录共同读取的源文件格式。一个消费者可以把 OKF Bundle 建入向量索引，另一个消费者可以从其中抽取图谱边，第三个消费者可以按 <code class="language-text">status</code> 和 <code class="language-text">verified</code> 过滤；它们可以复用同一份原始知识结构。</p>
+<h2 id="bundleconcept-与文件路径">Bundle、Concept 与文件路径<a aria-hidden="true" tabindex="-1" href="#bundleconcept-与文件路径"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>OKF 的 <strong>Knowledge Bundle</strong> 是可独立分发的目录树。目录中每个普通 <code class="language-text">.md</code> 文件表示一个 <strong>Concept</strong>，即一条独立知识。Concept 可以描述表、数据集、API 等具体资源，也可以描述指标、业务规则或故障处理手册等抽象对象。</p>
+<p>Concept ID 使用文件相对 Bundle 根目录的路径，并去掉 <code class="language-text">.md</code> 后缀：</p>
+<div class="gatsby-highlight" data-language="text"><pre style="counter-reset: linenumber NaN" class="language-text line-numbers"><code class="language-text">analytics/
+  index.md
+  tables/
+    orders.md
+    customers.md
+  metrics/
+    weekly-active-users.md
+  playbooks/
+    late-data.md</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>上例中，<code class="language-text">tables/orders.md</code> 的 Concept ID 是 <code class="language-text">tables/orders</code>。目录用于导航；Concept 之间的普通 Markdown 链接用于表达关联、依赖和引用。因此，一个 Bundle 同时具备目录层级和链接图。</p>
+<p>Bundle 可以作为 Git 仓库、压缩包，或较大仓库中的子目录分发。规范推荐 Git，因为提交历史、责任人和 diff 有助于审核知识变更；但 Git 不是格式要求。</p>
+<h3 id="indexmd-与-logmd"><code class="language-text">index.md</code> 与 <code class="language-text">log.md</code><a aria-hidden="true" tabindex="-1" href="#indexmd-与-logmd"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>每一级目录有两个保留文件名：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>文件</th><th>用途</th><th>是否属于 Concept</th></tr></thead><tbody><tr><td><code class="language-text">index.md</code></td><td>列出当前目录内容，支持渐进式浏览</td><td>否</td></tr><tr><td><code class="language-text">log.md</code></td><td>按日期记录当前目录范围内的更新历史</td><td>否</td></tr></tbody></table></div>
+<p>其他 <code class="language-text">.md</code> 文件都是 Concept。不能将 <code class="language-text">index.md</code> 和 <code class="language-text">log.md</code> 作为普通概念文档使用。</p>
+<p><code class="language-text">index.md</code> 并非必需。人或 Agent 可以先读取索引，再按需打开少量文件，而不用把整个知识库放进上下文。<code class="language-text">log.md</code> 也可选。Git 历史记录了文件变更，面向读者的更新摘要则便于了解近期语义变化。</p>
+<h2 id="concept-文档与-frontmatter">Concept 文档与 frontmatter<a aria-hidden="true" tabindex="-1" href="#concept-文档与-frontmatter"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>每份 Concept 都是 UTF-8 Markdown，由文件开头的 YAML frontmatter 和其后的 Markdown body 组成：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
+<span class="token front-matter yaml language-yaml"><span class="token key atrule">type</span><span class="token punctuation">:</span> BigQuery Table
+<span class="token key atrule">title</span><span class="token punctuation">:</span> Customer Orders
+<span class="token key atrule">description</span><span class="token punctuation">:</span> 所有渠道中已完成订单，每行对应一笔订单。
+<span class="token key atrule">resource</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//console.cloud.google.com/bigquery<span class="token punctuation">?</span>p=acme<span class="token important">&#x26;d=sales&#x26;t=orders</span>
+<span class="token key atrule">tags</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>sales<span class="token punctuation">,</span> orders<span class="token punctuation">,</span> revenue<span class="token punctuation">]</span></span>
+<span class="token punctuation">---</span></span>
+
+<span class="token title important"><span class="token punctuation">#</span> Schema</span>
+
+<span class="token table"><span class="token table-header-row"><span class="token punctuation">|</span><span class="token table-header important"> 字段          </span><span class="token punctuation">|</span><span class="token table-header important"> 类型      </span><span class="token punctuation">|</span><span class="token table-header important"> 含义                                            </span><span class="token punctuation">|</span>
+</span><span class="token table-line"><span class="token punctuation">|</span> <span class="token punctuation">-------------</span> <span class="token punctuation">|</span> <span class="token punctuation">---------</span> <span class="token punctuation">|</span> <span class="token punctuation">-----------------------------------------------</span> <span class="token punctuation">|</span>
+</span><span class="token table-data-rows"><span class="token punctuation">|</span><span class="token table-data"> <span class="token code-snippet code keyword">`order_id`</span>    </span><span class="token punctuation">|</span><span class="token table-data"> STRING    </span><span class="token punctuation">|</span><span class="token table-data"> 全局唯一订单标识。                              </span><span class="token punctuation">|</span>
+<span class="token punctuation">|</span><span class="token table-data"> <span class="token code-snippet code keyword">`customer_id`</span> </span><span class="token punctuation">|</span><span class="token table-data"> STRING    </span><span class="token punctuation">|</span><span class="token table-data"> 关联 <span class="token url">[<span class="token content">customers</span>](<span class="token url">/tables/customers.md</span>)</span> 的外键。 </span><span class="token punctuation">|</span>
+<span class="token punctuation">|</span><span class="token table-data"> <span class="token code-snippet code keyword">`placed_at`</span>   </span><span class="token punctuation">|</span><span class="token table-data"> TIMESTAMP </span><span class="token punctuation">|</span><span class="token table-data"> 用户提交订单的时间。                            </span><span class="token punctuation">|</span>
+</span></span>
+<span class="token title important"><span class="token punctuation">#</span> Joins</span>
+
+通过 <span class="token code-snippet code keyword">`customer_id`</span> 与 <span class="token url">[<span class="token content">customers</span>](<span class="token url">/tables/customers.md</span>)</span> 关联。</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>frontmatter 存放适合过滤、路由和预览的结构化信息。body 使用 Markdown 记录字段说明、示例、决策依据和运行步骤。OKF 不要求所有领域知识使用固定的 JSON Schema。</p>
+<h3 id="唯一必填字段是-type">唯一必填字段是 <code class="language-text">type</code><a aria-hidden="true" tabindex="-1" href="#唯一必填字段是-type"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>v0.2 的合规性要求很少：每个非保留 Markdown 文件必须包含可解析的 frontmatter，且其中必须有非空 <code class="language-text">type</code>。</p>
+<p><code class="language-text">type</code> 是描述 Concept 种类的短字符串。规范列出的例子包括 <code class="language-text">BigQuery Table</code>、<code class="language-text">API Endpoint</code>、<code class="language-text">Metric</code>、<code class="language-text">Playbook</code>、<code class="language-text">Reference</code> 和 <code class="language-text">Attested Computation</code>。OKF 没有中央类型注册表。生产者应选用清晰稳定的类型名；消费者必须容忍未知类型，并按通用 Concept 处理。</p>
+<p>格式只规定互操作所需的最小字段，不规定领域模型。数据平台可以使用 <code class="language-text">dbt Model</code>、<code class="language-text">Looker Explore</code>，研发知识库可以使用 <code class="language-text">Service</code>、<code class="language-text">ADR</code>、<code class="language-text">Runbook</code>。消费者必须将未知类型按通用 Concept 处理，不能拒绝整个 Bundle。</p>
+<h3 id="推荐字段和扩展字段">推荐字段和扩展字段<a aria-hidden="true" tabindex="-1" href="#推荐字段和扩展字段"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>规范推荐以下字段，但均非强制：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>字段</th><th>含义</th><th>常见用途</th></tr></thead><tbody><tr><td><code class="language-text">title</code></td><td>人类可读标题</td><td>索引页、搜索结果、UI</td></tr><tr><td><code class="language-text">description</code></td><td>单句摘要</td><td>预览、检索结果、Agent 路由</td></tr><tr><td><code class="language-text">resource</code></td><td>底层资源的规范 URI</td><td>跳转、工具调用、资产绑定</td></tr><tr><td><code class="language-text">tags</code></td><td>横向分类的字符串列表</td><td>过滤、专题索引</td></tr></tbody></table></div>
+<p>生产者可以加入其他字段。消费者应在读写往返时保留未知字段，且不能因为未知字段拒绝文档。团队因此可以逐步加入数据分级、责任人或访问策略等约定，无需等待 OKF 修改规范。</p>
+<p>body 没有必需章节。<code class="language-text"># Schema</code>、<code class="language-text"># Examples</code> 和 <code class="language-text"># Computation</code> 具有约定含义，适用时应优先使用，方便人和程序定位内容。</p>
+<h2 id="链接与路径规则">链接与路径规则<a aria-hidden="true" tabindex="-1" href="#链接与路径规则"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>OKF 使用 Markdown 链接表示 Concept 关系，支持两种路径：</p>
+<ul>
+<li><strong>以 <code class="language-text">/</code> 开头的 Bundle 相对路径</strong>，例如 <code class="language-text">[customers](/tables/customers.md)</code>。规范推荐这种形式，因为移动链接源文档后，目标路径不受源目录影响。</li>
+<li><strong>标准相对路径</strong>，例如 <code class="language-text">[相邻概念](./other.md)</code>。</li>
+</ul>
+<p>链接不携带 <code class="language-text">depends_on</code>、<code class="language-text">joins_with</code> 等关系类型。关系含义由周围文本表达，图消费者通常将链接作为有向、无类型边处理。因此，严格的图谱语义需要由正文或额外的领域 Schema 提供；Markdown 链接仍可直接阅读和编辑。</p>
+<p>消费者必须容忍断链。链接目标不存在不构成格式错误，它可能表示尚未补齐的知识。例如，Agent 发现某表引用了不存在的指标定义时，可以创建待办，而不应使整个 Bundle 导入失败。</p>
+<p><code class="language-text">resource</code>、<code class="language-text">sources[].resource</code>、<code class="language-text">computation</code>、<code class="language-text">executor.resource</code> 和 <code class="language-text">attester.resource</code> 等路径型字段均支持绝对 URL、以 <code class="language-text">/</code> 开头的 Bundle 相对路径和普通相对路径。<code class="language-text">references/</code> 是建议的目录名，适合存放外部资料镜像、执行说明和校验程序，但不是必需目录。</p>
+<h2 id="v02-如何表达来源信任和当前性">v0.2 如何表达来源、信任和当前性<a aria-hidden="true" tabindex="-1" href="#v02-如何表达来源信任和当前性"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>早期 Markdown 知识库可读，但 Agent 难以判断内容的依据、审核状态和有效期。OKF v0.2 增加了一组可选 frontmatter 字段，使这些状态可以被程序读取。</p>
+<p>未填写相关字段的文档依然合规。对消费者而言，字段缺失表示该文档未提供相应的状态信号。</p>
+<h3 id="sources来源和主张归因"><code class="language-text">sources</code>：来源和主张归因<a aria-hidden="true" tabindex="-1" href="#sources来源和主张归因"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p><code class="language-text">sources</code> 记录 Concept 所依据的材料。每条来源的 <code class="language-text">resource</code> 必填，可以是绝对 URL、Bundle 内路径、<code class="language-text">references/</code> 中的材料，也可以是不能直接跳转的范围描述，例如 “BigQuery 项目 X 中的全部查询”。</p>
+<div class="gatsby-highlight" data-language="yaml"><pre style="counter-reset: linenumber NaN" class="language-yaml line-numbers"><code class="language-yaml"><span class="token key atrule">sources</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> revenue<span class="token punctuation">-</span>policy
+    <span class="token key atrule">resource</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//wiki.example.com/finance/revenue<span class="token punctuation">-</span>recognition
+    <span class="token key atrule">title</span><span class="token punctuation">:</span> 收入确认政策
+    <span class="token key atrule">author</span><span class="token punctuation">:</span> team<span class="token punctuation">:</span>finance<span class="token punctuation">-</span>fpa
+    <span class="token key atrule">last_modified</span><span class="token punctuation">:</span> <span class="token datetime number">2026-06-18</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> executive<span class="token punctuation">-</span>dashboard
+    <span class="token key atrule">resource</span><span class="token punctuation">:</span> dashboards/executive<span class="token punctuation">-</span>revenue
+    <span class="token key atrule">title</span><span class="token punctuation">:</span> 收入驾驶舱
+    <span class="token key atrule">author</span><span class="token punctuation">:</span> team<span class="token punctuation">:</span>finance<span class="token punctuation">-</span>fpa
+    <span class="token key atrule">usage_count</span><span class="token punctuation">:</span> <span class="token number">5000</span>
+    <span class="token key atrule">last_modified</span><span class="token punctuation">:</span> <span class="token datetime number">2026-06-28</span>
+<span class="token key atrule">usage_window</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">from</span><span class="token punctuation">:</span> <span class="token datetime number">2026-06-01</span><span class="token punctuation">,</span> <span class="token key atrule">to</span><span class="token punctuation">:</span> <span class="token datetime number">2026-06-30</span> <span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p><code class="language-text">sources[].id</code> 是可选字段，但正文引用来源时应提供稳定 ID。正文用 Markdown 脚注将具体主张关联到该 ID：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown">收入按财年内已确认记录的 <span class="token code-snippet code keyword">`amount`</span> 求和。[^revenue-policy]
+
+<span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">^revenue-policy</span><span class="token punctuation">]</span><span class="token punctuation">:</span> 收入确认政策</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>脚注标签是 <code class="language-text">sources[].id</code> 的连接键。消费者应按 ID 解析归因，不应依赖脚注中的自由文本。即使 Agent 重排来源列表，主张与来源的关联也不会变化。</p>
+<p>来源可以包含三类客观信号：</p>
+<ul>
+<li><code class="language-text">author</code>：来源由谁或什么生成；</li>
+<li><code class="language-text">usage_count</code>：在 <code class="language-text">usage_window</code> 内被使用、访问或执行的次数；</li>
+<li><code class="language-text">last_modified</code>：来源本身最后修改的日期。</li>
+</ul>
+<p>规范没有定义统一的可信度分数。组织对作者、使用量和新鲜度的权重不同，固定分数无法表达这些差异，也可能随时间失效。<code class="language-text">usage_count</code> 只应作为活跃度和趋势信号，不应用于精确比较仪表盘阅读次数和定时任务执行次数。</p>
+<h3 id="generated-与-verified"><code class="language-text">generated</code> 与 <code class="language-text">verified</code><a aria-hidden="true" tabindex="-1" href="#generated-与-verified"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p><code class="language-text">generated</code> 记录当前内容最后一次实质性变更的生产者和时间：</p>
+<div class="gatsby-highlight" data-language="yaml"><pre style="counter-reset: linenumber NaN" class="language-yaml line-numbers"><code class="language-yaml"><span class="token key atrule">generated</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> catalog<span class="token punctuation">-</span>agent/1.4.2<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-06T09:30:00Z</span> <span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span></span></pre></div>
+<p><code class="language-text">generated.by</code> 在 <code class="language-text">generated</code> 对象出现时必填，<code class="language-text">generated.at</code> 使用 ISO 8601 时间。规范为 actor 建议了统一写法：</p>
+<ul>
+<li>Agent 或工具：<code class="language-text">&#x3C;producer>/&#x3C;version></code>，例如 <code class="language-text">catalog-agent/1.4.2</code>；</li>
+<li>人：<code class="language-text">human:&#x3C;id></code>，例如 <code class="language-text">human:alice</code>；</li>
+<li>自动流程：<code class="language-text">process:&#x3C;id></code>，例如 <code class="language-text">process:finance-nightly</code>。</li>
+</ul>
+<p><code class="language-text">verified</code> 记录内容是否已由某个参与者根据来源或底层资源确认。它可以保留多条事件，例如人工审核和自动校验：</p>
+<div class="gatsby-highlight" data-language="yaml"><pre style="counter-reset: linenumber NaN" class="language-yaml line-numbers"><code class="language-yaml"><span class="token key atrule">verified</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> human<span class="token punctuation">:</span>finance<span class="token punctuation">-</span>owner<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-05T15:00:00Z</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> process<span class="token punctuation">:</span>finance<span class="token punctuation">-</span>nightly<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-06T02:00:00Z</span> <span class="token punctuation">}</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>规范也接受单个 mapping：<code class="language-text">verified: { by: human:finance-owner, at: ... }</code>。消费者必须把它作为单元素列表处理。</p>
+<p>消费者可以从 <code class="language-text">verified</code> 推导信任层级：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>条件</th><th>信任层级</th></tr></thead><tbody><tr><td>没有 <code class="language-text">verified</code></td><td><code class="language-text">unverified</code></td></tr><tr><td>只有非 <code class="language-text">human:</code> 的校验者</td><td><code class="language-text">machine-confirmed</code></td></tr><tr><td>至少有一个 <code class="language-text">human:&#x3C;id></code> 校验者</td><td><code class="language-text">human-reviewed</code></td></tr></tbody></table></div>
+<p>这些字段是建议性信号，不能用于访问控制。人工审核过的定义仍可能过期；自动校验通过的定义也可能不适用于某个业务问题。</p>
+<h3 id="status-与-stale_after"><code class="language-text">status</code> 与 <code class="language-text">stale_after</code><a aria-hidden="true" tabindex="-1" href="#status-与-stale_after"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p><code class="language-text">status</code> 可取 <code class="language-text">draft</code>、<code class="language-text">stable</code> 或 <code class="language-text">deprecated</code>，缺失时默认 <code class="language-text">stable</code>：</p>
+<div class="gatsby-highlight" data-language="yaml"><pre style="counter-reset: linenumber NaN" class="language-yaml line-numbers"><code class="language-yaml"><span class="token key atrule">status</span><span class="token punctuation">:</span> deprecated
+<span class="token key atrule">stale_after</span><span class="token punctuation">:</span> <span class="token datetime number">2026-09-30</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span></span></pre></div>
+<p><code class="language-text">draft</code> 表示内容尚未审阅或可能不完整。<code class="language-text">deprecated</code> 表示保留历史和链接，但不再是当前定义。<code class="language-text">stale_after</code> 是绝对日期。当 <code class="language-text">today >= stale_after</code> 时，文档处于 stale 状态。规范使用绝对日期而非 “读取后 30 天” 这类 TTL，消费者只需比较日期，不需要确定 TTL 的起算点。</p>
+<p>Agent 选择上下文时，应结合 <code class="language-text">status</code>、<code class="language-text">stale_after</code>、<code class="language-text">generated.at</code>、最新的 <code class="language-text">verified.at</code> 和来源的 <code class="language-text">last_modified</code>。历史指标解释、旧系统修复和迁移可能需要 stale 文档。任务允许时，可以保留这类内容，并将 stale 状态明确传给模型和用户。</p>
+<h2 id="attested-computation-如何约束敏感计算">Attested Computation 如何约束敏感计算<a aria-hidden="true" tabindex="-1" href="#attested-computation-如何约束敏感计算"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>v0.2 新增的 <code class="language-text">Attested Computation</code> 用于描述经批准的计算及其运行校验方式。它解决的问题是：如何确认某次数字确实由批准的计算产生。</p>
+<p>假设 Agent 需要回答 “2025 财年收入是多少”。即使它检索到了正确的指标文档，也可能改写 SQL、遗漏参数、替换为相近的表，或在复述时更改查询结果。将 SQL 放在 Markdown 文档中无法约束实际运行。</p>
+<p>OKF 将经批准的计算建模为独立 Concept：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
+<span class="token front-matter yaml language-yaml"><span class="token key atrule">type</span><span class="token punctuation">:</span> Attested Computation
+<span class="token key atrule">title</span><span class="token punctuation">:</span> 按财年计算已确认收入
+<span class="token key atrule">runtime</span><span class="token punctuation">:</span> bigquery
+<span class="token key atrule">parameters</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">{</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> year<span class="token punctuation">,</span> <span class="token key atrule">type</span><span class="token punctuation">:</span> integer<span class="token punctuation">,</span> <span class="token key atrule">required</span><span class="token punctuation">:</span> <span class="token boolean important">true</span> <span class="token punctuation">}</span>
+<span class="token key atrule">executor</span><span class="token punctuation">:</span>
+  <span class="token key atrule">resource</span><span class="token punctuation">:</span> references/skills/run<span class="token punctuation">-</span>bigquery.md
+  <span class="token key atrule">receipt</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>job_id<span class="token punctuation">,</span> executed_sql<span class="token punctuation">,</span> result<span class="token punctuation">]</span>
+<span class="token key atrule">attester</span><span class="token punctuation">:</span>
+  <span class="token key atrule">resource</span><span class="token punctuation">:</span> references/attesters/revenue.py
+<span class="token key atrule">generated</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> metric<span class="token punctuation">-</span>agent/2.0.0<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-01T08:00:00Z</span> <span class="token punctuation">}</span>
+<span class="token key atrule">verified</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> human<span class="token punctuation">:</span>finance<span class="token punctuation">-</span>owner<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-02T14:00:00Z</span> <span class="token punctuation">}</span>
+<span class="token key atrule">stale_after</span><span class="token punctuation">:</span> <span class="token datetime number">2026-12-31</span>
+<span class="token key atrule">sources</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> revenue<span class="token punctuation">-</span>policy
+    <span class="token key atrule">resource</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//wiki.example.com/finance/revenue<span class="token punctuation">-</span>recognition
+    <span class="token key atrule">title</span><span class="token punctuation">:</span> 收入确认政策</span>
+<span class="token punctuation">---</span></span>
+
+<span class="token title important"><span class="token punctuation">#</span> Computation</span>
+
+<span class="token code"><span class="token punctuation">```</span><span class="token code-language">sql</span>
+<span class="token code-block language-sql"><span class="token keyword">SELECT</span> <span class="token function">SUM</span><span class="token punctuation">(</span>amount<span class="token punctuation">)</span> <span class="token keyword">AS</span> revenue
+<span class="token keyword">FROM</span> finance<span class="token punctuation">.</span>recognized_revenue
+<span class="token keyword">WHERE</span> fiscal_year <span class="token operator">=</span> <span class="token variable">@year</span></span>
+<span class="token punctuation">```</span></span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>该类型在通用字段之外定义了以下契约字段：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>字段</th><th>要求</th><th>含义</th></tr></thead><tbody><tr><td><code class="language-text">runtime</code></td><td>该类型必填</td><td>计算如何解释和运行，例如 <code class="language-text">bigquery</code>、<code class="language-text">postgres</code>、<code class="language-text">dbt</code>、<code class="language-text">python</code>、<code class="language-text">Looker</code></td></tr><tr><td><code class="language-text">parameters</code></td><td>可选</td><td>Agent 可填入的具名、带类型参数；绑定语义由 <code class="language-text">runtime</code> 决定</td></tr><tr><td><code class="language-text">computation</code></td><td>可选</td><td>指向外部计算文件；缺失时使用 body 中 <code class="language-text"># Computation</code> 下的代码块</td></tr><tr><td><code class="language-text">executor.resource</code></td><td>推荐</td><td>执行说明或执行代码的位置</td></tr><tr><td><code class="language-text">executor.receipt</code></td><td>推荐</td><td>运行必须返回的证据字段，例如 job ID、实际 SQL 和结果</td></tr><tr><td><code class="language-text">attester.resource</code></td><td>推荐</td><td>对 receipt 做确定性检查的程序位置；规范要求它不是 LLM</td></tr></tbody></table></div>
+<p>指标说明无需包含全部 SQL，可以链接到独立计算 Concept：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token title important"><span class="token punctuation">#</span> Definition</span>
+
+财年收入由<span class="token url">[<span class="token content">按财年计算已确认收入</span>](<span class="token url">../computations/revenue.md</span>)</span>产生。</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span></span></pre></div>
+<p>同一计算可以被指标、仪表盘和报表复用，也可独立维护验证状态和过期时间。</p>
+<h3 id="参数边界和执行过程">参数边界和执行过程<a aria-hidden="true" tabindex="-1" href="#参数边界和执行过程"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>规范要求 Agent 只能为已声明的 <code class="language-text">parameters</code> 提供值，不能改写 <code class="language-text">computation</code>。参数绑定和可执行产物生成由消费者或 executor 完成。attester 根据计算定义和参数独立推导预期执行产物，再与 receipt 中的 <code class="language-text">executed_sql</code> 或 <code class="language-text">compiled_sql</code> 比较。</p>
+<p>典型消费过程如下：</p>
+<ol>
+<li>通过 <code class="language-text">type: Attested Computation</code> 或指标文档链接发现计算；</li>
+<li>读取 frontmatter 契约和内联或外部计算；</li>
+<li>仅填写已声明的参数；</li>
+<li>按 <code class="language-text">executor</code> 执行并获取符合 <code class="language-text">receipt</code> 约定的运行证据；</li>
+<li>在确定性环境中运行 attester，校验实际计算、参数绑定和展示结果；</li>
+<li>根据 attestation、<code class="language-text">stale_after</code> 和 trust tier 展示结果、提示风险或拒绝输出。</li>
+</ol>
+<p><code class="language-text">verified</code> 与 attestation 的职责不同：</p>
+<ul>
+<li><code class="language-text">verified</code> 确认<strong>定义</strong>仍符合政策或来源。它通常较慢，记录在 Bundle 中；</li>
+<li>attestation 确认一次<strong>运行</strong>是否按批准定义产生结果。它发生在运行时，receipt 不写回 Bundle。</li>
+</ul>
+<p>旧定义仍可能被正确执行并通过 attestation。刚经人工审核的定义，也仍需要对每次敏感查询进行 attestation。</p>
+<h2 id="okf-的职责边界">OKF 的职责边界<a aria-hidden="true" tabindex="-1" href="#okf-的职责边界"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>OKF 负责知识表示和交换；下表列出仍由实现方负责的部分：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>能力</th><th>OKF 负责</th><th>实现方仍需负责</th></tr></thead><tbody><tr><td>文档表示</td><td>Markdown、frontmatter、目录、链接</td><td>富文本协同编辑体验</td></tr><tr><td>领域模型</td><td>必填 <code class="language-text">type</code> 和可扩展字段</td><td>统一企业本体或固定业务 Schema</td></tr><tr><td>检索</td><td>可索引的结构和渐进式目录</td><td>向量索引、重排序、召回服务</td></tr><tr><td>生产和消费</td><td>允许生产者与消费者独立实现</td><td>SDK、服务端或具体 Agent 框架</td></tr><tr><td>可信性</td><td>来源、验证者、状态、过期日等信号</td><td>权限认证、数据脱敏、访问控制</td></tr><tr><td>受控计算</td><td>runtime、参数、执行证据和 attester 接口</td><td>executor 协议、attester ABI、沙箱和缓存</td></tr></tbody></table></div>
+<p>OKF 可以与 RAG、知识图谱、数据目录、MCP 和 Agent Skill 组合使用：</p>
+<ul>
+<li>RAG 可以对 OKF 文件和 frontmatter 建立混合索引；</li>
+<li>知识图谱可以从目录和 Markdown 链接生成节点与边；</li>
+<li>数据目录可以将表、血缘和使用信息导出为 OKF；</li>
+<li>MCP Server 可以将 Bundle 暴露为 <code class="language-text">search_concepts</code>、<code class="language-text">read_concept</code>、<code class="language-text">run_attested_computation</code> 等工具；</li>
+<li>Agent Skill 可以说明如何按某个 runtime 读取、执行和验证 Attested Computation。</li>
+</ul>
+<h2 id="okf-在-ai-native-agent-知识库中的位置">OKF 在 AI Native Agent 知识库中的位置<a aria-hidden="true" tabindex="-1" href="#okf-在-ai-native-agent-知识库中的位置"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>这里的知识库指为 Agent 补充模型参数中没有、或需要随业务变化而更新的信息。例如客服 Agent 的知识库会包含商品规则、服务政策、退款条件、常见问题、工单处理流程和升级路径。Agent 在回答用户问题前，从中检索相关内容，以减少依赖通用预训练知识带来的错误，并让回答符合当前业务口径。</p>
+<p>这类知识库通常由文档、FAQ、网页、表格或数据库记录构成。系统会对原始材料切分、嵌入并写入向量索引，再在每次请求时召回相关片段，拼接到模型上下文中。它解决的是”当前问题应补充哪些事实”。</p>
+<p>OKF 规定知识进入索引前的保存和交换结构。它不规定 embedding 模型、向量数据库、分块策略或重排序算法。它规定知识文档如何表达类型、底层资源、来源、验证状态、过期时间和与其他知识的链接，使不同检索服务和 Agent 可以读取同一份知识资产。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>AI Native Agent 知识库</th><th>OKF</th></tr></thead><tbody><tr><td>主要目标</td><td>为一次 Agent 请求补充模型缺少的业务事实和操作信息</td><td>定义知识资产的文件表示和跨系统交换约定</td></tr><tr><td>典型内容</td><td>客服政策、商品说明、FAQ、流程、案例和工单知识</td><td>表、指标、API、运行手册、业务规则和受控计算</td></tr><tr><td>核心处理</td><td>采集、切分、嵌入、索引、召回和上下文拼接</td><td>编写或导出 Bundle、Concept、frontmatter 和链接</td></tr><tr><td>消费方式</td><td>根据用户问题召回片段，作为模型上下文</td><td>由检索器、浏览器、Agent 或其他消费者直接解析</td></tr><tr><td>质量判断</td><td>关注召回率、相关性、答案正确性和时效性</td><td>记录 <code class="language-text">sources</code>、<code class="language-text">verified</code>、<code class="language-text">status</code>、<code class="language-text">stale_after</code> 等可供消费者使用的信号</td></tr><tr><td>知识关系</td><td>常被切分为独立 chunk，关系依赖索引或额外图谱</td><td>目录和 Markdown 链接保留 Concept 之间的关系</td></tr><tr><td>更新路径</td><td>原文更新后需要重新切分和建立索引</td><td>文件变更可被 Git 审查、diff、导出和被不同消费者重新索引</td></tr><tr><td>执行约束</td><td>通常只提供检索文本，具体工具调用由 Agent 自行决定</td><td><code class="language-text">Attested Computation</code> 可限制参数，并描述执行证据和确定性校验接口</td></tr></tbody></table></div>
+<p>客服 Agent 可以将服务政策、退款规则和升级流程整理成 OKF Concept，再由检索系统构建向量索引。用户询问退款条件时，检索系统先按问题召回相关 Concept 或片段，随后将正文、来源、验证状态和过期时间提供给模型。在该流程中，OKF 提供 RAG 上游的知识表示层。</p>
+<p>这一差异会影响知识库的建设方式。若只把文档切块写入向量库，原始资料的来源、审核人、版本、链接关系和过期状态常需由每个系统重新定义。OKF 在可审查的源文件中保存这些信息。重建索引、更换 embedding 模型或迁移服务时，知识的结构、来源和状态可以继续复用。</p>
+<p>不需要为所有检索材料建立 OKF Bundle。变化快、风险低的临时公告或短期 FAQ 可以直接进入现有检索管道。业务口径、合规政策、跨系统关联和需要 Agent 执行计算的知识需要记录来源、审核和当前性，适合使用 OKF。对于客服 Agent，这些字段可用于在召回后区分已审核的现行政策、待确认草稿和已废弃规则。</p>
+<h2 id="okf-的适用条件与限制">OKF 的适用条件与限制<a aria-hidden="true" tabindex="-1" href="#okf-的适用条件与限制"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>OKF 只要求目录、Markdown、YAML frontmatter、链接和少量保留文件名。现有编辑器、Git、静态站点、搜索系统和 Agent 可以直接处理这些文件。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>格式特性</th><th>对工程实践的影响</th></tr></thead><tbody><tr><td>人和 Agent 使用同一份源文件</td><td>人可以直接阅读和审查 Markdown，Agent 可以解析 frontmatter 和链接，无需先转换为专用对象模型</td></tr><tr><td>不依赖特定平台</td><td>Bundle 可以放入 Git、压缩包或任意文件系统；生产者、检索器和展示工具可以独立替换</td></tr><tr><td>保留知识关系</td><td>文件目录提供导航，Markdown 链接保留表、指标、政策和运行手册之间的关联，消费者可构建图或按链接继续读取</td></tr><tr><td>将来源和当前性放入源数据</td><td><code class="language-text">sources</code>、<code class="language-text">generated</code>、<code class="language-text">verified</code>、<code class="language-text">status</code> 和 <code class="language-text">stale_after</code> 可随文档版本一起审查，不必散落在索引服务的私有元数据中</td></tr><tr><td>支持渐进式读取</td><td><code class="language-text">index.md</code> 让 Agent 先浏览目录，再读取需要的 Concept，减少一次加载无关上下文</td></tr><tr><td>支持受控计算的描述</td><td><code class="language-text">Attested Computation</code> 可将指标定义、参数范围、执行证据和确定性校验放在同一份可链接的契约中</td></tr></tbody></table></div>
+<p>这些特性不改变检索结果的相关性，也不验证来源真实性或内容正确性。<code class="language-text">verified</code> 和 <code class="language-text">status</code> 由生产者提供，消费者仍需定义信任策略。<code class="language-text">Attested Computation</code> 只定义计算描述和校验入口；平台仍需实现 executor、attester、运行权限和沙箱。</p>
+<p>采用 OKF 时还需要处理以下限制：</p>
+<ul>
+<li><strong>当前规范是 v0.2。</strong> producer、consumer 和兼容性实践仍在形成，采用方需要维护版本兼容策略。</li>
+<li><strong>只有 <code class="language-text">type</code> 是必填字段。</strong> 不同团队可能为相同对象使用不同类型名和扩展字段，组织内部需要另行约定词表和校验规则。</li>
+<li><strong>大型表格、复杂图形、多媒体、细粒度评论和多人实时协作需要其他存储或编辑系统。</strong> OKF 可以引用这些资源，但不取代它们。</li>
+<li><strong>Markdown 链接不包含标准关系类型。</strong> 链接只表示存在关系，<code class="language-text">depends_on</code>、<code class="language-text">joins_with</code> 或数据血缘等具体语义仍在正文中表达。需要严格关系查询时，消费者要增加领域 Schema 或同步到知识图谱。</li>
+<li><strong>重命名或移动文件会改变 Concept ID。</strong> 此类变更可能影响 Bundle 内链接和外部引用，团队需要将路径稳定性纳入变更流程。</li>
+<li><strong>来源和审核需要持续维护。</strong> 缺少 Owner、复核流程和过期策略时，frontmatter 会过时；格式不能替代内容治理。</li>
+<li><strong>Bundle 不提供访问控制。</strong> <code class="language-text">verified</code>、<code class="language-text">status</code> 和 <code class="language-text">resource</code> 不等同于权限。数据读取、工具执行和密钥访问仍需 IAM、工具网关和审计系统控制。</li>
+</ul>
+<p>可按知识的复用范围和风险判断适用范围。跨多个 Agent、检索服务或团队使用的业务政策、指标定义、服务接口、数据资产说明和运行手册，需要稳定身份、来源、审核记录和关系导航，适合整理为 OKF Bundle。仅服务于单个检索应用、变化快且风险低的临时通知、活动文案或短期 FAQ，可以直接进入现有采集和索引流程。对于高结构化且要求严格关系推理的数据，可继续以语义层或知识图谱为主，再将面向人和 Agent 的说明导出为 OKF。</p>
+<h2 id="在-ai-native-系统中落地-okf">在 AI Native 系统中落地 OKF<a aria-hidden="true" tabindex="-1" href="#在-ai-native-系统中落地-okf"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>落地 OKF 时，需要将知识生产、审核、消费和反馈纳入日常流程。一次性迁移文档不能覆盖后续维护。</p>
+<h3 id="按发布边界组织-bundle">按发布边界组织 Bundle<a aria-hidden="true" tabindex="-1" href="#按发布边界组织-bundle"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>可按独立发布、独立授权和变更节奏相近的领域划分 Bundle：</p>
+<div class="gatsby-highlight" data-language="text"><pre style="counter-reset: linenumber NaN" class="language-text line-numbers"><code class="language-text">knowledge/
+  commerce-analytics/
+  finance-metrics/
+  order-domain/
+  developer-platform/
+  incident-response/</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>Bundle 不必等同于组织部门。更实用的判断是：Concept 是否来自相近的源系统，是否遵循同一权限等级，是否需要同时提供给同一类 Agent。</p>
+<p>团队还应约定常用 <code class="language-text">type</code> 和对应正文结构：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>类型</th><th>建议内容</th><th>维护责任</th></tr></thead><tbody><tr><td><code class="language-text">Data Table</code></td><td>Schema、分区、关联、示例查询</td><td>数据工程或表 Owner</td></tr><tr><td><code class="language-text">Metric</code></td><td>定义、适用范围、反例、关联计算</td><td>指标 Owner</td></tr><tr><td><code class="language-text">API Endpoint</code></td><td>请求、响应、鉴权、错误语义</td><td>服务 Owner</td></tr><tr><td><code class="language-text">Playbook</code></td><td>触发条件、步骤、验证、升级路径</td><td>Oncall Owner</td></tr><tr><td><code class="language-text">Attested Computation</code></td><td>计算契约、参数、executor、attester</td><td>业务定义 Owner 与平台团队</td></tr></tbody></table></div>
+<p>这类约定用于减少同一团队内的写法分歧，不需要先建立全局本体。</p>
+<h3 id="从权威系统生成初稿">从权威系统生成初稿<a aria-hidden="true" tabindex="-1" href="#从权威系统生成初稿"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>表结构、OpenAPI、dbt manifest、告警规则和服务目录等结构化来源可以由确定性导出器生成初始 Concept。导出器至少应写入 <code class="language-text">type</code>、<code class="language-text">title</code>、<code class="language-text">resource</code>、<code class="language-text">generated</code> 和对应的 <code class="language-text">sources</code>。</p>
+<p>LLM 可以补充字段摘要、示例、关联文档和关联路径。这些补充必须保留可追溯来源，不能将模型推断写成权威事实。</p>
+<p>一条可审计的生产流水线通常包括：</p>
+<ol>
+<li>从权威 API 或代码仓库导出基础字段；</li>
+<li>为每个对象创建或更新对应 Concept；</li>
+<li>让 Agent 在指定的权威材料范围内补充 body 与 <code class="language-text">sources</code>；</li>
+<li>对 source link、frontmatter、重复 Concept 和断链运行确定性检查；</li>
+<li>对高风险类型创建变更请求，由 Owner 写入 <code class="language-text">verified: human:&#x3C;id></code>；</li>
+<li>合并后更新目录索引和搜索索引。</li>
+</ol>
+<p><code class="language-text">generated.by</code> 应记录实际使用的生成器和版本。生成器出现系统性摘要错误时，团队可以据此定位并重建受影响批次。</p>
+<h3 id="为-agent-提供渐进式读取工具">为 Agent 提供渐进式读取工具<a aria-hidden="true" tabindex="-1" href="#为-agent-提供渐进式读取工具"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>将整个 Bundle 拼入 system prompt 会随 Bundle 增长而扩大上下文。可以提供只读工具，并以 <code class="language-text">index.md</code> 和 frontmatter 导航：</p>
+<div class="gatsby-highlight" data-language="text"><pre style="counter-reset: linenumber NaN" class="language-text line-numbers"><code class="language-text">list_bundle(path)                -> 当前目录的 index 或合成目录
+search_concepts(query, filters)  -> ID、title、description、type、trust、freshness
+read_concept(id)                 -> frontmatter、body、出站链接
+read_sources(id)                 -> sources 与逐条归因</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span></span></pre></div>
+<p>当 Agent 回答 “订单收入如何计算” 时，可以先搜索 <code class="language-text">Metric</code> 和 <code class="language-text">Attested Computation</code>，再读取命中的指标定义、计算契约和少量关联表说明。<code class="language-text">index.md</code> 支持在没有向量检索时按目录浏览。搜索服务也可以先按 <code class="language-text">type</code>、<code class="language-text">tags</code>、<code class="language-text">status</code>、信任等级和过期时间过滤，再读取正文。</p>
+<p>检索策略应由确定性代码实现：</p>
+<ul>
+<li>默认优先 <code class="language-text">status: stable</code> 且未过期的内容；</li>
+<li>涉及财务、生产变更、权限和合规的任务，要求 <code class="language-text">human-reviewed</code>，或进入人工审批；</li>
+<li>stale 或 <code class="language-text">draft</code> 内容可作为背景材料，但应将状态传给模型和用户；</li>
+<li><code class="language-text">deprecated</code> 内容只用于历史追溯或迁移，不作为默认操作依据。</li>
+</ul>
+<p>这类约束需要由确定性代码执行；模型可能忽略或误解 prompt 中的字段要求。</p>
+<h3 id="通过工具网关执行-attested-computation">通过工具网关执行 Attested Computation<a aria-hidden="true" tabindex="-1" href="#通过工具网关执行-attested-computation"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>高风险指标、报表和生产操作需要区分解释知识和执行动作。MCP Server、内部工具网关或 Agent runtime 可以按 Attested Computation 暴露受限工具：</p>
+<div class="gatsby-highlight" data-language="text"><pre style="counter-reset: linenumber NaN" class="language-text line-numbers"><code class="language-text">get_metric_value(
+  computation_id: string,
+  parameters: object
+) -> { result, receipt, attestation, freshness, trust }</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span></span></pre></div>
+<p>调用链至少应保证：</p>
+<ol>
+<li>参数 schema 来自 <code class="language-text">parameters</code>，拒绝未声明参数；</li>
+<li>executor 从 Bundle 指向的已批准实现读取运行说明；</li>
+<li>receipt 保存实际执行内容、运行 ID 和原始结果；</li>
+<li>attester 在独立的确定性环境中校验 receipt；</li>
+<li>返回给模型的结果包含 attestation verdict、验证时间和 stale 状态；</li>
+<li>工具网关、身份系统和数据权限系统继续控制执行权限，OKF 字段不替代这些机制。</li>
+</ol>
+<p>将 executor 和 attester 接入工具网关后，可阻止 Agent 在读取收入定义后临时编写另一段 SQL 并直接展示数字。OKF 单独使用不能施加这一执行约束。</p>
+<h3 id="将-bundle-纳入代码审查和持续校验">将 Bundle 纳入代码审查和持续校验<a aria-hidden="true" tabindex="-1" href="#将-bundle-纳入代码审查和持续校验"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>当 Agent 使用知识做决策、生成 SQL 或执行操作时，知识文件也需要版本、审核和回滚能力。CI 可以检查：</p>
+<ul>
+<li>每个 Concept 是否具有可解析的 frontmatter 和非空 <code class="language-text">type</code>；</li>
+<li><code class="language-text">index.md</code>、<code class="language-text">log.md</code> 是否被误写成 Concept；</li>
+<li><code class="language-text">sources</code> 中必填的 <code class="language-text">resource</code> 是否存在，脚注 ID 是否能对应来源；</li>
+<li><code class="language-text">stale_after</code> 是否格式合法，敏感 Concept 是否过期后仍被标记为可自动执行；</li>
+<li>Attested Computation 的 <code class="language-text">runtime</code>、参数、executor、attester 和计算位置是否完整；</li>
+<li>attester 是否覆盖成功和失败 receipt；</li>
+<li>面向生产操作的变更是否经过指定 Owner 审核；</li>
+<li>索引是否在变更后重建，检索结果是否保留 Bundle commit SHA。</li>
+</ul>
+<p>对于自动生成的批量变更，还应限制可写目录、单次修改数量和可访问源系统。Agent 维护知识库时，仍需通过审核流程更新业务定义。</p>
+<h3 id="将运行反馈转为可审核的变更">将运行反馈转为可审核的变更<a aria-hidden="true" tabindex="-1" href="#将运行反馈转为可审核的变更"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Agent 使用 Bundle 时会发现断链、过期定义、缺少字段说明或 attestation 持续失败等问题。这些发现需要进入知识维护流程，不能只留在 trace 中。</p>
+<p>可以分别处理：</p>
+<ul>
+<li>对断链、缺失 <code class="language-text">description</code>、过期日临近等低风险问题，自动创建 issue 或候选变更；</li>
+<li>对 schema API 可确定同步的新字段，自动更新并写入新的 <code class="language-text">generated</code> 记录；</li>
+<li>对指标语义、政策、权限、运行手册步骤和 Attested Computation 的变更，提交给 Owner 审核，并在确认后更新 <code class="language-text">verified</code>。</li>
+</ul>
+<p>Agent 的运行轨迹可作为知识维护的输入，相关变更仍需经过对应的确认流程。</p>
+<h2 id="一个最小-bundle-示例">一个最小 Bundle 示例<a aria-hidden="true" tabindex="-1" href="#一个最小-bundle-示例"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>以下目录可以承载订单分析领域的知识：</p>
+<div class="gatsby-highlight" data-language="text"><pre style="counter-reset: linenumber NaN" class="language-text line-numbers"><code class="language-text">commerce-analytics/
+  index.md
+  tables/
+    orders.md
+    customers.md
+  metrics/
+    weekly-active-users.md
+  computations/
+    weekly-active-users.md
+  references/
+    skills/run-bigquery.md
+    attesters/weekly-active-users.py</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>Bundle 根目录的 <code class="language-text">index.md</code> 可以声明目标协议版本，并提供 Agent 导航：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
+<span class="token front-matter yaml language-yaml"><span class="token key atrule">okf_version</span><span class="token punctuation">:</span> <span class="token string">"0.2"</span></span>
+<span class="token punctuation">---</span></span>
+
+<span class="token title important"><span class="token punctuation">#</span> 数据表</span>
+
+<span class="token list punctuation">-</span> <span class="token url">[<span class="token content">订单表</span>](<span class="token url">tables/orders.md</span>)</span> - 完成订单及其金额、用户与时间。
+<span class="token list punctuation">-</span> <span class="token url">[<span class="token content">客户表</span>](<span class="token url">tables/customers.md</span>)</span> - 客户主数据与注册信息。
+
+<span class="token title important"><span class="token punctuation">#</span> 指标</span>
+
+<span class="token list punctuation">-</span> <span class="token url">[<span class="token content">周活跃用户</span>](<span class="token url">metrics/weekly-active-users.md</span>)</span> - 按事件口径计算的周去重活跃用户。</code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>frontmatter 只允许出现在 Bundle 根 <code class="language-text">index.md</code>。<code class="language-text">okf_version</code> 也是可选的。消费者不认识声明版本时，应尽力读取该 Bundle。</p>
+<p>指标文档负责解释口径，并链接到受控计算：</p>
+<div class="gatsby-highlight" data-language="markdown"><pre style="counter-reset: linenumber NaN" class="language-markdown line-numbers"><code class="language-markdown"><span class="token front-matter-block"><span class="token punctuation">---</span>
+<span class="token front-matter yaml language-yaml"><span class="token key atrule">type</span><span class="token punctuation">:</span> Metric
+<span class="token key atrule">title</span><span class="token punctuation">:</span> 周活跃用户
+<span class="token key atrule">description</span><span class="token punctuation">:</span> 在自然周内至少完成一次有效行为的去重用户数。
+<span class="token key atrule">tags</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>engagement<span class="token punctuation">,</span> active<span class="token punctuation">-</span>users<span class="token punctuation">]</span>
+<span class="token key atrule">status</span><span class="token punctuation">:</span> stable
+<span class="token key atrule">generated</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> analytics<span class="token punctuation">-</span>catalog/1.4.2<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-06T08:00:00Z</span> <span class="token punctuation">}</span>
+<span class="token key atrule">verified</span><span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token key atrule">by</span><span class="token punctuation">:</span> human<span class="token punctuation">:</span>growth<span class="token punctuation">-</span>metrics<span class="token punctuation">-</span>owner<span class="token punctuation">,</span> <span class="token key atrule">at</span><span class="token punctuation">:</span> <span class="token datetime number">2026-08-05T16:00:00Z</span> <span class="token punctuation">}</span>
+<span class="token key atrule">stale_after</span><span class="token punctuation">:</span> <span class="token datetime number">2026-11-01</span>
+<span class="token key atrule">sources</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> metric<span class="token punctuation">-</span>policy
+    <span class="token key atrule">resource</span><span class="token punctuation">:</span> /references/metric<span class="token punctuation">-</span>policy.md
+    <span class="token key atrule">title</span><span class="token punctuation">:</span> 活跃指标口径说明</span>
+<span class="token punctuation">---</span></span>
+
+<span class="token title important"><span class="token punctuation">#</span> Definition</span>
+
+自然周按业务时区划分；同一用户在同一周内只计一次。结果由<span class="token url">[<span class="token content">周活跃用户计算</span>](<span class="token url">../computations/weekly-active-users.md</span>)</span>产生。[^metric-policy]
+
+<span class="token url-reference url"><span class="token punctuation">[</span><span class="token variable">^metric-policy</span><span class="token punctuation">]</span><span class="token punctuation">:</span> 活跃指标口径说明</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>生产环境中，SQL 可以保存在版本控制的 <code class="language-text">.sql</code> 文件中，再通过 <code class="language-text">computation</code> 字段引用。</p>
+<h2 id="仍需由实现方解决的问题">仍需由实现方解决的问题<a aria-hidden="true" tabindex="-1" href="#仍需由实现方解决的问题"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>OKF 将以下问题留给实现方。</p>
+<p><code class="language-text">type</code> 和 Markdown 链接不提供严格的语义层或数据血缘能力。OKF 可以表达 “该指标由哪个计算产生”，但不定义列级血缘、血缘变更传播或统一关系类型。</p>
+<p><code class="language-text">verified</code> 和来源信号不能作为安全边界。Agent 是否可以读取 Bundle、访问 URI 或运行计算，仍应由 IAM、工具网关、密钥管理和数据分级策略控制。</p>
+<p>Attested Computation 定义了概念接口，但 v0.2 尚未规定 receipt/verdict 的统一 wire format、attester ABI、跨环境可移植性、沙箱和缓存。这些部分需要平台实现，或等待后续协议演进。</p>
+<p>Markdown 可以降低迁移和编辑成本。内容质量仍取决于来源、Owner、过期策略、CI 校验和人工审核；缺少这些机制时，Bundle 会积累过时或互相矛盾的描述。</p>
+<h2 id="okf-在知识系统中的实现位置">OKF 在知识系统中的实现位置<a aria-hidden="true" tabindex="-1" href="#okf-在知识系统中的实现位置"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>Google OKF 使用一组人可读、Agent 可解析、可版本管理的 Markdown 文件交换知识。v0.1 定义目录、Concept、frontmatter、链接、<code class="language-text">index.md</code> 和 <code class="language-text">log.md</code> 等基础约定。v0.2 新增 <code class="language-text">sources</code>、<code class="language-text">generated</code>、<code class="language-text">verified</code>、<code class="language-text">status</code>、<code class="language-text">stale_after</code> 与 <code class="language-text">Attested Computation</code>，用于表达来源、审核、当前性，以及计算是否按批准定义执行。</p>
+<p>在 AI Native 系统中，权威系统可以导出基础事实，Agent 可以补充可读上下文，Git 和 CI 管理变更，检索服务根据当前性和信任状态选择上下文，工具网关通过 Attested Computation 约束敏感执行。权限、检索质量和运行安全由周边系统提供。</p>
+<h2 id="参考资料">参考资料<a aria-hidden="true" tabindex="-1" href="#参考资料"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<ul>
+<li><a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing">Google Cloud：Introducing the Open Knowledge Format</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md">GoogleCloudPlatform/knowledge-catalog：OKF v0.2 Specification</a></li>
+<li><a href="https://github.com/GoogleCloudPlatform/knowledge-catalog">GoogleCloudPlatform/knowledge-catalog</a></li>
+</ul></div><hr class="my-8 border-theme-subtle"><astro-island uid="1VPSjB" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/08-15-google-open-knowledge-format/&quot;],&quot;words&quot;:[0,1665],&quot;paragraphs&quot;:[0,206]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1665<!-- --> 字 · <!-- -->206<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2026/08-04-harness-agent-components/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Harness Agent 的组成要素分析</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2026/08-30-agent-rsi-review/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Agent RSI 复盘</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/ai-coding/" class="hover:text-accent transition-colors duration-200">《AI Coding 工程实践》</a><span>· 第 16 篇 · 共 16 篇</span></div><div class="sm:col-start-1"><a href="/post/2026/07-31-claude-engineering-evolution/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Anthropic Claude 工程化演进分析</span></a></div><div class="sm:col-start-2 sm:text-right"></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2026/07-31-claude-engineering-evolution/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Anthropic Claude 工程化演进分析</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-31</time></a><a href="/post/2026/07-11-pi-claude-session-context/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Pi agent-core harness 与 Claude Code 的 Session 和 Context 对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-11</time></a><a href="/post/2026/07-06-graph-engineering/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Graph Engineering：Agent 从单一闭环走向可治理的执行网络</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-06</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="1SPQ7J" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/08-15-google-open-knowledge-format/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="1O46l0" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#agent-%E9%9C%80%E8%A6%81%E5%8F%AF%E7%94%A8%E4%B8%94%E5%8F%AF%E8%BF%81%E7%A7%BB%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87\&quot;&gt;Agent 需要可用且可迁移的上下文&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E7%8E%B0%E6%9C%89%E6%96%B9%E6%A1%88%E8%A6%86%E7%9B%96%E7%9A%84%E8%8C%83%E5%9B%B4\&quot;&gt;现有方案覆盖的范围&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#bundleconcept-%E4%B8%8E%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84\&quot;&gt;Bundle、Concept 与文件路径&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#code-classlanguage-textindexmdcode-%E4%B8%8E-code-classlanguage-textlogmdcode\&quot;&gt;&lt;code class=\&quot;language-text\&quot;&gt;index.md&lt;/code&gt; 与 &lt;code class=\&quot;language-text\&quot;&gt;log.md&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#concept-%E6%96%87%E6%A1%A3%E4%B8%8E-frontmatter\&quot;&gt;Concept 文档与 frontmatter&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%94%AF%E4%B8%80%E5%BF%85%E5%A1%AB%E5%AD%97%E6%AE%B5%E6%98%AF-code-classlanguage-texttypecode\&quot;&gt;唯一必填字段是 &lt;code class=\&quot;language-text\&quot;&gt;type&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%8E%A8%E8%8D%90%E5%AD%97%E6%AE%B5%E5%92%8C%E6%89%A9%E5%B1%95%E5%AD%97%E6%AE%B5\&quot;&gt;推荐字段和扩展字段&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E9%93%BE%E6%8E%A5%E4%B8%8E%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%99\&quot;&gt;链接与路径规则&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#v02-%E5%A6%82%E4%BD%95%E8%A1%A8%E8%BE%BE%E6%9D%A5%E6%BA%90%E4%BF%A1%E4%BB%BB%E5%92%8C%E5%BD%93%E5%89%8D%E6%80%A7\&quot;&gt;v0.2 如何表达来源、信任和当前性&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#code-classlanguage-textsourcescode%E6%9D%A5%E6%BA%90%E5%92%8C%E4%B8%BB%E5%BC%A0%E5%BD%92%E5%9B%A0\&quot;&gt;&lt;code class=\&quot;language-text\&quot;&gt;sources&lt;/code&gt;：来源和主张归因&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#code-classlanguage-textgeneratedcode-%E4%B8%8E-code-classlanguage-textverifiedcode\&quot;&gt;&lt;code class=\&quot;language-text\&quot;&gt;generated&lt;/code&gt; 与 &lt;code class=\&quot;language-text\&quot;&gt;verified&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#code-classlanguage-textstatuscode-%E4%B8%8E-code-classlanguage-textstale_aftercode\&quot;&gt;&lt;code class=\&quot;language-text\&quot;&gt;status&lt;/code&gt; 与 &lt;code class=\&quot;language-text\&quot;&gt;stale_after&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#attested-computation-%E5%A6%82%E4%BD%95%E7%BA%A6%E6%9D%9F%E6%95%8F%E6%84%9F%E8%AE%A1%E7%AE%97\&quot;&gt;Attested Computation 如何约束敏感计算&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%8F%82%E6%95%B0%E8%BE%B9%E7%95%8C%E5%92%8C%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B\&quot;&gt;参数边界和执行过程&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#okf-%E7%9A%84%E8%81%8C%E8%B4%A3%E8%BE%B9%E7%95%8C\&quot;&gt;OKF 的职责边界&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#okf-%E5%9C%A8-ai-native-agent-%E7%9F%A5%E8%AF%86%E5%BA%93%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE\&quot;&gt;OKF 在 AI Native Agent 知识库中的位置&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#okf-%E7%9A%84%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6%E4%B8%8E%E9%99%90%E5%88%B6\&quot;&gt;OKF 的适用条件与限制&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%9C%A8-ai-native-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E8%90%BD%E5%9C%B0-okf\&quot;&gt;在 AI Native 系统中落地 OKF&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%8C%89%E5%8F%91%E5%B8%83%E8%BE%B9%E7%95%8C%E7%BB%84%E7%BB%87-bundle\&quot;&gt;按发布边界组织 Bundle&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E4%BB%8E%E6%9D%83%E5%A8%81%E7%B3%BB%E7%BB%9F%E7%94%9F%E6%88%90%E5%88%9D%E7%A8%BF\&quot;&gt;从权威系统生成初稿&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E4%B8%BA-agent-%E6%8F%90%E4%BE%9B%E6%B8%90%E8%BF%9B%E5%BC%8F%E8%AF%BB%E5%8F%96%E5%B7%A5%E5%85%B7\&quot;&gt;为 Agent 提供渐进式读取工具&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E7%BD%91%E5%85%B3%E6%89%A7%E8%A1%8C-attested-computation\&quot;&gt;通过工具网关执行 Attested Computation&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%B0%86-bundle-%E7%BA%B3%E5%85%A5%E4%BB%A3%E7%A0%81%E5%AE%A1%E6%9F%A5%E5%92%8C%E6%8C%81%E7%BB%AD%E6%A0%A1%E9%AA%8C\&quot;&gt;将 Bundle 纳入代码审查和持续校验&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%B0%86%E8%BF%90%E8%A1%8C%E5%8F%8D%E9%A6%88%E8%BD%AC%E4%B8%BA%E5%8F%AF%E5%AE%A1%E6%A0%B8%E7%9A%84%E5%8F%98%E6%9B%B4\&quot;&gt;将运行反馈转为可审核的变更&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%B8%80%E4%B8%AA%E6%9C%80%E5%B0%8F-bundle-%E7%A4%BA%E4%BE%8B\&quot;&gt;一个最小 Bundle 示例&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%BB%8D%E9%9C%80%E7%94%B1%E5%AE%9E%E7%8E%B0%E6%96%B9%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98\&quot;&gt;仍需由实现方解决的问题&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#okf-%E5%9C%A8%E7%9F%A5%E8%AF%86%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%BD%8D%E7%BD%AE\&quot;&gt;OKF 在知识系统中的实现位置&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99\&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="22" text-anchor="middle" font-size="12" fill="#555">rebaseSteps：本地两步未确认（s1、s2），远端到达一步（r1），三方都基于 v10</text>
+
+  <!-- document chain -->
+  <rect x="20" y="70" width="150" height="48" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="95" y="90" text-anchor="middle" font-size="12" fill="#2c4a73">rebase 前本地文档</text>
+  <text x="95" y="106" text-anchor="middle" font-size="11" fill="#2c4a73">v10 + s1 + s2</text>
+
+  <rect x="225" y="70" width="110" height="48" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="280" y="90" text-anchor="middle" font-size="12" fill="#2c4a73">退回基点</text>
+  <text x="280" y="106" text-anchor="middle" font-size="11" fill="#2c4a73">v10</text>
+
+  <rect x="390" y="70" width="120" height="48" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="450" y="90" text-anchor="middle" font-size="12" fill="#2c4a73">应用远端</text>
+  <text x="450" y="106" text-anchor="middle" font-size="11" fill="#2c4a73">v11 = v10 + r1</text>
+
+  <rect x="565" y="70" width="170" height="48" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="650" y="90" text-anchor="middle" font-size="12" fill="#2c4a73">rebase 后本地文档</text>
+  <text x="650" y="106" text-anchor="middle" font-size="11" fill="#2c4a73">v11 + s1′ + s2′</text>
+
+  <line x1="170" y1="94" x2="225" y2="94" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="197" y="58" text-anchor="middle" font-size="11" fill="#6b4c22">① 逆序撤销</text>
+  <text x="197" y="72" text-anchor="middle" font-size="11" fill="#6b4c22">s2⁻¹、s1⁻¹</text>
+
+  <line x1="335" y1="94" x2="390" y2="94" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="362" y="58" text-anchor="middle" font-size="11" fill="#6b4c22">② 应用远端</text>
+  <text x="362" y="72" text-anchor="middle" font-size="11" fill="#6b4c22">r1</text>
+
+  <line x1="510" y1="94" x2="565" y2="94" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="537" y="58" text-anchor="middle" font-size="11" fill="#6b4c22">③ 映射重做</text>
+  <text x="537" y="72" text-anchor="middle" font-size="11" fill="#6b4c22">s1′、s2′</text>
+
+  <!-- unconfirmed array evolution -->
+  <text x="130" y="160" text-anchor="end" font-size="12" fill="#333">unconfirmed</text>
+  <rect x="140" y="142" width="70" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="175" y="163" text-anchor="middle" font-size="12" fill="#6b4c22">s1</text>
+  <rect x="210" y="142" width="70" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="245" y="163" text-anchor="middle" font-size="12" fill="#6b4c22">s2</text>
+
+  <rect x="590" y="142" width="70" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="625" y="163" text-anchor="middle" font-size="12" fill="#6b4c22">s1′</text>
+  <rect x="660" y="142" width="70" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="695" y="163" text-anchor="middle" font-size="12" fill="#6b4c22">s2′</text>
+
+  <!-- mirror links -->
+  <path d="M175,174 C175,235 625,235 625,174" fill="none" stroke="#4a7c59" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <path d="M245,174 C245,255 695,255 695,174" fill="none" stroke="#4a7c59" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="435" y="230" text-anchor="middle" font-size="11" fill="#2e5a3c">mapping.setMirror：s1⁻¹ ↔ s1′、s2⁻¹ ↔ s2′ 登记为镜像对</text>
+
+  <!-- stage notes -->
+  <text x="95" y="140" text-anchor="middle" font-size="10" fill="#777">inverted 在收集时已算好</text>
+  <text x="650" y="196" text-anchor="middle" font-size="10" fill="#777">s1′ = s1.map(mapping.slice(2))，映射后应用失败即丢弃</text>
+
+  <text x="380" y="300" text-anchor="middle" font-size="11" fill="#555">整个过程在同一个 transaction 的 Transform 上连续追加步骤，docs、steps、mapping 三个数组同步增长</text>
+  <text x="380" y="318" text-anchor="middle" font-size="11" fill="#555">新 CollabState(version=11, unconfirmed=[s1′, s2′]) 随 meta 写回插件状态</text>
+</svg>

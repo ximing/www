@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="55%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="102" height="102" patternUnits="userSpaceOnUse">
+      <circle cx="51" cy="51" r="2.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <rect width="1200" height="900" fill="url(#dots)" opacity="0.08"/>
+
+  <!-- gear hint -->
+  <g stroke="#fde68a" stroke-width="7" fill="none" opacity="0.85">
+    <circle cx="1035" cy="190" r="26"/>
+    <path d="M 1035 154 L 1035 166 M 1035 214 L 1035 226 M 999 190 L 1011 190 M 1059 190 L 1071 190 M 1010 165 L 1018 173 M 1052 207 L 1060 215 M 1060 165 L 1052 173 M 1018 207 L 1010 215"/>
+  </g>
+
+  <!-- pipeline arrows -->
+  <g stroke="#fef3c7" stroke-width="6" fill="none" opacity="0.9">
+    <path d="M 458 380 L 500 380"/>
+    <path d="M 486 369 L 502 380 L 486 391"/>
+    <path d="M 698 380 L 740 380"/>
+    <path d="M 726 369 L 742 380 L 726 391"/>
+  </g>
+
+  <!-- pipeline stages -->
+  <g>
+    <rect x="270" y="325" width="180" height="110" rx="16" fill="#fffbeb"/>
+    <rect x="510" y="325" width="180" height="110" rx="16" fill="#ffffff"/>
+    <rect x="750" y="325" width="180" height="110" rx="16" fill="#fffbeb"/>
+  </g>
+  <g fill="#b45309" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="26" font-weight="600" text-anchor="middle">
+    <text x="360" y="376">源码</text>
+    <text x="600" y="376">构建</text>
+    <text x="840" y="376">产物</text>
+  </g>
+  <g fill="#d97706" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" text-anchor="middle">
+    <text x="360" y="410">TS · SCSS</text>
+    <text x="600" y="410">HMR · minify</text>
+    <text x="840" y="410">dist/</text>
+  </g>
+
+  <!-- env chip -->
+  <rect x="505" y="480" width="190" height="34" rx="17" fill="none" stroke="#fde68a" stroke-width="2" opacity="0.85"/>
+  <text x="600" y="503" fill="#fef3c7" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" text-anchor="middle" letter-spacing="1">multi-env config</text>
+
+  <!-- title -->
+  <text x="600" y="732" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">MPBuild</text>
+  <text x="600" y="792" fill="#fde68a" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="4">现代化小程序构建工具</text>
+</svg>

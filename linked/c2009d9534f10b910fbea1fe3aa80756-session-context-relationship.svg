@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 710" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10z" fill="#827c73"/>
+    </marker>
+    <marker id="accentArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10z" fill="#bd5634"/>
+    </marker>
+  </defs>
+
+  <text x="540" y="31" text-anchor="middle" font-size="19" font-weight="700" fill="#25231f">Session、Context 与模型消息：从持久化日志到一次模型请求</text>
+  <text x="540" y="53" text-anchor="middle" font-size="12" fill="#6b655d">Session 保存完整历史；Context 是当前路径的运行时投影；模型只接收投影后的 messages 与独立 system prompt</text>
+
+  <!-- Persistent layer -->
+  <rect x="38" y="84" width="1004" height="132" rx="13" fill="#f4f2ee"/>
+  <text x="62" y="111" font-size="14" font-weight="700" fill="#464139">持久化层</text>
+  <text x="62" y="130" font-size="11" fill="#6b655d">完整、追加、可分叉的历史</text>
+
+  <rect x="205" y="100" width="220" height="86" rx="9" fill="#fff"/>
+  <text x="315" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#403c35">JSONL session file</text>
+  <text x="315" y="146" text-anchor="middle" font-size="11" fill="#6b655d">header + append-only entries</text>
+  <text x="315" y="164" text-anchor="middle" font-size="11" fill="#6b655d">id · parentId · leaf · summaries</text>
+
+  <rect x="500" y="100" width="230" height="86" rx="9" fill="#fff"/>
+  <text x="615" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#403c35">JsonlSessionBackend</text>
+  <text x="615" y="146" text-anchor="middle" font-size="11" fill="#6b655d">读写文件、打开会话</text>
+  <text x="615" y="164" text-anchor="middle" font-size="11" fill="#6b655d">实现 SessionRepository</text>
+
+  <rect x="805" y="100" width="205" height="86" rx="9" fill="#fff"/>
+  <text x="908" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#403c35">ArraySessionIndex</text>
+  <text x="908" y="146" text-anchor="middle" font-size="11" fill="#6b655d">entries + byId + leafId</text>
+  <text x="908" y="164" text-anchor="middle" font-size="11" fill="#6b655d">索引、回溯、统计投影</text>
+
+  <path d="M425 143 L494 143" fill="none" stroke="#827c73" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M730 143 L799 143" fill="none" stroke="#827c73" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="460" y="133" text-anchor="middle" font-size="10.5" fill="#6b655d">load / append</text>
+  <text x="765" y="133" text-anchor="middle" font-size="10.5" fill="#6b655d">内存索引</text>
+
+  <!-- Session layer -->
+  <rect x="38" y="248" width="1004" height="151" rx="13" fill="#f8f7f4"/>
+  <text x="62" y="275" font-size="14" font-weight="700" fill="#464139">会话层</text>
+  <text x="62" y="294" font-size="11" fill="#6b655d">对 harness 暴露稳定 API</text>
+
+  <rect x="234" y="266" width="280" height="104" rx="9" fill="#fff7f2" stroke="#bd5634" stroke-width="2"/>
+  <text x="374" y="292" text-anchor="middle" font-size="15" font-weight="700" fill="#994427">Session</text>
+  <text x="374" y="314" text-anchor="middle" font-size="11" fill="#655f57">运行时 leafId + 串行 append 队列</text>
+  <text x="374" y="334" text-anchor="middle" font-size="11" fill="#655f57">appendMessage() · moveTo() · getBranch()</text>
+  <text x="374" y="352" text-anchor="middle" font-size="11" fill="#655f57">buildContext()</text>
+
+  <rect x="682" y="266" width="280" height="104" rx="9" fill="#fff"/>
+  <text x="822" y="292" text-anchor="middle" font-size="14" font-weight="700" fill="#403c35">SessionStorage（接口）</text>
+  <text x="822" y="314" text-anchor="middle" font-size="11" fill="#655f57">readEntry · appendEntry · readPath…</text>
+  <text x="822" y="334" text-anchor="middle" font-size="11" fill="#655f57">Jsonl backend / memory backend</text>
+  <text x="822" y="352" text-anchor="middle" font-size="11" fill="#655f57">负责存取，不决定业务语义</text>
+
+  <path d="M514 318 L676 318" fill="none" stroke="#827c73" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="595" y="307" text-anchor="middle" font-size="11" fill="#6b655d">依赖</text>
+  <path d="M615 187 C580 226 481 237 409 265" fill="none" stroke="#827c73" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="515" y="224" text-anchor="middle" font-size="11" fill="#6b655d">create / open</text>
+
+  <!-- Projection layer -->
+  <rect x="38" y="431" width="1004" height="149" rx="13" fill="#f4f2ee"/>
+  <text x="62" y="458" font-size="14" font-weight="700" fill="#464139">Context 构建层</text>
+  <text x="62" y="477" font-size="11" fill="#6b655d">只保留本次模型调用所需的当前分支视图</text>
+
+  <rect x="198" y="454" width="220" height="92" rx="9" fill="#fff"/>
+  <text x="308" y="479" text-anchor="middle" font-size="13" font-weight="700" fill="#403c35">当前 branch entries</text>
+  <text x="308" y="500" text-anchor="middle" font-size="11" fill="#655f57">leafId 向 parentId 回溯</text>
+  <text x="308" y="518" text-anchor="middle" font-size="11" fill="#655f57">根 → 当前 leaf 的路径</text>
+  <text x="308" y="534" text-anchor="middle" font-size="10.5" fill="#827c73">旧分支不在此路径</text>
+
+  <rect x="475" y="454" width="230" height="92" rx="9" fill="#fff"/>
+  <text x="590" y="479" text-anchor="middle" font-size="13" font-weight="700" fill="#403c35">Context transform</text>
+  <text x="590" y="500" text-anchor="middle" font-size="11" fill="#655f57">defaultContextEntryTransform</text>
+  <text x="590" y="518" text-anchor="middle" font-size="11" fill="#655f57">compaction 折叠历史</text>
+  <text x="590" y="534" text-anchor="middle" font-size="10.5" fill="#827c73">可注入 custom projector</text>
+
+  <rect x="762" y="454" width="235" height="92" rx="9" fill="#fff7f2" stroke="#bd5634" stroke-width="1.5"/>
+  <text x="880" y="479" text-anchor="middle" font-size="13" font-weight="700" fill="#994427">SessionContext</text>
+  <text x="880" y="500" text-anchor="middle" font-size="11" fill="#655f57">messages: AgentMessage[]</text>
+  <text x="880" y="518" text-anchor="middle" font-size="11" fill="#655f57">model · thinkingLevel · tools</text>
+  <text x="880" y="534" text-anchor="middle" font-size="10.5" fill="#827c73">本次 turn 的状态快照</text>
+
+  <path d="M418 500 L469 500" fill="none" stroke="#bd5634" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+  <path d="M705 500 L756 500" fill="none" stroke="#bd5634" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+  <path d="M374 371 C347 403 323 419 313 451" fill="none" stroke="#bd5634" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+
+  <!-- request layer -->
+  <rect x="38" y="612" width="1004" height="67" rx="13" fill="#f8f7f4"/>
+  <text x="62" y="640" font-size="14" font-weight="700" fill="#464139">执行层</text>
+  <rect x="292" y="625" width="270" height="40" rx="8" fill="#fff"/>
+  <text x="427" y="650" text-anchor="middle" font-size="12" font-weight="700" fill="#403c35">AgentHarness.createTurnState()</text>
+  <rect x="687" y="625" width="260" height="40" rx="8" fill="#fff7f2" stroke="#bd5634" stroke-width="1.5"/>
+  <text x="817" y="650" text-anchor="middle" font-size="12" font-weight="700" fill="#994427">AgentContext → models.streamSimple()</text>
+  <path d="M562 645 L681 645" fill="none" stroke="#bd5634" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+  <path d="M880 547 L840 623" fill="none" stroke="#bd5634" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+  <text x="950" y="621" font-size="10.5" fill="#827c73">system prompt 独立生成</text>
+</svg>

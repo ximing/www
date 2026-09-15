@@ -1,0 +1,203 @@
+<svg viewBox="0 0 980 680" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="panelL" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="panelR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#58a6ff"/></marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#f85149"/></marker>
+  </defs>
+
+  <rect width="980" height="680" fill="url(#bg)" rx="8"/>
+
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">seq2seq 与注意力：加入前后的信息通路对比</text>
+  <text x="490" y="54" text-anchor="middle" fill="#8b949e" font-size="12">左：固定向量是编码器到解码器的唯一通道；右：解码每一步按权重从所有输入位置取上下文</text>
+
+  <!-- ============ 左：无注意力 ============ -->
+  <rect x="30" y="80" width="440" height="430" rx="6" fill="url(#panelL)" filter="url(#glow)"/>
+  <text x="250" y="104" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">不加注意力：一个向量传所有信息</text>
+  <text x="250" y="121" text-anchor="middle" fill="#8b949e" font-size="10">源句全部内容压进编码器最后的隐状态，解码端只看它</text>
+
+  <!-- 输出词 -->
+  <rect x="73" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="105" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">I</text>
+  <rect x="153" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="185" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">love</text>
+  <rect x="233" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="265" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">eating</text>
+  <rect x="313" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="345" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">apples</text>
+
+  <!-- 解码器单元 -->
+  <rect x="83" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="105" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s1</text>
+  <rect x="163" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="185" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s2</text>
+  <rect x="243" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="265" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s3</text>
+  <rect x="323" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="345" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s4</text>
+
+  <!-- 解码器内部传递与输出箭头 -->
+  <line x1="127" y1="194" x2="160" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="207" y1="194" x2="240" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="287" y1="194" x2="320" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="105" y1="180" x2="105" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="185" y1="180" x2="185" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="265" y1="180" x2="265" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="345" y1="180" x2="345" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+
+  <!-- 上下文向量（瓶颈） -->
+  <rect x="180" y="255" width="140" height="32" rx="6" fill="#0d1117" stroke="#f85149" stroke-width="2"/>
+  <text x="250" y="275" text-anchor="middle" fill="#f85149" font-size="11">c：固定长度向量</text>
+
+  <!-- c 广播到解码器每一步 -->
+  <line x1="205" y1="255" x2="108" y2="210" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="228" y1="255" x2="188" y2="210" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="272" y1="255" x2="262" y2="210" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="295" y1="255" x2="342" y2="210" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <text x="250" y="240" text-anchor="middle" fill="#8b949e" font-size="10">同一个 c 喂给解码的每一步</text>
+
+  <!-- h4 -> c 唯一通道 -->
+  <path d="M 345 348 C 345 322, 335 305, 322 290" fill="none" stroke="#f85149" stroke-width="2.5" marker-end="url(#arrRed)"/>
+  <text x="400" y="322" text-anchor="middle" fill="#f85149" font-size="10">唯一通道</text>
+
+  <!-- 编码器单元 -->
+  <rect x="83" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="105" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h1</text>
+  <rect x="163" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="185" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h2</text>
+  <rect x="243" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="265" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h3</text>
+  <rect x="323" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="345" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h4</text>
+
+  <!-- 编码器内部传递 -->
+  <line x1="127" y1="364" x2="160" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="207" y1="364" x2="240" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="287" y1="364" x2="320" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+
+  <!-- 输入词 -->
+  <rect x="77" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="105" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">我</text>
+  <rect x="157" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="185" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">爱</text>
+  <rect x="237" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="265" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">吃</text>
+  <rect x="317" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="345" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">苹果</text>
+
+  <!-- 输入 -> 编码器 -->
+  <line x1="105" y1="420" x2="105" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="185" y1="420" x2="185" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="265" y1="420" x2="265" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="345" y1="420" x2="345" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+
+  <text x="250" y="482" text-anchor="middle" fill="#f85149" font-size="10">5 个词和 50 个词，要传的信息都挤这一个向量</text>
+
+  <!-- 左图注 -->
+  <rect x="30" y="524" width="440" height="130" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="46" y="548" fill="#f85149" font-size="11">● 瓶颈：解码端唯一的信息源是 c，与句子长短无关</text>
+  <text x="46" y="570" fill="#8b949e" font-size="10">Sutskever 2014：编码器-解码器 + LSTM，神经翻译首次达到可用水平</text>
+  <text x="46" y="592" fill="#8b949e" font-size="10">Cho 等的观察（Bahdanau 论文引用）：句子变长，BLEU 分数明显下降</text>
+  <text x="46" y="614" fill="#8b949e" font-size="10">RNN 逐词串行：h4 要等 h3 算完，序列越长训练越慢</text>
+  <text x="46" y="636" fill="#8b949e" font-size="10">LSTM 的门控缓解长距离衰减，但通道仍只有最后一个状态</text>
+
+  <!-- ============ 右：有注意力 ============ -->
+  <rect x="500" y="80" width="450" height="430" rx="6" fill="url(#panelR)" filter="url(#glow)"/>
+  <text x="725" y="104" text-anchor="middle" fill="#a371f7" font-size="13" font-weight="bold">加注意力：每一步回头查所有位置</text>
+  <text x="725" y="121" text-anchor="middle" fill="#8b949e" font-size="10">以生成 apples 那一步为例：对四个输入位置算权重，加权取上下文</text>
+
+  <!-- 输出词 -->
+  <rect x="543" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="575" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">I</text>
+  <rect x="623" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="655" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">love</text>
+  <rect x="703" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="735" y="156" text-anchor="middle" fill="#c9d1d9" font-size="12">eating</text>
+  <rect x="783" y="140" width="64" height="24" rx="4" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+  <text x="815" y="156" text-anchor="middle" fill="#e6edf3" font-size="12">apples</text>
+
+  <!-- 解码器单元 -->
+  <rect x="553" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="575" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s1</text>
+  <rect x="633" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="655" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s2</text>
+  <rect x="713" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#8b949e"/>
+  <text x="735" y="198" text-anchor="middle" fill="#c9d1d9" font-size="11">s3</text>
+  <rect x="793" y="180" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff" stroke-width="2" filter="url(#glow)"/>
+  <text x="815" y="198" text-anchor="middle" fill="#e6edf3" font-size="11">s4</text>
+
+  <!-- 解码器内部传递与输出箭头 -->
+  <line x1="597" y1="194" x2="630" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="677" y1="194" x2="710" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="757" y1="194" x2="790" y2="194" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="575" y1="180" x2="575" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="655" y1="180" x2="655" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="735" y1="180" x2="735" y2="166" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="815" y1="180" x2="815" y2="166" stroke="#58a6ff" marker-end="url(#arrBlue)"/>
+
+  <!-- c4 加权求和节点 -->
+  <rect x="640" y="269" width="120" height="32" rx="6" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+  <text x="700" y="289" text-anchor="middle" fill="#58a6ff" font-size="11">c4 = Σ αi · hi</text>
+
+  <!-- c4 -> s4 -->
+  <path d="M 712 268 C 748 250, 782 230, 806 212" fill="none" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrBlue)"/>
+  <text x="790" y="248" fill="#58a6ff" font-size="10">当前步上下文</text>
+
+  <!-- 注意力连线：h1..h4 -> c4 -->
+  <line x1="575" y1="350" x2="655" y2="303" stroke="#8b949e" stroke-dasharray="4,3"/>
+  <line x1="655" y1="350" x2="678" y2="303" stroke="#8b949e" stroke-dasharray="4,3"/>
+  <line x1="735" y1="350" x2="702" y2="303" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="815" y1="350" x2="724" y2="303" stroke="#58a6ff" stroke-width="3"/>
+
+  <!-- 权重标注 -->
+  <text x="582" y="326" fill="#8b949e" font-size="10">0.04</text>
+  <text x="646" y="334" fill="#8b949e" font-size="10">0.02</text>
+  <text x="712" y="334" fill="#8b949e" font-size="10">0.11</text>
+  <text x="780" y="322" fill="#58a6ff" font-size="11" font-weight="bold">0.83</text>
+
+  <!-- 编码器单元 -->
+  <rect x="553" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="575" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h1</text>
+  <rect x="633" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="655" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h2</text>
+  <rect x="713" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff"/>
+  <text x="735" y="368" text-anchor="middle" fill="#c9d1d9" font-size="11">h3</text>
+  <rect x="793" y="350" width="44" height="28" rx="4" fill="#161b22" stroke="#58a6ff" stroke-width="2" filter="url(#glow)"/>
+  <text x="815" y="368" text-anchor="middle" fill="#e6edf3" font-size="11">h4</text>
+
+  <!-- 编码器内部传递 -->
+  <line x1="597" y1="364" x2="630" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="677" y1="364" x2="710" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="757" y1="364" x2="790" y2="364" stroke="#8b949e" marker-end="url(#arrGray)"/>
+
+  <!-- 输入词 -->
+  <rect x="547" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="575" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">我</text>
+  <rect x="627" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="655" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">爱</text>
+  <rect x="707" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#8b949e"/>
+  <text x="735" y="436" text-anchor="middle" fill="#c9d1d9" font-size="12">吃</text>
+  <rect x="787" y="420" width="56" height="24" rx="4" fill="#0d1117" stroke="#58a6ff" stroke-width="2"/>
+  <text x="815" y="436" text-anchor="middle" fill="#e6edf3" font-size="12">苹果</text>
+
+  <!-- 输入 -> 编码器 -->
+  <line x1="575" y1="420" x2="575" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="655" y1="420" x2="655" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="735" y1="420" x2="735" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+  <line x1="815" y1="420" x2="815" y2="380" stroke="#8b949e" marker-end="url(#arrGray)"/>
+
+  <!-- 手算数字 -->
+  <text x="725" y="472" text-anchor="middle" fill="#c9d1d9" font-size="11">打分 s·hi = 2, 1, 3, 5 → softmax → α = 0.04, 0.02, 0.11, 0.83</text>
+  <text x="725" y="492" text-anchor="middle" fill="#8b949e" font-size="10">c4 ≈ [1.81, 0.96]，绝大部分来自「苹果」的隐状态</text>
+
+  <!-- 右图注 -->
+  <rect x="500" y="524" width="450" height="130" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="516" y="548" fill="#58a6ff" font-size="11">● 上下文随步变化：每生成一个词，重新算一组权重</text>
+  <text x="516" y="570" fill="#8b949e" font-size="10">Bahdanau 2014：打分用可学习前馈网络（图中点积为简化示意）</text>
+  <text x="516" y="592" fill="#8b949e" font-size="10">权重同时给出源词与目标词的软对齐，论文附有对齐热力图</text>
+  <text x="516" y="614" fill="#8b949e" font-size="10">编码器用双向 RNN：每个位置的状态同时含左右两侧上下文</text>
+  <text x="516" y="636" fill="#8b949e" font-size="10">打分与加权本身可并行，但 RNN 本体仍是逐词串行</text>
+</svg>

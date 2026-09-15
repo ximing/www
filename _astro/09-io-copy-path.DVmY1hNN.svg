@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 620" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="620" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">一个文件从磁盘到网卡：三种 IO 路径的拷贝次数对照</text>
+  <text x="30" y="53" font-size="11" fill="#64748b">以「读本地文件、经 socket 发给客户端」为例（2016 年 Linux 口径）；编号为拷贝顺序，红色为 CPU 亲自搬运</text>
+
+  <!-- 一、传统 IO -->
+  <text x="30" y="86" font-size="12" font-weight="600" fill="#475569">一、传统 IO（InputStream → OutputStream）</text>
+
+  <rect x="25" y="96" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="80" y="125" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">磁盘</text>
+
+  <line x1="137" y1="121" x2="172" y2="121" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="155" cy="108" r="8" fill="#2563eb"/>
+  <text x="155" y="112" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="155" y="140" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="176" y="96" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="231" y="118" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">内核缓冲区</text>
+  <text x="231" y="134" font-size="9.5" fill="#1d4ed8" text-anchor="middle">page cache</text>
+
+  <line x1="288" y1="121" x2="323" y2="121" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <circle cx="306" cy="108" r="8" fill="#b91c1c"/>
+  <text x="306" y="112" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="306" y="140" font-size="9.5" fill="#b91c1c" text-anchor="middle">CPU</text>
+
+  <rect x="327" y="96" width="110" height="50" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+  <text x="382" y="118" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">用户缓冲区</text>
+  <text x="382" y="134" font-size="9.5" fill="#b45309" text-anchor="middle">JVM 堆 byte[]</text>
+
+  <line x1="439" y1="121" x2="474" y2="121" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <circle cx="457" cy="108" r="8" fill="#b91c1c"/>
+  <text x="457" y="112" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="457" y="140" font-size="9.5" fill="#b91c1c" text-anchor="middle">CPU</text>
+
+  <rect x="478" y="96" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="533" y="118" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">Socket 缓冲区</text>
+  <text x="533" y="134" font-size="9.5" fill="#1d4ed8" text-anchor="middle">内核</text>
+
+  <line x1="590" y1="121" x2="625" y2="121" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="608" cy="108" r="8" fill="#2563eb"/>
+  <text x="608" y="112" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="608" y="140" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="629" y="96" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="684" y="125" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">网卡</text>
+
+  <text x="30" y="166" font-size="10.5" fill="#b45309">JVM 层面还有额外往返：本地内存 ↔ 堆上 byte[]，第 2、3 步各倒一手</text>
+  <text x="30" y="188" font-size="11.5" fill="#334155">合计：<tspan font-weight="600" fill="#b91c1c">拷贝 4 次（DMA 2 次 + CPU 2 次），JVM 堆内外另有 2 次额外往返</tspan> · <tspan font-weight="600" fill="#b91c1c">上下文切换 4 次</tspan>（read / write 各 2 次）</text>
+
+  <!-- 二、NIO 直接内存 -->
+  <text x="30" y="226" font-size="12" font-weight="600" fill="#475569">二、NIO（FileChannel + 直接内存缓冲）</text>
+
+  <rect x="25" y="236" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="80" y="265" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">磁盘</text>
+
+  <line x1="137" y1="261" x2="172" y2="261" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="155" cy="248" r="8" fill="#2563eb"/>
+  <text x="155" y="252" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="155" y="280" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="176" y="236" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="231" y="258" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">内核缓冲区</text>
+  <text x="231" y="274" font-size="9.5" fill="#1d4ed8" text-anchor="middle">page cache</text>
+
+  <line x1="288" y1="261" x2="323" y2="261" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <circle cx="306" cy="248" r="8" fill="#b91c1c"/>
+  <text x="306" y="252" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="306" y="280" font-size="9.5" fill="#b91c1c" text-anchor="middle">CPU</text>
+
+  <rect x="327" y="236" width="110" height="50" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+  <text x="382" y="258" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">直接内存</text>
+  <text x="382" y="274" font-size="9.5" fill="#b45309" text-anchor="middle">堆外，无堆拷贝</text>
+
+  <line x1="439" y1="261" x2="474" y2="261" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <circle cx="457" cy="248" r="8" fill="#b91c1c"/>
+  <text x="457" y="252" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="457" y="280" font-size="9.5" fill="#b91c1c" text-anchor="middle">CPU</text>
+
+  <rect x="478" y="236" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="533" y="258" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">Socket 缓冲区</text>
+  <text x="533" y="274" font-size="9.5" fill="#1d4ed8" text-anchor="middle">内核</text>
+
+  <line x1="590" y1="261" x2="625" y2="261" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="608" cy="248" r="8" fill="#2563eb"/>
+  <text x="608" y="252" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">4</text>
+  <text x="608" y="280" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="629" y="236" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="684" y="265" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">网卡</text>
+
+  <text x="30" y="306" font-size="10.5" fill="#b45309">省掉的是 JVM 堆内外的往返；内核视角数据仍要进出用户态</text>
+  <text x="30" y="328" font-size="11.5" fill="#334155">合计：<tspan font-weight="600" fill="#b45309">拷贝 4 次（CPU 搬 2 次）</tspan> · <tspan font-weight="600" fill="#b45309">上下文切换 4 次</tspan></text>
+
+  <!-- 三、零拷贝 -->
+  <text x="30" y="366" font-size="12" font-weight="600" fill="#475569">三、零拷贝（FileChannel.transferTo → sendfile）</text>
+
+  <rect x="41" y="376" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="96" y="405" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">磁盘</text>
+
+  <line x1="153" y1="401" x2="222" y2="401" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="188" cy="388" r="8" fill="#2563eb"/>
+  <text x="188" y="392" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">1</text>
+  <text x="188" y="420" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="226" y="376" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="281" y="398" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">内核缓冲区</text>
+  <text x="281" y="414" font-size="9.5" fill="#1d4ed8" text-anchor="middle">page cache</text>
+
+  <line x1="338" y1="401" x2="407" y2="401" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <circle cx="373" cy="388" r="8" fill="#b91c1c"/>
+  <text x="373" y="392" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">2</text>
+  <text x="373" y="420" font-size="9.5" fill="#b91c1c" text-anchor="middle">CPU（SG-DMA 时可省）</text>
+
+  <rect x="411" y="376" width="110" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="466" y="398" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">Socket 缓冲区</text>
+  <text x="466" y="414" font-size="9.5" fill="#1d4ed8" text-anchor="middle">内核</text>
+
+  <line x1="523" y1="401" x2="592" y2="401" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <circle cx="558" cy="388" r="8" fill="#2563eb"/>
+  <text x="558" y="392" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">3</text>
+  <text x="558" y="420" font-size="9.5" fill="#2563eb" text-anchor="middle">DMA</text>
+
+  <rect x="596" y="376" width="110" height="50" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="651" y="405" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">网卡</text>
+
+  <text x="30" y="446" font-size="10.5" fill="#1d4ed8">数据全程不进入用户态；红利只在「文件 → socket」方向，文件到文件 JDK 7 仍退回用户态搬运</text>
+  <text x="30" y="468" font-size="11.5" fill="#334155">合计：<tspan font-weight="600" fill="#1d4ed8">拷贝 3 次（SG-DMA 时 2 次）</tspan> · <tspan font-weight="600" fill="#1d4ed8">上下文切换 2 次</tspan></text>
+
+  <!-- 图例 -->
+  <text x="30" y="506" font-size="12" font-weight="600" fill="#475569">图例</text>
+  <line x1="30" y1="528" x2="62" y2="528" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrBlue)"/>
+  <text x="72" y="532" font-size="10.5" fill="#334155">DMA 拷贝（不耗 CPU）</text>
+  <line x1="220" y1="528" x2="252" y2="528" stroke="#b91c1c" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <text x="262" y="532" font-size="10.5" fill="#334155">CPU 拷贝</text>
+  <circle cx="420" cy="528" r="8" fill="#2563eb"/>
+  <text x="420" y="532" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">n</text>
+  <text x="438" y="532" font-size="10.5" fill="#334155">拷贝顺序编号</text>
+
+  <!-- 结论 -->
+  <rect x="30" y="550" width="720" height="48" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="50" y="571" font-size="11.5" font-weight="600" fill="#1d4ed8">结论：IO 优化 = 减少拷贝次数与上下文切换（NIO 省堆拷贝，transferTo/sendfile 再省用户态进出）</text>
+  <text x="50" y="589" font-size="11.5" font-weight="600" fill="#1d4ed8">但比它更重要的结论是：能少一跳就少一跳 —— 流对流链路里 java 这一跳最终被整体移除</text>
+</svg>

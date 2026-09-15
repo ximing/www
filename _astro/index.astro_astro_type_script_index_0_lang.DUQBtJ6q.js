@@ -1,0 +1,1 @@
+import{t as e}from"./client.BKm8_Y-M.js";document.addEventListener(`astro:page-load`,()=>{let t=document.getElementById(`random-walk`);t&&(t.onclick=()=>{let n=JSON.parse(t.dataset.slugs||`[]`);n.length>0&&e(n[Math.floor(Math.random()*n.length)])})});
