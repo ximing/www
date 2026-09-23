@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 780" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="780" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">at-least-once 设计：三段失败窗口与三道防线</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">端到端恰好一次难落地；默认假设至少一次投递，消费幂等，死信隔离，对账兜底</text>
+
+  <!-- ============ 上半：投递链路三段 ============ -->
+  <text x="28" y="84" font-size="13" font-weight="600" fill="#1f2937">投递链路：生产者 → broker → 消费者，每段都有失败窗口</text>
+
+  <!-- ① 生产者 -->
+  <rect x="20" y="98" width="300" height="200" rx="6" fill="#eff6ff" opacity="0.55"/>
+  <text x="36" y="120" font-size="12" font-weight="600" fill="#1d4ed8">① 生产者段</text>
+
+  <rect x="36" y="134" width="268" height="58" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="48" y="153" font-size="11" font-weight="600" fill="#dc2626">失败窗口 A：发送未确认</text>
+  <text x="48" y="169" font-size="10" fill="#475569">网络超时 / broker 暂未持久化</text>
+  <text x="48" y="183" font-size="10" fill="#475569">重试 → 可能写入重复（broker 已收但 ACK 丢失）</text>
+
+  <rect x="36" y="200" width="268" height="84" rx="5" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.2"/>
+  <text x="48" y="220" font-size="11" font-weight="600" fill="#1f2937">Kafka 0.11 幂等生产者（适用范围）</text>
+  <text x="48" y="236" font-size="10" fill="#16a34a">enable.idempotence=true</text>
+  <text x="48" y="251" font-size="10" fill="#475569">PID + sequence number，broker 端去重</text>
+  <text x="48" y="266" font-size="10" fill="#ca8a04">限制：单会话、单分区内有效</text>
+  <text x="48" y="280" font-size="10" fill="#ca8a04">重启后 PID 重置，跨会话不保证</text>
+
+  <!-- ② broker -->
+  <rect x="340" y="98" width="300" height="200" rx="6" fill="#f0fdf4" opacity="0.55"/>
+  <text x="356" y="120" font-size="12" font-weight="600" fill="#16a34a">② broker 段</text>
+
+  <rect x="356" y="134" width="268" height="58" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="368" y="153" font-size="11" font-weight="600" fill="#dc2626">失败窗口 B：已确认但未同步</text>
+  <text x="368" y="169" font-size="10" fill="#475569">leader 确认后、follower 同步前宕机</text>
+  <text x="368" y="183" font-size="10" fill="#475569">unclean 选举 → HW 以上数据丢失</text>
+
+  <rect x="356" y="200" width="268" height="84" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="368" y="220" font-size="11" font-weight="600" fill="#1f2937">Kafka 0.11 事务（适用范围）</text>
+  <text x="368" y="236" font-size="10" fill="#16a34a">transactional.id，跨分区原子写入</text>
+  <text x="368" y="251" font-size="10" fill="#475569">consume-process-produce 链路原子化</text>
+  <text x="368" y="266" font-size="10" fill="#ca8a04">限制：不覆盖下游外部系统写入</text>
+  <text x="368" y="280" font-size="10" fill="#ca8a04">DB / Redis 等仍需业务幂等</text>
+
+  <!-- ③ 消费者 -->
+  <rect x="660" y="98" width="320" height="200" rx="6" fill="#fef2f2" opacity="0.5"/>
+  <text x="676" y="120" font-size="12" font-weight="600" fill="#dc2626">③ 消费者段</text>
+
+  <rect x="676" y="134" width="288" height="58" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="688" y="153" font-size="11" font-weight="600" fill="#dc2626">失败窗口 C：处理后未提交位移</text>
+  <text x="688" y="169" font-size="10" fill="#475569">业务处理完成、提交 offset 前崩溃</text>
+  <text x="688" y="183" font-size="10" fill="#475569">重启后重投 → 重复处理（最常见来源）</text>
+
+  <rect x="676" y="200" width="288" height="84" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="688" y="220" font-size="11" font-weight="600" fill="#1f2937">消费幂等（业务侧唯一可靠手段）</text>
+  <text x="688" y="236" font-size="10" fill="#475569">业务唯一键 / 去重表</text>
+  <text x="688" y="251" font-size="10" fill="#475569">状态机校验 / 外部存储原子操作</text>
+  <text x="688" y="266" font-size="10" fill="#475569">broker 不感知业务结果，幂等由消费方负责</text>
+  <text x="688" y="280" font-size="10" fill="#475569">至少一次 + 幂等 = 业务等效恰好一次</text>
+
+  <!-- 段间箭头 -->
+  <line x1="320" y1="198" x2="338" y2="198" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <line x1="640" y1="198" x2="658" y2="198" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ============ 中间：为什么端到端恰好一次难 ============ -->
+  <rect x="20" y="316" width="960" height="56" rx="6" fill="#fffbeb" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="36" y="338" font-size="11" font-weight="600" fill="#92400e">为什么端到端恰好一次难</text>
+  <text x="36" y="356" font-size="10" fill="#475569">A/B/C 三段任一失败都需协调；两阶段提交把协调者可用性变成所有参与者瓶颈，代价无法摊到每条消息；0.11 幂等与事务只覆盖 Kafka 内部闭环，跨 DB/外部系统仍靠幂等</text>
+
+  <!-- ============ 下半：三道防线 ============ -->
+  <text x="28" y="396" font-size="13" font-weight="600" fill="#1f2937">业务侧三道防线：幂等 → 死信与重试分级 → 对账兜底</text>
+
+  <!-- 防线 1 幂等 -->
+  <rect x="20" y="410" width="310" height="200" rx="6" fill="#eff6ff" opacity="0.55"/>
+  <text x="36" y="432" font-size="12" font-weight="600" fill="#1d4ed8">防线 1：消费幂等</text>
+
+  <rect x="36" y="446" width="278" height="42" rx="5" fill="#ffffff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="48" y="464" font-size="10" font-weight="600" fill="#1f2937">业务唯一键 / 去重表</text>
+  <text x="48" y="479" font-size="10" fill="#475569">msg_id + 消费者名做唯一约束，重复写影响行数 0</text>
+
+  <rect x="36" y="494" width="278" height="42" rx="5" fill="#ffffff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="48" y="512" font-size="10" font-weight="600" fill="#1f2937">状态机校验</text>
+  <text x="48" y="527" font-size="10" fill="#475569">按业务状态迁移判断，已终态消息直接跳过</text>
+
+  <rect x="36" y="542" width="278" height="58" rx="5" fill="#ffffff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="48" y="560" font-size="10" font-weight="600" fill="#1f2937">外部存储原子操作</text>
+  <text x="48" y="575" font-size="10" fill="#475569">Redis SETNX / Lua 脚本原子判定+写入</text>
+  <text x="48" y="589" font-size="10" fill="#ca8a04">注意：Redis 与 DB 跨存储仍非原子，需对账</text>
+
+  <!-- 防线 2 死信与重试 -->
+  <rect x="345" y="410" width="310" height="200" rx="6" fill="#fef2f2" opacity="0.5"/>
+  <text x="361" y="432" font-size="12" font-weight="600" fill="#dc2626">防线 2：重试分级与死信隔离</text>
+
+  <rect x="361" y="446" width="278" height="42" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1"/>
+  <text x="373" y="464" font-size="10" font-weight="600" fill="#1f2937">重试分级</text>
+  <text x="373" y="479" font-size="10" fill="#475569">瞬时失败重试 3 次，指数退避；超限转死信</text>
+
+  <rect x="361" y="494" width="278" height="42" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1"/>
+  <text x="373" y="512" font-size="10" font-weight="600" fill="#1f2937">死信隔离</text>
+  <text x="373" y="527" font-size="10" fill="#475569">无法消费的消息转存死信队列，保存失败上下文</text>
+
+  <rect x="361" y="542" width="278" height="58" rx="5" fill="#ffffff" stroke="#ca8a04" stroke-width="1"/>
+  <text x="373" y="560" font-size="10" font-weight="600" fill="#1f2937">隔离之后</text>
+  <text x="373" y="575" font-size="10" fill="#475569">主链路提交位移继续推进，不被毒消息阻塞</text>
+  <text x="373" y="589" font-size="10" fill="#475569">死信由补偿任务或人工处理，完成后对账核销</text>
+
+  <!-- 防线 3 对账 -->
+  <rect x="670" y="410" width="310" height="200" rx="6" fill="#f0fdf4" opacity="0.55"/>
+  <text x="686" y="432" font-size="12" font-weight="600" fill="#16a34a">防线 3：定时对账兜底</text>
+
+  <rect x="686" y="446" width="278" height="42" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="698" y="464" font-size="10" font-weight="600" fill="#1f2937">生产侧 vs 消费侧计数</text>
+  <text x="698" y="479" font-size="10" fill="#475569">可比较字段对齐，差异超阈值告警</text>
+
+  <rect x="686" y="494" width="278" height="42" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="698" y="512" font-size="10" font-weight="600" fill="#1f2937">事件表长停留检查</text>
+  <text x="698" y="527" font-size="10" fill="#475569">待发送/处理中超阈值未清告警，定位卡点</text>
+
+  <rect x="686" y="542" width="278" height="58" rx="5" fill="#ffffff" stroke="#ca8a04" stroke-width="1"/>
+  <text x="698" y="560" font-size="10" font-weight="600" fill="#1f2937">定位与边界</text>
+  <text x="698" y="575" font-size="10" fill="#475569">不提供实时一致性，发现延迟由频率决定</text>
+  <text x="698" y="589" font-size="10" fill="#475569">前三层无法证明全对齐，对账是最后手段</text>
+
+  <!-- 防线间箭头 -->
+  <line x1="330" y1="510" x2="343" y2="510" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <line x1="655" y1="510" x2="668" y2="510" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ============ 底部对照表 ============ -->
+  <rect x="24" y="626" width="952" height="138" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="648" font-size="11" font-weight="600" fill="#1f2937">业务需求 × 应使用的模式 × 不成立的假设</text>
+  <text x="40" y="666" font-size="10" fill="#1d4ed8">允许重复处理、单分区保序</text>
+  <text x="392" y="666" font-size="10" fill="#475569">→ 至少一次 + 消费幂等（去重表/唯一键）</text>
+  <text x="780" y="666" font-size="10" fill="#dc2626">× 假设 broker 保证恰好一次</text>
+  <text x="40" y="686" font-size="10" fill="#1d4ed8">本地事务与发消息需原子</text>
+  <text x="392" y="686" font-size="10" fill="#475569">→ 本地事件表 + 扫描投递 + 对账（第 15 篇事务消息）</text>
+  <text x="780" y="686" font-size="10" fill="#dc2626">× 假设跨 DB 与 MQ 原子提交</text>
+  <text x="40" y="706" font-size="10" fill="#1d4ed8">同业务对象事件需保序</text>
+  <text x="392" y="706" font-size="10" fill="#475569">→ 稳定分区键 + 消息版本号裁决</text>
+  <text x="780" y="706" font-size="10" fill="#dc2626">× 假设全局有序且高吞吐</text>
+  <text x="40" y="726" font-size="10" fill="#1d4ed8">消费失败需隔离</text>
+  <text x="392" y="726" font-size="10" fill="#475569">→ 重试分级 + 死信队列 + 补偿任务</text>
+  <text x="780" y="726" font-size="10" fill="#dc2626">× 假设失败消息自动恢复</text>
+  <text x="40" y="746" font-size="10" fill="#1d4ed8">全链路最终一致</text>
+  <text x="392" y="746" font-size="10" fill="#475569">→ 幂等 + 死信 + 对账三层叠加</text>
+  <text x="780" y="746" font-size="10" fill="#dc2626">× 假设任一层单独足够</text>
+</svg>

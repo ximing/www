@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="296" viewBox="0 0 800 296" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- scope bands -->
+  <text x="166" y="24" font-size="12.5" fill="#71717a" text-anchor="middle">项目级 · 一次性</text>
+  <text x="546" y="24" font-size="12.5" fill="#71717a" text-anchor="middle">每页面 · 独立 run / 独立分支 / 独立门禁</text>
+  <line x1="318" y1="12" x2="318" y2="266" stroke="#d4d4d8" stroke-dasharray="5 5"/>
+
+  <!-- S0 -->
+  <rect x="20" y="44" width="140" height="148" rx="8" fill="#f4f4f5"/>
+  <text x="90" y="70" font-size="14.5" font-weight="600" fill="#18181b" text-anchor="middle">S0 环境基线</text>
+  <text x="90" y="96" font-size="12" fill="#3f3f46" text-anchor="middle">scoped 口径实测</text>
+  <text x="90" y="116" font-size="12" fill="#3f3f46" text-anchor="middle">负控制防假绿</text>
+  <text x="90" y="136" font-size="12" fill="#3f3f46" text-anchor="middle">环境 checklist</text>
+  <text x="90" y="168" font-size="11" fill="#71717a" text-anchor="middle">→ target-baseline.json</text>
+
+  <!-- S1 -->
+  <rect x="172" y="44" width="140" height="148" rx="8" fill="#f4f4f5"/>
+  <text x="242" y="70" font-size="14.5" font-weight="600" fill="#18181b" text-anchor="middle">S1 全量普查</text>
+  <text x="242" y="96" font-size="12" fill="#3f3f46" text-anchor="middle">115 entry 闭包</text>
+  <text x="242" y="116" font-size="12" fill="#3f3f46" text-anchor="middle">双端组件对账</text>
+  <text x="242" y="136" font-size="12" fill="#3f3f46" text-anchor="middle">1300+ 高危归类</text>
+  <text x="242" y="168" font-size="11" fill="#71717a" text-anchor="middle">→ 清单 + 对账 + 工单</text>
+
+  <!-- S2 -->
+  <rect x="324" y="44" width="140" height="148" rx="8" fill="#ededf0"/>
+  <text x="394" y="70" font-size="14.5" font-weight="600" fill="#18181b" text-anchor="middle">S2 页面规划</text>
+  <text x="394" y="96" font-size="12" fill="#3f3f46" text-anchor="middle">拓扑排序共享先行</text>
+  <text x="394" y="116" font-size="12" fill="#3f3f46" text-anchor="middle">kimi-3 出草案</text>
+  <text x="394" y="136" font-size="12" fill="#3f3f46" text-anchor="middle">pi 标准化落盘</text>
+  <text x="394" y="168" font-size="11" fill="#71717a" text-anchor="middle">→ plans/&lt;page&gt;.json</text>
+
+  <!-- S3 -->
+  <rect x="476" y="44" width="140" height="148" rx="8" fill="#e4e4e7"/>
+  <text x="546" y="70" font-size="14.5" font-weight="600" fill="#18181b" text-anchor="middle">S3 转码修复</text>
+  <text x="546" y="96" font-size="12" fill="#3f3f46" text-anchor="middle">glm-5.3 逐文件</text>
+  <text x="546" y="116" font-size="12" fill="#3f3f46" text-anchor="middle">账本按文件事务</text>
+  <text x="546" y="136" font-size="12" fill="#3f3f46" text-anchor="middle">修复循环双护栏</text>
+  <text x="546" y="168" font-size="11" fill="#71717a" text-anchor="middle">→ 页级分支提交 + 账本</text>
+
+  <!-- S4 -->
+  <rect x="628" y="44" width="140" height="148" rx="8" fill="#dcdce0"/>
+  <text x="698" y="70" font-size="14.5" font-weight="600" fill="#18181b" text-anchor="middle">S4 双端 e2e</text>
+  <text x="698" y="96" font-size="12" fill="#3f3f46" text-anchor="middle">语义 selector 录制</text>
+  <text x="698" y="116" font-size="12" fill="#3f3f46" text-anchor="middle">同 mock 双端 replay</text>
+  <text x="698" y="136" font-size="12" fill="#3f3f46" text-anchor="middle">确定性 differ</text>
+  <text x="698" y="168" font-size="11" fill="#71717a" text-anchor="middle">→ 基线产物 + diff 结论</text>
+
+  <!-- flow arrows -->
+  <line x1="162" y1="118" x2="170" y2="118" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <line x1="314" y1="118" x2="322" y2="118" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <line x1="466" y1="118" x2="474" y2="118" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <line x1="618" y1="118" x2="626" y2="118" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- gate connectors -->
+  <line x1="90" y1="194" x2="90" y2="208" stroke="#a1a1aa" stroke-dasharray="3 3"/>
+  <line x1="242" y1="194" x2="242" y2="208" stroke="#a1a1aa" stroke-dasharray="3 3"/>
+  <line x1="394" y1="194" x2="394" y2="208" stroke="#a1a1aa" stroke-dasharray="3 3"/>
+  <line x1="546" y1="194" x2="546" y2="208" stroke="#a1a1aa" stroke-dasharray="3 3"/>
+  <line x1="698" y1="194" x2="698" y2="208" stroke="#a1a1aa" stroke-dasharray="3 3"/>
+
+  <!-- gates -->
+  <rect x="20" y="210" width="140" height="42" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="90" y="228" font-size="11" fill="#b45309" text-anchor="middle">G0 环境门禁</text>
+  <text x="90" y="245" font-size="11" fill="#3f3f46" text-anchor="middle">不绿不开工</text>
+
+  <rect x="172" y="210" width="140" height="42" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="242" y="228" font-size="11" fill="#b45309" text-anchor="middle">G1 映射门禁</text>
+  <text x="242" y="245" font-size="11" fill="#3f3f46" text-anchor="middle">gap 加权 ≤ 10%</text>
+
+  <rect x="324" y="210" width="140" height="42" rx="8" fill="#f4f4f5" stroke="#a1a1aa" stroke-width="1.2"/>
+  <text x="394" y="228" font-size="11" fill="#52525b" text-anchor="middle">计划确定性校验</text>
+  <text x="394" y="245" font-size="11" fill="#3f3f46" text-anchor="middle">高风险页人审</text>
+
+  <rect x="476" y="210" width="140" height="42" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="546" y="228" font-size="11" fill="#b45309" text-anchor="middle">G2 静态 → G3 对账</text>
+  <text x="546" y="245" font-size="11" fill="#3f3f46" text-anchor="middle">→ G4 覆盖（防腐）</text>
+
+  <rect x="628" y="210" width="140" height="42" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="698" y="228" font-size="11" fill="#b45309" text-anchor="middle">G5 双端 e2e</text>
+  <text x="698" y="245" font-size="11" fill="#3f3f46" text-anchor="middle">需真实登录态</text>
+
+  <text x="400" y="282" font-size="12" fill="#71717a" text-anchor="middle">阶段间只经 artifact 传递 · 每阶段可独立重跑 · 崩溃最多丢一个文件的进度</text>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="400" viewBox="0 0 780 400" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="12" y="24" font-size="12" fill="#2c4a73" font-weight="bold">输入：## 标题 / 正文 **加粗**</text>
+  <text x="12" y="48" font-size="10" fill="#555">token 流：heading_open → inline(“标题”) → heading_close → paragraph_open → inline(“正文 ”, strong_open, “加粗”, strong_close) → paragraph_close</text>
+
+  <!-- panel 1 -->
+  <text x="12" y="86" font-size="11" fill="#2c4a73" font-weight="bold">① 初始</text>
+  <rect x="12" y="96" width="130" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="77" y="117" text-anchor="middle" font-size="11" fill="#2c4a73">doc（栈底）</text>
+  <text x="12" y="160" font-size="10" fill="#777">栈：1 帧</text>
+  <text x="12" y="180" font-size="10" fill="#777">doc.content：空</text>
+
+  <line x1="146" y1="113" x2="158" y2="113" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- panel 2 -->
+  <text x="164" y="86" font-size="11" fill="#2c4a73" font-weight="bold">② heading_open</text>
+  <rect x="164" y="96" width="130" height="34" fill="#f5eeda" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="229" y="117" text-anchor="middle" font-size="11" fill="#6b5a2e">heading（开）</text>
+  <rect x="164" y="136" width="130" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="229" y="157" text-anchor="middle" font-size="11" fill="#2c4a73">doc</text>
+  <text x="164" y="200" font-size="10" fill="#777">openNode 压帧</text>
+  <text x="164" y="220" font-size="10" fill="#777">inline 的文本进 heading.content</text>
+
+  <line x1="298" y1="113" x2="310" y2="113" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- panel 3 -->
+  <text x="316" y="86" font-size="11" fill="#2c4a73" font-weight="bold">③ heading_close</text>
+  <rect x="316" y="96" width="130" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="381" y="117" text-anchor="middle" font-size="11" fill="#2c4a73">doc</text>
+  <text x="316" y="160" font-size="10" fill="#777">closeNode 弹帧成节点</text>
+  <text x="316" y="180" font-size="10" fill="#777">doc.content：</text>
+  <text x="316" y="198" font-size="10" fill="#777">[heading(“标题”)]</text>
+
+  <line x1="450" y1="113" x2="462" y2="113" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- panel 4 -->
+  <text x="468" y="86" font-size="11" fill="#2c4a73" font-weight="bold">④ strong_open 时</text>
+  <rect x="468" y="96" width="130" height="34" fill="#f5eeda" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="533" y="117" text-anchor="middle" font-size="11" fill="#6b5a2e">paragraph（开）</text>
+  <rect x="468" y="136" width="130" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="533" y="157" text-anchor="middle" font-size="11" fill="#2c4a73">doc</text>
+  <text x="468" y="200" font-size="10" fill="#777">帧上 marks：[strong]</text>
+  <text x="468" y="220" font-size="10" fill="#777">paragraph.content：</text>
+  <text x="468" y="238" font-size="10" fill="#777">[text(“正文 ”)]</text>
+  <text x="468" y="258" font-size="10" fill="#777">“加粗” 带 strong 入帧</text>
+
+  <line x1="602" y1="113" x2="614" y2="113" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- panel 5 -->
+  <text x="620" y="86" font-size="11" fill="#2c4a73" font-weight="bold">⑤ 收尾</text>
+  <text x="620" y="117" font-size="10" fill="#777">栈已弹空</text>
+  <text x="620" y="147" font-size="10" fill="#777">doc.content：</text>
+  <text x="620" y="167" font-size="10" fill="#777">[heading(“标题”),</text>
+  <text x="620" y="185" font-size="10" fill="#777"> paragraph(“正文 ”,</text>
+  <text x="620" y="203" font-size="10" fill="#777">  “加粗”[strong])]</text>
+  <text x="620" y="233" font-size="10" fill="#777">parse 末尾循环 closeNode</text>
+  <text x="620" y="251" font-size="10" fill="#777">收掉所有未闭合帧</text>
+
+  <text x="12" y="386" font-size="10" fill="#777">黄框：栈顶打开的帧（openNode 压入）；蓝框：已建节点的父帧。marks 记录在栈帧上，addText 用它给文本挂格式。</text>
+</svg>

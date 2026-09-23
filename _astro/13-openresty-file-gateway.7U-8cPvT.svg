@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 610" role="img" aria-labelledby="title desc" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <title id="title">OpenResty 文件网关鉴权与代理架构</title>
+  <desc id="desc">客户端向 OpenResty 文件网关发起文件请求。Lua 向 Java 鉴权与寻址服务发起控制面调用；授权后通过内部 rewrite 进入代理 location，由 Nginx 直接将文件流从 Swift S3 对象存储返回客户端。拒绝的请求直接返回 401，Java 不经过文件数据流。</desc>
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#d97706"/></marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#dc2626"/></marker>
+  </defs>
+
+  <rect width="1000" height="610" rx="12" fill="#f8fafc"/>
+  <text x="42" y="46" font-size="20" font-weight="700" fill="#0f172a">高性能文件网关：控制面鉴权，数据面直通 Swift</text>
+  <text x="42" y="72" font-size="12" fill="#64748b">Java 只返回权限结论与对象定位；文件字节由 Nginx/OpenResty 的代理链路转发，不进入 JVM。</text>
+
+  <!-- Client -->
+  <rect x="42" y="247" width="145" height="112" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="114" y="286" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">IM 客户端</text>
+  <text x="114" y="311" text-anchor="middle" font-size="11" fill="#64748b">图片 / 文件请求</text>
+  <text x="114" y="331" text-anchor="middle" font-size="11" fill="#64748b">Cookie / Header / IM ID</text>
+
+  <!-- OpenResty boundary -->
+  <rect x="260" y="118" width="410" height="384" rx="14" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.6"/>
+  <text x="285" y="151" font-size="15" font-weight="700" fill="#1d4ed8">文件网关（OpenResty）</text>
+  <text x="285" y="172" font-size="11" fill="#3b82f6">Nginx 事件模型 + Lua 扩展</text>
+
+  <rect x="290" y="199" width="155" height="86" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <text x="367" y="232" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">access_by_lua</text>
+  <text x="367" y="255" text-anchor="middle" font-size="11" fill="#475569">提取身份与 fileId</text>
+  <text x="367" y="274" text-anchor="middle" font-size="11" fill="#475569">调用鉴权寻址接口</text>
+
+  <rect x="486" y="199" width="155" height="86" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <text x="563" y="232" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">内部 rewrite</text>
+  <text x="563" y="255" text-anchor="middle" font-size="11" fill="#475569">写入 upstream / path</text>
+  <text x="563" y="274" text-anchor="middle" font-size="11" fill="#475569">转入受控 location</text>
+
+  <rect x="358" y="358" width="245" height="92" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <text x="480" y="392" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">proxy_pass</text>
+  <text x="480" y="416" text-anchor="middle" font-size="11" fill="#475569">Nginx 连接上游、分块回传</text>
+  <text x="480" y="435" text-anchor="middle" font-size="11" fill="#475569">文件流不经过 Lua / Java 缓冲</text>
+
+  <!-- Auth service -->
+  <rect x="736" y="116" width="215" height="127" rx="10" fill="#fff7ed" stroke="#fb923c" stroke-width="1.5"/>
+  <text x="843" y="153" text-anchor="middle" font-size="16" font-weight="700" fill="#9a3412">Java 鉴权与寻址服务</text>
+  <text x="843" y="181" text-anchor="middle" font-size="11" fill="#7c2d12">校验群成员、消息归属、访问者</text>
+  <text x="843" y="202" text-anchor="middle" font-size="11" fill="#7c2d12">返回 allow / deny 与对象路径</text>
+  <text x="843" y="222" text-anchor="middle" font-size="11" fill="#7c2d12">控制面：小响应，不传文件字节</text>
+
+  <!-- Swift -->
+  <rect x="735" y="361" width="216" height="112" rx="10" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="843" y="398" text-anchor="middle" font-size="16" font-weight="700" fill="#166534">Swift S3 对象存储</text>
+  <text x="843" y="425" text-anchor="middle" font-size="11" fill="#166534">图片、文件对象</text>
+  <text x="843" y="446" text-anchor="middle" font-size="11" fill="#166534">按 bucket / object path 读取</text>
+
+  <!-- request flow -->
+  <line x1="189" y1="274" x2="287" y2="243" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <rect x="201" y="228" width="92" height="27" rx="13" fill="#dbeafe"/>
+  <text x="247" y="246" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1d4ed8">1 请求文件</text>
+
+  <line x1="447" y1="242" x2="733" y2="186" stroke="#d97706" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrowOrange)"/>
+  <rect x="527" y="181" width="117" height="26" rx="13" fill="#ffedd5"/>
+  <text x="585" y="198" text-anchor="middle" font-size="10.5" font-weight="600" fill="#9a3412">2 鉴权 + 寻址</text>
+
+  <line x1="734" y1="218" x2="447" y2="267" stroke="#d97706" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrowOrange)"/>
+  <rect x="534" y="247" width="116" height="26" rx="13" fill="#ffedd5"/>
+  <text x="592" y="264" text-anchor="middle" font-size="10.5" font-weight="600" fill="#9a3412">3 allow + 路径</text>
+
+  <line x1="447" y1="330" x2="480" y2="356" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <text x="382" y="339" font-size="10.5" fill="#1d4ed8">4 rewrite</text>
+
+  <line x1="606" y1="405" x2="732" y2="415" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <rect x="630" y="374" width="101" height="26" rx="13" fill="#dbeafe"/>
+  <text x="680" y="391" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1d4ed8">5 代理取对象</text>
+
+  <path d="M734 452 C675 535 267 551 188 336" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <rect x="397" y="519" width="178" height="28" rx="14" fill="#dbeafe"/>
+  <text x="486" y="538" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">6 文件流直通回客户端</text>
+
+  <!-- denial -->
+  <line x1="366" y1="285" x2="232" y2="397" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrowRed)"/>
+  <rect x="225" y="376" width="92" height="26" rx="13" fill="#fee2e2"/>
+  <text x="271" y="393" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b91c1c">deny → 401</text>
+
+  <!-- legend -->
+  <rect x="42" y="543" width="915" height="42" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="63" y1="565" x2="94" y2="565" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="106" y="569" font-size="11" fill="#475569">数据面：文件字节流</text>
+  <line x1="262" y1="565" x2="293" y2="565" stroke="#d97706" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrowOrange)"/>
+  <text x="305" y="569" font-size="11" fill="#475569">控制面：鉴权与对象定位</text>
+  <line x1="518" y1="565" x2="549" y2="565" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrowRed)"/>
+  <text x="561" y="569" font-size="11" fill="#475569">拒绝路径：直接返回 401</text>
+</svg>

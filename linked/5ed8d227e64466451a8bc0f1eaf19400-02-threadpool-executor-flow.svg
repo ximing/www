@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 640" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="640" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">ThreadPoolExecutor.execute() 任务提交流程（JDK 7）</text>
+
+  <!-- 起点 -->
+  <rect x="220" y="52" width="160" height="40" rx="20" fill="#2563eb"/>
+  <text x="300" y="77" font-size="14" fill="#ffffff" text-anchor="middle">execute(任务)</text>
+  <line x1="300" y1="92" x2="300" y2="104" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 判断 1：核心线程 -->
+  <polygon points="300,104 452,150 300,196 148,150" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="300" y="146" font-size="13" fill="#1f2937" text-anchor="middle">当前线程数 &lt;</text>
+  <text x="300" y="164" font-size="13" fill="#1f2937" text-anchor="middle">corePoolSize ？</text>
+
+  <line x1="452" y1="150" x2="512" y2="150" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="482" y="140" font-size="12" fill="#16a34a" text-anchor="middle">是</text>
+  <rect x="512" y="126" width="238" height="48" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="631" y="146" font-size="13" fill="#1f2937" text-anchor="middle">创建核心线程</text>
+  <text x="631" y="164" font-size="13" fill="#1f2937" text-anchor="middle">立即执行任务</text>
+
+  <line x1="300" y1="196" x2="300" y2="230" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="314" y="218" font-size="12" fill="#dc2626">否</text>
+
+  <!-- 判断 2：队列 -->
+  <polygon points="300,230 452,276 300,322 148,276" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="300" y="272" font-size="13" fill="#1f2937" text-anchor="middle">阻塞队列</text>
+  <text x="300" y="290" font-size="13" fill="#1f2937" text-anchor="middle">是否未满 ？</text>
+
+  <line x1="452" y1="276" x2="512" y2="276" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="482" y="266" font-size="12" fill="#16a34a" text-anchor="middle">是</text>
+  <rect x="512" y="246" width="238" height="60" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+  <text x="631" y="270" font-size="13" fill="#1f2937" text-anchor="middle">任务进入队列排队</text>
+  <text x="631" y="290" font-size="13" fill="#1f2937" text-anchor="middle">等待核心线程空闲后取出执行</text>
+
+  <line x1="300" y1="322" x2="300" y2="356" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="314" y="344" font-size="12" fill="#dc2626">否</text>
+
+  <!-- 判断 3：最大线程 -->
+  <polygon points="300,356 452,402 300,448 148,402" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="300" y="398" font-size="13" fill="#1f2937" text-anchor="middle">当前线程数 &lt;</text>
+  <text x="300" y="416" font-size="13" fill="#1f2937" text-anchor="middle">maximumPoolSize ？</text>
+
+  <line x1="452" y1="402" x2="512" y2="402" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="482" y="392" font-size="12" fill="#16a34a" text-anchor="middle">是</text>
+  <rect x="512" y="372" width="238" height="60" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="631" y="396" font-size="13" fill="#1f2937" text-anchor="middle">创建非核心线程立即执行</text>
+  <text x="631" y="416" font-size="13" fill="#1f2937" text-anchor="middle">空闲超过 keepAliveTime 后回收</text>
+
+  <line x1="300" y1="448" x2="300" y2="478" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="314" y="470" font-size="12" fill="#dc2626">否</text>
+
+  <!-- 拒绝策略 -->
+  <rect x="140" y="478" width="320" height="128" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="300" y="502" font-size="14" font-weight="600" fill="#b91c1c" text-anchor="middle">触发拒绝策略 RejectedExecutionHandler</text>
+  <text x="158" y="528" font-size="12" fill="#1f2937">AbortPolicy：抛异常（默认）</text>
+  <text x="158" y="548" font-size="12" fill="#1f2937">CallerRunsPolicy：交回调用方线程执行</text>
+  <text x="158" y="568" font-size="12" fill="#1f2937">DiscardPolicy：直接丢弃该任务</text>
+  <text x="158" y="588" font-size="12" fill="#1f2937">DiscardOldestPolicy：丢队首任务后重试提交</text>
+
+  <!-- 直觉校准注释 -->
+  <rect x="512" y="478" width="238" height="128" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="631" y="502" font-size="13" font-weight="600" fill="#475569" text-anchor="middle">直觉校准</text>
+  <text x="526" y="526" font-size="12" fill="#475569">队列不满时，即使核心线程全忙，</text>
+  <text x="526" y="546" font-size="12" fill="#475569">也不会创建新线程。</text>
+  <text x="526" y="572" font-size="12" fill="#475569">所以无界队列下，maximumPoolSize</text>
+  <text x="526" y="592" font-size="12" fill="#475569">与拒绝策略形同虚设。</text>
+</svg>

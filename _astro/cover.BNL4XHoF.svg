@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#831843"/>
+      <stop offset="55%" stop-color="#db2777"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="102" height="102" patternUnits="userSpaceOnUse">
+      <circle cx="51" cy="51" r="2.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <rect width="1200" height="900" fill="url(#dots)" opacity="0.08"/>
+
+  <!-- speech bubble with heart -->
+  <g>
+    <rect x="742" y="176" width="150" height="104" rx="26" fill="#fff1f2"/>
+    <path d="M 776 280 L 758 322 L 806 280 z" fill="#fff1f2"/>
+    <path d="M 817 205 c -10 -16 -34 -12 -34 6 c 0 16 20 26 34 38 c 14 -12 34 -22 34 -38 c 0 -18 -24 -22 -34 -6 z" fill="#e11d48"/>
+  </g>
+
+  <!-- fat bird body -->
+  <circle cx="540" cy="420" r="120" fill="#fff7ed"/>
+  <circle cx="540" cy="455" r="82" fill="#ffedd5"/>
+
+  <!-- wing -->
+  <path d="M 448 400 c -34 22 -40 66 -12 96 c 22 -8 44 -30 50 -58 z" fill="#fdba74"/>
+
+  <!-- crest -->
+  <path d="M 510 306 c -4 -24 12 -40 30 -44 c -6 16 -4 30 4 44 z" fill="#fdba74"/>
+  <path d="M 552 300 c 2 -24 20 -36 38 -36 c -8 14 -8 28 0 40 z" fill="#fb923c"/>
+
+  <!-- happy closed eyes -->
+  <path d="M 500 396 a 16 16 0 0 1 32 0" stroke="#7c2d12" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M 566 396 a 16 16 0 0 1 32 0" stroke="#7c2d12" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+  <!-- blush -->
+  <circle cx="486" cy="428" r="14" fill="#fda4af" opacity="0.8"/>
+  <circle cx="606" cy="428" r="14" fill="#fda4af" opacity="0.8"/>
+
+  <!-- beak -->
+  <path d="M 540 410 l -16 16 l 16 14 l 16 -14 z" fill="#f97316"/>
+
+  <!-- feet -->
+  <g stroke="#f97316" stroke-width="9" stroke-linecap="round">
+    <line x1="508" y1="534" x2="508" y2="558"/>
+    <line x1="572" y1="534" x2="572" y2="558"/>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="752" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">aipet</text>
+  <text x="600" y="812" fill="#fbcfe8" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="4">AI 桌面陪伴宠物</text>
+</svg>

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1010" viewBox="0 0 1440 1010" role="img" aria-labelledby="title desc">
+  <title id="title">RAG 与 Skill 的职责边界</title>
+  <desc id="desc">RAG 根据问题从变化的资料中检索事实证据，Skill 根据任务按需加载完整工作流程。两者共同为 Agent 提供上下文，但权限和业务校验由系统执行。</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .panel { fill: #ffffff; stroke: #e5e7eb; stroke-width: 2; }
+      .rag { fill: #eff6ff; stroke: #60a5fa; stroke-width: 2; }
+      .skill { fill: #f0fdf4; stroke: #4ade80; stroke-width: 2; }
+      .system { fill: #fff7ed; stroke: #fb923c; stroke-width: 2; }
+      .ink { fill: #172033; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+      .muted { fill: #64748b; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+      .small { font-size: 22px; }
+      .body { font-size: 25px; }
+      .heading { font-size: 31px; font-weight: 700; }
+      .title { font-size: 42px; font-weight: 700; }
+      .arrow { fill: none; stroke: #94a3b8; stroke-width: 3; marker-end: url(#arrow); }
+      .divider { stroke: #d8dee9; stroke-width: 2; stroke-dasharray: 8 8; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/></marker>
+  </defs>
+  <rect class="bg" width="1440" height="1010" rx="28"/>
+  <text class="ink title" x="80" y="82">RAG 与 Skill：都提供上下文，选择的对象不同</text>
+  <text class="muted body" x="80" y="124">先看用户输入是“要回答什么”，还是“要完成什么”。前者需要事实证据，后者需要工作流程。</text>
+
+  <rect class="panel" x="70" y="170" width="620" height="620" rx="22"/>
+  <rect class="panel" x="750" y="170" width="620" height="620" rx="22"/>
+  <text class="ink heading" x="110" y="226">RAG：为当前问题找证据</text>
+  <text class="muted small" x="110" y="262">选择依据：query 与文档的相关性</text>
+  <text class="ink heading" x="790" y="226">Skill：为当前任务加载做法</text>
+  <text class="muted small" x="790" y="262">选择依据：任务是否适用这套流程</text>
+
+  <rect class="rag" x="110" y="302" width="540" height="74" rx="12"/>
+  <text class="ink body" x="138" y="349">输入：用户问题 + 当前对象</text>
+  <path class="arrow" d="M380 377 L380 421"/>
+  <rect class="rag" x="110" y="430" width="540" height="104" rx="12"/>
+  <text class="ink body" x="138" y="473">从大量资料中召回、重排</text>
+  <text class="muted small" x="138" y="510">政策、文档、历史记录、研究资料</text>
+  <path class="arrow" d="M380 535 L380 580"/>
+  <rect class="rag" x="110" y="589" width="540" height="74" rx="12"/>
+  <text class="ink body" x="138" y="636">输出：回答当前问题的事实依据</text>
+  <text class="muted small" x="110" y="721">适合：资料多、持续更新、问题范围开放</text>
+  <text class="muted small" x="110" y="756">风险：漏召回、过期资料、证据不足</text>
+
+  <rect class="skill" x="790" y="302" width="540" height="74" rx="12"/>
+  <text class="ink body" x="818" y="349">输入：任务目标 + 运行环境</text>
+  <path class="arrow" d="M1060 377 L1060 421"/>
+  <rect class="skill" x="790" y="430" width="540" height="104" rx="12"/>
+  <text class="ink body" x="818" y="473">发现并读取完整能力包</text>
+  <text class="muted small" x="818" y="510">步骤、模板、工具说明、检查清单</text>
+  <path class="arrow" d="M1060 535 L1060 580"/>
+  <rect class="skill" x="790" y="589" width="540" height="74" rx="12"/>
+  <text class="ink body" x="818" y="636">输出：执行任务的流程和约束</text>
+  <text class="muted small" x="790" y="721">适合：步骤稳定、需要反复执行、可验收</text>
+  <text class="muted small" x="790" y="756">风险：误触发、漏读资源、流程过期或冲突</text>
+
+  <path class="divider" d="M720 170 L720 790"/>
+  <path class="arrow" d="M690 476 C710 476, 730 476, 750 476"/>
+  <text class="muted small" x="700" y="452" text-anchor="middle">配合</text>
+
+  <rect class="system" x="70" y="838" width="1300" height="118" rx="18"/>
+  <text class="ink heading" x="110" y="886">不能交给 RAG 或 Skill 的部分：权限与业务校验</text>
+  <text class="muted body" x="110" y="928">金额上限、数据范围、生产审批、状态变更由工具和后端强制执行。RAG 提供事实，Skill 规定步骤，系统决定是否允许执行。</text>
+</svg>

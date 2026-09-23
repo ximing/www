@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="55%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="102" height="102" patternUnits="userSpaceOnUse">
+      <circle cx="51" cy="51" r="2.5" fill="#ffffff"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <rect width="1200" height="900" fill="url(#dots)" opacity="0.08"/>
+
+  <!-- editor window -->
+  <rect x="250" y="92" width="700" height="560" rx="16" fill="#f5f3ff"/>
+  <!-- window chrome -->
+  <rect x="250" y="92" width="700" height="44" rx="16" fill="#ede9fe"/>
+  <rect x="250" y="114" width="700" height="22" fill="#ede9fe"/>
+  <circle cx="282" cy="114" r="7" fill="#c4b5fd"/>
+  <circle cx="308" cy="114" r="7" fill="#c4b5fd"/>
+  <circle cx="334" cy="114" r="7" fill="#c4b5fd"/>
+
+  <!-- heading -->
+  <text x="296" y="208" fill="#4c1d95" font-family="Georgia, 'Songti SC', serif" font-size="34" font-weight="700">所见即所得</text>
+  <!-- text lines -->
+  <g stroke="#c4b5fd" stroke-width="13" stroke-linecap="round">
+    <line x1="296" y1="258" x2="884" y2="258"/>
+    <line x1="296" y1="302" x2="820" y2="302"/>
+    <line x1="296" y1="390" x2="884" y2="390"/>
+    <line x1="296" y1="434" x2="760" y2="434"/>
+  </g>
+  <!-- inline code + formula chips -->
+  <rect x="296" y="330" width="150" height="34" rx="8" fill="#ede9fe"/>
+  <text x="371" y="353" fill="#6d28d9" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="17" text-anchor="middle">`markdown`</text>
+  <rect x="462" y="330" width="120" height="34" rx="8" fill="#ede9fe"/>
+  <text x="522" y="353" fill="#6d28d9" font-family="Georgia, serif" font-size="17" font-style="italic" text-anchor="middle">E = mc²</text>
+
+  <!-- slash menu -->
+  <g>
+    <rect x="296" y="470" width="300" height="158" rx="12" fill="#ffffff" stroke="#ddd6fe" stroke-width="2"/>
+    <text x="318" y="506" fill="#7c3aed" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16">/ 命令</text>
+    <rect x="308" y="518" width="276" height="34" rx="8" fill="#ede9fe"/>
+    <text x="326" y="541" fill="#4c1d95" font-family="'PingFang SC', 'Noto Sans SC', sans-serif" font-size="16">标题 · Mermaid 图</text>
+    <text x="326" y="582" fill="#7c3aed" font-family="'PingFang SC', 'Noto Sans SC', sans-serif" font-size="16">公式 KaTeX</text>
+    <text x="326" y="616" fill="#7c3aed" font-family="'PingFang SC', 'Noto Sans SC', sans-serif" font-size="16">代码块 Shiki</text>
+    <line x1="640" y1="478" x2="640" y2="520" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <!-- caret -->
+  <line x1="296" y1="446" x2="296" y2="470" stroke="#4c1d95" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- title -->
+  <text x="600" y="772" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">typomd</text>
+  <text x="600" y="830" fill="#ddd6fe" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="4">Typora 式 WYSIWYG Markdown 编辑器</text>
+</svg>

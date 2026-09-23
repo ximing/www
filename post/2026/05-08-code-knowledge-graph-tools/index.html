@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>CodeGraph、GitNexus 与 Graphify：代码知识图谱的比较维度 | 一席之地</title><meta name="description" content="从任务边界、建图方式、查询路径、LLM 参与位置、关系证据和维护方式比较 CodeGraph、GitNexus 与 Graphify，并说明适用场景与使用限制。"><meta property="og:title" content="CodeGraph、GitNexus 与 Graphify：代码知识图谱的比较维度"><meta property="og:description" content="从任务边界、建图方式、查询路径、LLM 参与位置、关系证据和维护方式比较 CodeGraph、GitNexus 与 Graphify，并说明适用场景与使用限制。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="CodeGraph、GitNexus 与 Graphify：代码知识图谱的比较维度"><meta name="twitter:description" content="从任务边界、建图方式、查询路径、LLM 参与位置、关系证据和维护方式比较 CodeGraph、GitNexus 与 Graphify，并说明适用场景与使用限制。"><meta name="keywords" content="AICoding, 架构"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/ai-coding/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《AI Coding 工程实践》· 第 11 篇 · 共 16 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">CodeGraph、GitNexus 与 Graphify：代码知识图谱的比较维度</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2026-05-08</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>2 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/ai-coding/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#AICoding</a><a href="/tags/架构/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#架构</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>代码知识图谱工具预先从仓库中抽取节点和关系，供 Agent 查询符号、依赖和调用路径。这样可以减少目录遍历和全文检索，但三个工具处理的输入、关系来源和查询方式并不相同。</p>
+<p>本文比较三个公开项目：</p>
+<ul>
+<li><a href="https://github.com/colbymchenry/codegraph">CodeGraph</a>：本地预索引代码图谱和 MCP 服务。</li>
+<li><a href="https://github.com/abhigyanpatwari/GitNexus">GitNexus</a>：为编码 Agent 提供结构检索、影响分析和执行流查询。</li>
+<li><a href="https://github.com/Graphify-Labs/graphify">Graphify</a>：把代码及相关文档、媒体材料抽取为可查询知识图谱。</li>
+</ul>
+<h2 id="三种产品任务">三种产品任务<a aria-hidden="true" tabindex="-1" href="#三种产品任务"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>三者都生成图，但图在系统里的角色不同。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th>主要任务</th><th>图的角色</th><th>适合的问题</th></tr></thead><tbody><tr><td>CodeGraph</td><td>减少 Agent 在代码库里的逐文件探索</td><td>本地代码结构索引</td><td>某个符号在哪里、谁调用它、改动会涉及哪些代码</td></tr><tr><td>GitNexus</td><td>为重构、调试和接口变更准备可行动的上下文</td><td>Agent 的结构检索与影响分析后端</td><td>调用链如何连通、一个接口变化可能波及哪里、路由由谁处理</td></tr><tr><td>Graphify</td><td>将代码和项目材料组织为关系网络</td><td>可版本化的知识地图</td><td>某个模块与文档中的设计理由如何关联、哪些材料共同描述一个概念</td></tr></tbody></table></div>
+<p>CodeGraph 和 GitNexus 以代码为主要输入。Graphify 还可以处理 Markdown、PDF、Office 文档、图片和音视频转写文本。三者覆盖的语料不同，不能只比较“图谱能力”。</p>
+<p>PR 评审需要补哪些测试、哪些调用方需要检查时，GitNexus 的影响分析更接近这个任务。需要同时查找认证模块的代码、架构决策和会议材料时，Graphify 更合适。需要在本地向 MCP 客户端提供函数、类、导入和调用关系时，CodeGraph 的部署和输入范围更小。</p>
+<h2 id="比较维度">比较维度<a aria-hidden="true" tabindex="-1" href="#比较维度"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>语言数量、MCP 工具数量和 GitHub Star 无法说明工具是否适合一个具体仓库。比较时需要回答六个问题：</p>
+<ol>
+<li><strong>任务边界</strong>：它在减少什么成本，帮助谁做什么决策？</li>
+<li><strong>图如何生产</strong>：节点和边来自 AST、类型索引、规则、启发式还是 LLM？</li>
+<li><strong>图如何查询</strong>：查询时是图遍历、关键字检索、向量检索、Cypher，还是让 LLM 自己读文件？</li>
+<li><strong>LLM 在哪里参与</strong>：参与建图、检索排序、摘要，还是仅负责调用工具并组织回答？</li>
+<li><strong>准确性边界</strong>：哪些关系是源码直接事实，哪些是推断；漏边时系统是否提示？</li>
+<li><strong>如何维护</strong>：索引存在哪里，代码变更后怎么更新，图和原始代码是否可能不一致？</li>
+</ol>
+<p>图中关系的正确性只构成候选上下文的一部分。Agent 的回答还取决于查询选择、结果解释和未被图覆盖的信息；最终改动还取决于实现、构建、测试、审查和运行时验证。图谱可以减少无关文件进入上下文，但不能替代这些验证步骤。</p>
+<h2 id="图从哪里来">图从哪里来<a aria-hidden="true" tabindex="-1" href="#图从哪里来"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="codegraphast-抽取与关系解析">CodeGraph：AST 抽取与关系解析<a aria-hidden="true" tabindex="-1" href="#codegraphast-抽取与关系解析"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>CodeGraph 将项目索引保存在 <code class="language-text">.codegraph/codegraph.db</code> 中。它从 Tree-sitter 解析得到函数、类、方法、导入和调用表达式等结构，再将能够解析的引用连接到定义。它还实现了框架路由、回调、接口实现等规则，以及部分跨语言桥接。</p>
+<p>图中边的证据强度并不相同。AST 可以直接抽取 <code class="language-text">import</code>、函数声明和调用表达式。调用表达式对应哪个定义，尤其是跨文件、成员调用或多态调用时，还要解析导入、作用域、接收者类型或命名模式。CodeGraph 的边记录包含 <code class="language-text">provenance</code> 与可扩展的 <code class="language-text">metadata</code>。非 AST 直接抽取的关系只能作为候选路径。</p>
+<p>CodeGraph 还提供 Rust 解析内核和可选的语言索引路径。它们可以改善覆盖和性能，却不意味着对反射、依赖注入容器、运行时拼接、代码生成或未索引依赖具备完整调用图。</p>
+<p>参考：<a href="https://github.com/colbymchenry/codegraph/blob/1cbd5a81235fdd6f5f512a9bcec8cc4de8b26c58/README.md">CodeGraph README</a>、<a href="https://github.com/colbymchenry/codegraph/blob/1cbd5a81235fdd6f5f512a9bcec8cc4de8b26c58/src/db/schema.sql">数据库 schema</a>、<a href="https://github.com/colbymchenry/codegraph/tree/1cbd5a81235fdd6f5f512a9bcec8cc4de8b26c58/src/resolution">关系解析实现</a>。</p>
+<h3 id="gitnexus将解析结果组织为任务查询">GitNexus：将解析结果组织为任务查询<a aria-hidden="true" tabindex="-1" href="#gitnexus将解析结果组织为任务查询"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>GitNexus 使用 Tree-sitter 解析代码，并处理跨文件符号、继承、依赖注入、路由、工具调用、模块社区和执行流。结果写入每个仓库的 <code class="language-text">.gitnexus/</code>，由嵌入式 LadybugDB 保存。</p>
+<p>查询层因此可以直接提供 <code class="language-text">context</code>、<code class="language-text">impact</code>、<code class="language-text">route_map</code>、<code class="language-text">api_impact</code> 等面向任务的操作，而不是只提供“读一个节点”或“执行一段查询”。执行流作为图中的 process 信息，可通过上下文查询和资源接口获取。它也支持 Cypher，但 Cypher 只是接口的一部分。</p>
+<p>GitNexus 将 BM25、向量语义检索和 Reciprocal Rank Fusion 组合为混合检索。向量检索用于寻找名称不同但语义相关的候选实体；调用路径和影响范围仍通过图边遍历获得。跳过 embedding 后，混合检索不再包含语义向量分支。符号和文本候选仍可由 FTS/BM25 获得，但对名称差异较大、主要依赖语义相近性的查询，召回效果需要单独测试。</p>
+<p>参考：<a href="https://github.com/abhigyanpatwari/GitNexus/blob/5497079ab202d45061bce1b265645f31ec6f19fd/ARCHITECTURE.md">GitNexus 架构文档</a>、<a href="https://github.com/abhigyanpatwari/GitNexus/blob/5497079ab202d45061bce1b265645f31ec6f19fd/gitnexus/src/core/search/hybrid-search.ts">混合搜索实现</a>。</p>
+<h3 id="graphify代码与项目材料使用不同抽取路径">Graphify：代码与项目材料使用不同抽取路径<a aria-hidden="true" tabindex="-1" href="#graphify代码与项目材料使用不同抽取路径"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Graphify 的代码路径使用 Tree-sitter 本地抽取。它会输出 <code class="language-text">graph.json</code>、HTML 图谱和报告，并提供 <code class="language-text">query</code>、<code class="language-text">path</code>、<code class="language-text">explain</code> 等局部图查询能力。代码调用关系存在二次推断过程，因此直接调用和跨文件推断不应被混为同一类证据。</p>
+<p>Graphify 可以将 PDF、文档、图片和音视频转写文本放入同一张图。文件读取、文本提取、OCR 与转写能否离线运行取决于具体配置。语义关系抽取、摘要和概念对齐可能调用 Agent 或模型后端。代码 AST 路径可以离线运行；处理混合材料时，需要分别评估提取服务和模型调用的成本、数据流向与结果稳定性。</p>
+<p>它将边分为 <code class="language-text">EXTRACTED</code>、<code class="language-text">INFERRED</code> 和 <code class="language-text">AMBIGUOUS</code>：<code class="language-text">EXTRACTED</code> 来自原始材料中的显式内容；<code class="language-text">INFERRED</code> 是系统给出的合理推断，并附带置信分数；<code class="language-text">AMBIGUOUS</code> 表示系统无法可靠判定、需要人工复核的关系。这一标记适合用于决定何时回源核实，而不表示某条边的统计正确率。</p>
+<p>参考：<a href="https://github.com/Graphify-Labs/graphify/blob/0c29b2cb88c6274d889ca7c33a684ce103808715/docs/how-it-works.md">Graphify 工作原理</a>、<a href="https://github.com/Graphify-Labs/graphify/blob/0c29b2cb88c6274d889ca7c33a684ce103808715/ARCHITECTURE.md">Graphify 架构与置信度标签</a>、<a href="https://github.com/Graphify-Labs/graphify/blob/0c29b2cb88c6274d889ca7c33a684ce103808715/README.md#privacy">隐私说明</a>。</p>
+<h2 id="查询接口与返回结果">查询接口与返回结果<a aria-hidden="true" tabindex="-1" href="#查询接口与返回结果"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>三者都可以通过 MCP 被 Agent 调用。比较时应关注调用返回的对象和查询原语，而非 MCP 本身。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>查询层</th><th>CodeGraph</th><th>GitNexus</th><th>Graphify</th></tr></thead><tbody><tr><td>数据访问接口</td><td>CLI 与 MCP</td><td>CLI、MCP 与 HTTP</td><td>CLI、<code class="language-text">graph.json</code> 与可选 MCP 服务</td></tr><tr><td>查询原语</td><td>符号、邻居、调用方、被调用方、路径</td><td>图遍历、FTS/BM25、可选向量检索和 Cypher</td><td>节点、邻居、局部子图和最短路径</td></tr><tr><td>任务封装</td><td>符号探索与 impact</td><td><code class="language-text">context</code>、<code class="language-text">impact</code>、<code class="language-text">route_map</code>、<code class="language-text">api_impact</code></td><td><code class="language-text">query</code>、<code class="language-text">path</code>、<code class="language-text">explain</code></td></tr><tr><td>对 Agent 的主要价值</td><td>缩小需要阅读的代码范围</td><td>在重构或排障前给出候选依赖和调用链</td><td>将代码和相关材料限制在一个局部子图</td></tr></tbody></table></div>
+<p>MCP 工具数量不能直接比较。直接执行 Cypher 的接口覆盖范围较广，但调用方需要理解图模型。<code class="language-text">impact</code> 这类接口封装了查询策略，也限定了工具内部采用的关系和范围。评估时应记录完成真实任务所需的调用次数、返回是否包含来源和限制，以及 Agent 能否据此找到正确源码。</p>
+<h2 id="llm-的参与位置">LLM 的参与位置<a aria-hidden="true" tabindex="-1" href="#llm-的参与位置"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>“本地运行”不等于“不调用模型”。需要区分产品内部是否默认依赖模型，以及外部 Agent 如何将查询结果写成自然语言回答。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>产品内部阶段</th><th>CodeGraph</th><th>GitNexus</th><th>Graphify</th></tr></thead><tbody><tr><td>代码建图</td><td>默认不以 LLM 为必要条件</td><td>默认不以 LLM 为必要条件</td><td>默认不以 LLM 为必要条件</td></tr><tr><td>非代码材料</td><td>不是核心输入路径</td><td>wiki 等可选能力可调用模型</td><td>语义抽取可调用模型；文本提取、OCR、转写需按配置核验</td></tr><tr><td>检索排序</td><td>图和全文索引</td><td>图与 BM25 为基础；向量检索可选</td><td>以本文快照的局部图查询为主；额外接入语义检索时应单独记录</td></tr></tbody></table></div>
+<p>三者经 MCP 调用时，最终的自然语言回答都由外部 Agent 或客户端决定。GitNexus 的 Web 端可以引入其自身的 Agent 编排；Graphify 的 Skill 只负责引导调用路径，并不自行生成回答。</p>
+<p>因此，Graphify 的“纯代码建图无需 API Key”成立，但不能据此描述为“所有输入都不会离开本机”。GitNexus 的主索引流程无需生成式模型，也不代表启用远程 embedding、Web 服务或 wiki 后仍然没有外部数据流。CodeGraph 的索引可本地完成，但遥测、升级下载和 Agent 本身使用的模型仍是独立的数据边界。</p>
+<p>对企业部署，应该分别登记：原始代码、索引数据库、向量、查询日志、MCP HTTP 服务和模型请求各自保存在哪里、保留多久、由谁访问。</p>
+<h2 id="关系证据与准确性边界">关系证据与准确性边界<a aria-hidden="true" tabindex="-1" href="#关系证据与准确性边界"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>文本搜索用于查找包含某个词的材料，图谱用于在已建模关系中查找调用方、依赖路径或邻居。两者解决的问题不同。图谱结果是否可用，取决于关系如何产生。</p>
+<p>关系可以按证据强度区分：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>级别</th><th>关系来源</th><th>例子</th><th>使用建议</th></tr></thead><tbody><tr><td>A</td><td>编译器或语义索引</td><td>有定义与引用绑定的语言索引结果</td><td>适合高置信导航和重命名候选；多态、反射、生成代码和运行配置仍需结合构建与运行证据核验</td></tr><tr><td>B</td><td>AST 显式抽取</td><td>import、函数声明、调用表达式</td><td>适合导航和初步核验；调用点不等于调用目标已经绑定</td></tr><tr><td>C</td><td>规则或启发式推断</td><td>跨文件调用目标、成员调用、DI、框架路由、回调</td><td>作为候选范围，回源代码确认</td></tr><tr><td>D</td><td>LLM 语义推断</td><td>PDF 中概念关系、材料摘要、设计意图关联</td><td>不能作为代码改动或安全结论的唯一依据</td></tr></tbody></table></div>
+<p>GitNexus 在未能确定 receiver 类型时会将某些影响分析标为 <code class="language-text">lower-bound</code>，含义是“已返回的结果只是已知下界，实际影响可能更大”。Graphify 的 <code class="language-text">AMBIGUOUS</code> 有类似用途。这样的提示应进入 Agent 的工作流：结果为空不等于没有调用方，低置信或下界结果不应自动用于删除代码、跳过测试或批准发布。</p>
+<p>CodeGraph、GitNexus 和 Graphify 的公开 issue 都包含解析遗漏、别名解析失败、同名符号误绑定、增量索引陈旧等问题。这不是某个项目独有的缺陷，而是静态分析面对动态语言和工程约定时的共同边界。</p>
+<h2 id="索引更新与共享方式">索引更新与共享方式<a aria-hidden="true" tabindex="-1" href="#索引更新与共享方式"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>图谱与源码版本不一致时，查询结果可能过期。三个工具的维护方式不同。</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>CodeGraph</th><th>GitNexus</th><th>Graphify</th></tr></thead><tbody><tr><td>默认存储</td><td><code class="language-text">.codegraph/codegraph.db</code></td><td><code class="language-text">.gitnexus/</code> 中的图数据库</td><td><code class="language-text">graphify-out/graph.json</code> 和报告</td></tr><tr><td>更新方式</td><td>watcher 与 scoped sync</td><td>检测仓库版本后重新分析</td><td><code class="language-text">--update</code>、watch 或 Git hook</td></tr><tr><td>索引服务共享</td><td>本地服务或共享索引策略</td><td>本地 registry、服务化或企业部署</td><td>本地 CLI 或共享 MCP 服务</td></tr><tr><td>图工件版本控制</td><td>需按数据库和索引策略设计</td><td>需按索引和服务部署策略设计</td><td>工件可复现、体积可控且不含敏感材料时，可纳入版本控制；否则作为 CI 产物或受控文件保存</td></tr><tr><td>常见风险</td><td>watcher 失效、文件系统锁、局部更新未覆盖全局关系</td><td>大仓构建资源、embedding 成本、索引滞后</td><td>混合语料模型成本、增量图一致性、图文件体积</td></tr></tbody></table></div>
+<p>CodeGraph 以常驻 watcher 和文件级更新为中心。GitNexus 关注仓库索引、MCP 服务和多仓库查询；增量能力与大仓资源都需要按目标版本实测。Graphify 更像版本化的地图工件：团队可以把输出提交到 Git，但要额外处理图文件合并和更新时机。</p>
+<p>验收时应要求查询结果或其元数据能关联到索引对应的 commit、工作树状态和构建时间；工具不提供时，可在索引封装层补充这些元数据。CI 或开发流程还应保留全量重建与差异检查的兜底路径。</p>
+<h2 id="不能直接比较的指标">不能直接比较的指标<a aria-hidden="true" tabindex="-1" href="#不能直接比较的指标"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<h3 id="语言数量">语言数量<a aria-hidden="true" tabindex="-1" href="#语言数量"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>“支持 30 种语言”可能只表示能识别文件，也可能表示能抽取结构节点、解析跨文件引用、理解类型或识别框架约定。只识别文件时，调用图可能仍然很少。比较时应按目标语言和框架列出能力，而不是比较总数。</p>
+<h3 id="token-节省倍数">Token 节省倍数<a aria-hidden="true" tabindex="-1" href="#token-节省倍数"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>Token 节省通常来自项目自己的任务集、模型、提示词、缓存状态和统计口径。一次建图消耗的时间、内存和模型成本也不应遗漏。更合理的指标是：同一模型、同一任务集、相同工具权限下，完成任务的成功率、工具调用数、输入 token、实际耗时和人工复核时间。</p>
+<h3 id="完全本地">“完全本地”<a aria-hidden="true" tabindex="-1" href="#完全本地"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h3>
+<p>本地 AST 解析只描述其中一个阶段。远程 embedding、LLM API、HTTP MCP 服务、遥测和提交到仓库的图文件都可能带来新的数据面。安全评估应根据实际配置，而不是产品口号。</p>
+<h2 id="日常开发中的分工">日常开发中的分工<a aria-hidden="true" tabindex="-1" href="#日常开发中的分工"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>三种工具进入同一条开发流程后，差异会体现在使用时机上。</p>
+<p>进入陌生模块时，通常需要找到入口、确认符号的定义和调用方，再阅读少量关键文件。这个阶段主要需要代码导航。CodeGraph 可以作为 Agent 的默认代码索引：先用图谱确定需要读哪些文件，再回到源码确认实现细节。它减少的是目录遍历、grep 和重复读取，不能替代源码阅读。</p>
+<p>改动接口、拆分模块或处理跨目录问题时，需要确认还有哪些调用方、消费者和测试需要检查。GitNexus 的 <code class="language-text">impact</code>、<code class="language-text">context</code>、路由和 API 查询可以先给出候选范围。可以在写代码前用它补齐阅读范围，在发起 review 前用它检查 diff 是否遗漏关联模块和测试。<code class="language-text">lower-bound</code>、未解析 receiver 和动态调用边界仍需通过代码和测试确认。</p>
+<p>Graphify 不需要进入每一次代码修改流程。适用场景是代码库已经积累了架构说明、ADR、接口文档、会议记录或演示材料，并且这些材料需要与代码一起查找。它可以帮助定位模块的设计依据和相关资料，不能证明某个调用在运行时一定发生。纯代码仓库只使用 Graphify 的代码路径时，混合材料能力不会参与；处理混合材料前还需确认材料是否允许进入模型处理链路。</p>
+<p>日常流程可以按下表分工：</p>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>开发阶段</th><th>优先使用</th><th>作用</th><th>仍需保留的验证</th></tr></thead><tbody><tr><td>熟悉仓库、定位符号</td><td>CodeGraph</td><td>缩小阅读范围，找到定义、调用方和相邻代码</td><td>阅读源码，确认调用目标与当前索引一致</td></tr><tr><td>重构、排障、接口变更</td><td>GitNexus</td><td>汇总候选影响范围、调用路径、路由和消费者</td><td>检查动态调用、未解析关系，运行针对性测试</td></tr><tr><td>架构理解、交接、跨材料检索</td><td>Graphify</td><td>将代码与设计材料收敛到同一组概念和关系</td><td>回看原始文档和源码，核对推断关系</td></tr></tbody></table></div>
+<p>不宜同时让三个 MCP 承担默认代码搜索。这样会让 Agent 对同一个问题获得重复但格式不同的结果，也会增加工具选择的不确定性。可以确定一个默认代码导航入口：偏向符号和调用定位时使用 CodeGraph，偏向影响分析时使用 GitNexus。需要关联非代码材料时再使用 Graphify。</p>
+<h2 id="接入前的检查">接入前的检查<a aria-hidden="true" tabindex="-1" href="#接入前的检查"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>这些建议以目标语言、模块系统和关键框架模式能够被正确解析为前提。首次接入时，可用仓库中发生过的任务检查以下问题：</p>
+<ul>
+<li>对一个已知调用链，工具是否找到关键调用点和目标定义；对跨文件、成员调用、DI 或框架路由，遗漏会出现在哪里。</li>
+<li>修改一个接口或入口函数后，影响分析是否至少覆盖人工评审认为必须检查的模块和测试；结果为空时是否明确提示索引陈旧或召回下界。</li>
+<li>修改代码后，索引是否更新；旧边是否残留；watcher、hook 或手动重建失败时是否可见。</li>
+<li>模型、embedding、查询日志、图文件和 MCP 服务分别在哪里运行；许可证、依赖来源和文件访问权限是否满足团队要求。</li>
+</ul>
+<p>这些检查用于确认工具能否进入当前仓库的日常流程。代码图谱的覆盖会随语言、框架约定和仓库结构变化。未通过这些检查时，图谱结果不应参与高风险改动的判断。</p>
+<p>三者也可以组合，但组合前先明确责任：例如 GitNexus 负责代码变更影响候选，Graphify 负责代码与设计材料的关联，而正式接口契约、运行手册和发布结论仍由版本化文档、测试和运行数据承担。</p>
+<p>代码知识图谱可以将代码阅读起点和需要核验的关系整理为结构化查询。带有源码位置和明确提取证据的结构事实可以快速回源核验。推断边、空结果和低置信结果不能单独用于删除代码、批准发布或做安全判断。图谱不能替代源码阅读、类型检查、测试、代码审查和运行时观测。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="ZAt4Fo" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/05-08-code-knowledge-graph-tools/&quot;],&quot;words&quot;:[0,770],&quot;paragraphs&quot;:[0,80]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->770<!-- --> 字 · <!-- -->80<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2026/04-27-claude-code-skill-suites-comparison/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Claude Code 六大 Skill 套件源码级对比：谁在解决什么问题，谁在制造新问题</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2026/05-20-agent-skills/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Matt Pocock 的 agent-skills：Skill 调用分层与工程流程</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/ai-coding/" class="hover:text-accent transition-colors duration-200">《AI Coding 工程实践》</a><span>· 第 11 篇 · 共 16 篇</span></div><div class="sm:col-start-1"><a href="/post/2026/04-27-claude-code-skill-suites-comparison/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Claude Code 六大 Skill 套件源码级对比：谁在解决什么问题，谁在制造新问题</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2026/05-20-agent-skills/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Matt Pocock 的 agent-skills：Skill 调用分层与工程流程</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2026/08-15-google-open-knowledge-format/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Google OKF：面向 AI 知识资产的 Markdown 交换格式</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-08-15</time></a><a href="/post/2026/07-31-claude-engineering-evolution/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Anthropic Claude 工程化演进分析</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-31</time></a><a href="/post/2026/07-11-pi-claude-session-context/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">Pi agent-core harness 与 Claude Code 的 Session 和 Context 对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2026-07-11</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="Z294TIf" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2026/05-08-code-knowledge-graph-tools/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="Z22vfWp" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%B8%89%E7%A7%8D%E4%BA%A7%E5%93%81%E4%BB%BB%E5%8A%A1\&quot;&gt;三种产品任务&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E6%AF%94%E8%BE%83%E7%BB%B4%E5%BA%A6\&quot;&gt;比较维度&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%9B%BE%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5\&quot;&gt;图从哪里来&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#codegraphast-%E6%8A%BD%E5%8F%96%E4%B8%8E%E5%85%B3%E7%B3%BB%E8%A7%A3%E6%9E%90\&quot;&gt;CodeGraph：AST 抽取与关系解析&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#gitnexus%E5%B0%86%E8%A7%A3%E6%9E%90%E7%BB%93%E6%9E%9C%E7%BB%84%E7%BB%87%E4%B8%BA%E4%BB%BB%E5%8A%A1%E6%9F%A5%E8%AF%A2\&quot;&gt;GitNexus：将解析结果组织为任务查询&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#graphify%E4%BB%A3%E7%A0%81%E4%B8%8E%E9%A1%B9%E7%9B%AE%E6%9D%90%E6%96%99%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E6%8A%BD%E5%8F%96%E8%B7%AF%E5%BE%84\&quot;&gt;Graphify：代码与项目材料使用不同抽取路径&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E6%9F%A5%E8%AF%A2%E6%8E%A5%E5%8F%A3%E4%B8%8E%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C\&quot;&gt;查询接口与返回结果&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#llm-%E7%9A%84%E5%8F%82%E4%B8%8E%E4%BD%8D%E7%BD%AE\&quot;&gt;LLM 的参与位置&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E5%85%B3%E7%B3%BB%E8%AF%81%E6%8D%AE%E4%B8%8E%E5%87%86%E7%A1%AE%E6%80%A7%E8%BE%B9%E7%95%8C\&quot;&gt;关系证据与准确性边界&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E7%B4%A2%E5%BC%95%E6%9B%B4%E6%96%B0%E4%B8%8E%E5%85%B1%E4%BA%AB%E6%96%B9%E5%BC%8F\&quot;&gt;索引更新与共享方式&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E6%AF%94%E8%BE%83%E7%9A%84%E6%8C%87%E6%A0%87\&quot;&gt;不能直接比较的指标&lt;/a&gt;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E8%AF%AD%E8%A8%80%E6%95%B0%E9%87%8F\&quot;&gt;语言数量&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#token-%E8%8A%82%E7%9C%81%E5%80%8D%E6%95%B0\&quot;&gt;Token 节省倍数&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E5%AE%8C%E5%85%A8%E6%9C%AC%E5%9C%B0\&quot;&gt;“完全本地”&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E5%88%86%E5%B7%A5\&quot;&gt;日常开发中的分工&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;\n&lt;p&gt;&lt;a href=\&quot;#%E6%8E%A5%E5%85%A5%E5%89%8D%E7%9A%84%E6%A3%80%E6%9F%A5\&quot;&gt;接入前的检查&lt;/a&gt;&lt;/p&gt;\n&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

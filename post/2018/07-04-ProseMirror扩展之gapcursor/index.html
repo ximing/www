@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><script>
+      // 主题初始化(防闪烁),逐字平移自 gatsby-ssr.tsx:12-27。
+      // 必须在 head 最前同步执行:先读 localStorage/系统偏好落 data-theme,
+      // 再让后续 CSS 解析与首帧绘制直接命中正确主题。
+      ;(function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      })();
+    </script><script>
+      // 换页重应用(方案 §6.4):ClientRouter 换页后新 document 的 head 内联脚本
+      // 不再执行,这里在 astro:after-swap 重放同一套判定。document 对象跨换页存活,
+      // 监听只需注册一次。T7 挂 ClientRouter 前此监听器永不触发,无副作用。
+      document.addEventListener("astro:after-swap", function () {
+        var root = document.documentElement;
+        var theme = "light";
+        try {
+          var stored = localStorage.getItem("blog-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (error) {
+          if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        if (theme === "dark") root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        root.style.colorScheme = theme;
+        root.setAttribute("data-theme-ready", "");
+        root.setAttribute("data-js", "");
+        try {
+          if (localStorage.getItem("toc-collapsed") === "false") {
+            root.setAttribute("data-toc", "open");
+          } else {
+            root.removeAttribute("data-toc");
+          }
+        } catch (error) {}
+      });
+    </script><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>gapcursor：光标落不进去的地方怎么办 | 一席之地</title><meta name="description" content="两个块级节点之间的文档位置没有文本容器，TextSelection 与 NodeSelection 都落不进去；gapcursor 用一种选区类型加一个 widget 假光标补上这类缝隙。"><meta property="og:title" content="gapcursor：光标落不进去的地方怎么办"><meta property="og:description" content="两个块级节点之间的文档位置没有文本容器，TextSelection 与 NodeSelection 都落不进去；gapcursor 用一种选区类型加一个 widget 假光标补上这类缝隙。"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><meta name="twitter:creator" content="ximing"><meta name="twitter:title" content="gapcursor：光标落不进去的地方怎么办"><meta name="twitter:description" content="两个块级节点之间的文档位置没有文本容器，TextSelection 与 NodeSelection 都落不进去；gapcursor 用一种选区类型加一个 widget 假光标补上这类缝隙。"><meta name="keywords" content="源码分析"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"></noscript><link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#663399"><link rel="icon" href="/favicon-32x32.png" type="image/png"><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png"><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png"><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png"><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png"><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png"><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png"><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png"><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png"><link rel="alternate" type="application/rss+xml" title="yixi RSS Feed" href="/rss.xml"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.C_fsTMfO.js"></script><link rel="stylesheet" href="/_astro/globals.BdjaBpJk.css"><link rel="stylesheet" href="/_astro/BaseLayout.DX1bnoJk.css"><script type="module" src="/_astro/page.Ds1o33-y.js"></script></head><body><div class="flex flex-col min-h-screen bg-background"><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1kVJxT" prefix="r10" component-url="/_astro/SiteChrome.DjqwRKSA.js" component-export="default" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;avatar&quot;:[0,{&quot;src&quot;:[0,&quot;/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg&quot;],&quot;srcset&quot;:[0],&quot;sizes&quot;:[0],&quot;width&quot;:[0,40],&quot;height&quot;:[0,40],&quot;format&quot;:[0,&quot;jpg&quot;],&quot;lqip&quot;:[0,&quot;data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACwBACdASoYABgAPzmMvlevKSYjqAqp4CcJQBdgAbF7hrGex3VstX9fDyZGDkgAAP3qdfdjLrge33q05sbZsarhJfkZt3vWCcCsIejee8Yg+AmFoShjXMce8BWX5ugkUkYXe6fc/Ft+1B65Whv2HhMIBk5Yj5y7U19lALUxIAAAAA==&quot;]}],&quot;author&quot;:[0,&quot;ximing&quot;],&quot;title&quot;:[0,&quot;一席之地&quot;],&quot;data-astro-transition-persist&quot;:[0,&quot;chrome&quot;]}" ssr client="load" opts="{&quot;name&quot;:&quot;SiteChrome&quot;,&quot;value&quot;:true}" data-astro-transition-persist="chrome" await-children><header class="sticky top-0 z-50 w-full border-0 backdrop-blur-md transition-shadow duration-300 bg-background-80"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-16"><a href="/" class="flex items-center gap-3 text-accent hover:text-accent-hover transition-colors group"><img src="/_astro/profile-pic.CfB-s2yk_Z19Y47.jpg" width="40" height="40" alt="ximing" class="w-10 h-10 rounded-full ring-2 ring-accent-subtle group-hover:ring-accent transition-all"/><span class="font-semibold text-lg hidden sm:block font-serif">一席之地</span></a><div class="flex items-center gap-4"><nav class="hidden lg:flex items-center gap-6"><a href="/" data-nav-to="/" class="nav-link py-2 text-sm font-medium">Home</a><a href="/blog/" data-nav-to="/blog/" class="nav-link py-2 text-sm font-medium">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="nav-link py-2 text-sm font-medium">Thoughts</a><a href="/works/" data-nav-to="/works/" class="nav-link py-2 text-sm font-medium">Works</a><a href="/series/" data-nav-to="/series/" class="nav-link py-2 text-sm font-medium">Series</a><a href="/photos/" data-nav-to="/photos/" class="nav-link py-2 text-sm font-medium">Photos</a><a href="/tags/" data-nav-to="/tags/" class="nav-link py-2 text-sm font-medium">Tags</a><a href="/about/" data-nav-to="/about/" class="nav-link py-2 text-sm font-medium">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="nav-link py-2 text-sm font-medium">GitHub</a></nav><button class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent cursor-pointer" aria-label="搜索" title="搜索"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,112a80,80,0,1,1-80-80A80,80,0,0,1,192,112Z" opacity="0.2"></path><path d="M229.66,218.34,179.6,168.28a88.21,88.21,0,1,0-11.32,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></button><button class="
+        relative inline-flex items-center justify-center
+        w-10 h-10 rounded-lg
+        bg-background-secondary
+        text-foreground
+        hover:bg-background-tertiary hover:shadow-xs hover:text-accent
+        transition-all duration-200
+        focus:outline-hidden focus:ring-2 focus:ring-accent
+        cursor-pointer
+      " aria-label="切换主题" title="切换主题"><span class="
+          inline-block transition-transform duration-300 ease-in-out
+          rotate-0
+        "><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="hidden text-primary dark-theme-icon" aria-hidden="true"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"></path><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="light-theme-icon text-primary" aria-hidden="true"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"></path><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"></path></svg></span></button><button class="lg:hidden relative inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:shadow-xs hover:text-accent transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-accent" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="text-foreground" aria-hidden="true"><path d="M216,64V192H40V64Z" opacity="0.2"></path><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button></div></div></div></header><div id="mobile-menu" class="fixed inset-0 z-40 overflow-hidden lg:hidden pointer-events-none invisible" role="dialog" aria-modal="true" aria-label="移动端导航菜单"><div class="absolute inset-0 bg-background-95 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true"></div><div class="relative bg-background border-b border-theme shadow-xl transition-all duration-300 ease-out -translate-y-full opacity-0"><div class="pt-20 pb-8 px-6"><button class="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary text-foreground hover:bg-background-tertiary hover:text-accent hover:shadow-xs transition-all duration-200" aria-label="关闭菜单"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z" opacity="0.2"></path><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button><nav class="space-y-2"><a href="/" data-nav-to="/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Home</a><a href="/blog/" data-nav-to="/blog/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Blog</a><a href="/thoughts/" data-nav-to="/thoughts/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Thoughts</a><a href="/works/" data-nav-to="/works/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Works</a><a href="/series/" data-nav-to="/series/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Series</a><a href="/photos/" data-nav-to="/photos/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Photos</a><a href="/tags/" data-nav-to="/tags/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">Tags</a><a href="/about/" data-nav-to="/about/" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">About</a><a href="https://github.com/ximing" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-lg font-medium text-foreground-secondary hover:text-accent hover:bg-accent-subtle rounded-lg transition-all duration-200 -translate-y-4 opacity-0" style="transition-delay:0ms">GitHub</a></nav><div class="mt-8 pt-6 border-t border-theme"><p class="text-sm text-foreground-muted text-center font-serif italic">Digital Garden - 数字花园</p></div></div></div></div><!--astro:end--></astro-island><main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><article><div id="reading-progress" aria-hidden="true" class="fixed top-0 left-0 z-60 h-0.5 w-full bg-accent" style="display: none; transform: scaleX(0); transform-origin: left;"></div><div class="xl:grid xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-10"><div class="min-w-0"><nav class="fade-in mb-6" aria-label="Breadcrumb"><a href="/" class="inline-flex items-center text-xs text-foreground-muted hover:text-accent transition-colors duration-200 group"><span class="mr-1 transition-transform duration-200 group-hover:-translate-x-1">←</span>返回首页</a></nav><header class="mb-8 fade-in"><div class="mb-3"><a href="/series/prosemirror/" class="inline-flex items-center gap-1.5 text-xs text-foreground-muted hover:text-accent transition-colors duration-200"><span class="text-accent">📖</span><span>《ProseMirror 源码分析》· 第 44 篇 · 共 60 篇</span></a></div><h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight mb-4" style="font-family: 'Noto Serif SC', Georgia, 'Times New Roman', serif;">gapcursor：光标落不进去的地方怎么办</h1><div class="flex flex-wrap items-center gap-3 text-xs text-foreground-muted"><div class="flex items-center gap-1.5"><span>📅</span><time>2018-07-04</time></div><div class="flex items-center gap-1.5"><span>⏱</span><span>3 分钟阅读</span></div><span class="text-foreground-muted">·</span><div class="flex flex-wrap gap-1.5"><a href="/tags/源码分析/" class="inline-flex items-center px-2 py-0.5 text-[11px] font-medium text-accent bg-accent-subtle rounded-full hover:bg-accent hover:text-accent-foreground transition-colors duration-200" style="border-radius: 12px 16px 10px 18px;">#源码分析</a></div></div></header><div class="prose max-w-none fade-in article-content text-foreground" style="font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;"><p>块级节点之间没有文本容器时，光标需要落在两个块之间的位置。gapcursor 处理这类位置。整个包 src 下只有两个源文件：src/gapcursor.ts 定义选区类型，src/index.ts 定义插件，合计 230 来行。参考代码是 prosemirror-gapcursor 的 72657d0；顺带引用的 prosemirror-state、prosemirror-view、prosemirror-model、prosemirror-keymap 分别是 ffad5d9、ca4c78e、6264de0、d60e244。</p>
+<p>问题用 schema-basic 就能构造。horizontal_rule 和 image 都是 atom 的块级节点，文档里放两个挨着的 horizontal_rule，它们中间存在一个合法的文档位置，但这个位置的 parent 是 doc，doc 没有 inlineContent。第 20 篇讲选区体系时提过 TextSelection 的 $cursor 约定：光标位置的父节点必须能容纳 inline 内容，否则光标无处落脚。NodeSelection 是另一个极端，它选中某个节点整体，管不到节点之间的缝。TextSelection 与 NodeSelection 于是都管不到两个 atom 之间的这个位置。浏览器对块元素之间的原生 caret 支持也不一致，有的干脆拒绝把 caret 放到两个块元素中间。不装 gapcursor 的实际表现：方向键直接跳过这段缝，鼠标点过去选中的是节点，用户没有办法在两个块之间插入新段落。上一篇讲列表时说「每个列表项都有一个可以直接打字的落点」，落点缺失正是这类位置的特征。</p>
+<h2 id="系列目录">系列目录<a aria-hidden="true" tabindex="-1" href="#系列目录"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<div class="prose-table-scroll">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>日期</th><th>标题</th></tr></thead><tbody><tr><td>05-10</td><td><a href="/post/2017/05-10-ProseMirror%E5%BC%80%E7%AF%87%E5%AF%8C%E6%96%87%E6%9C%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%BE/">ProseMirror 源码分析开篇：富文本编辑器到底难在哪</a></td></tr><tr><td>05-17</td><td><a href="/post/2017/05-17-ProseMirror%E4%BB%93%E5%BA%93%E5%85%A8%E6%99%AF%E4%B8%8E%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86/">ProseMirror 仓库全景：22 个包怎么分工</a></td></tr><tr><td>05-24</td><td><a href="/post/2017/05-24-ProseMirror%E8%B7%91%E9%80%9ADemo%E4%B8%8E%E6%96%87%E6%A1%A3JSON%E7%BB%93%E6%9E%84/">跑通一个最小 ProseMirror：先看文档长什么样</a></td></tr><tr><td>06-07</td><td><a href="/post/2017/06-07-ProseMirrorModel%E4%B9%8BNode%E4%B8%8EFragment/">ProseMirror model（上）：Node 与 Fragment，文档树的骨架</a></td></tr><tr><td>06-14</td><td><a href="/post/2017/06-14-ProseMirrorModel%E4%B9%8BMark/">ProseMirror model（中）：Mark，内联格式怎么挂在文本上</a></td></tr><tr><td>06-21</td><td><a href="/post/2017/06-21-ProseMirrorModel%E4%B9%8BSchema%E4%B8%8E%E5%86%85%E5%AE%B9%E8%A1%A8%E8%BE%BE%E5%BC%8F/">ProseMirror model（下）：Schema 与 content expression，文档的类型系统</a></td></tr><tr><td>07-05</td><td><a href="/post/2017/07-05-ProseMirrorModel%E4%B9%8BResolvedPos/">ResolvedPos：一个数字位置怎么变成路径</a></td></tr><tr><td>07-12</td><td><a href="/post/2017/07-12-ProseMirrorModel%E4%B9%8BSlice%E4%B8%8EReplace/">Slice 与 replace：切一块文档出来再塞回去</a></td></tr><tr><td>07-19</td><td><a href="/post/2017/07-19-ProseMirrorModel%E4%B9%8BDOMSerializer/">DOMSerializer：文档怎么变成 DOM 和 HTML</a></td></tr><tr><td>08-02</td><td><a href="/post/2017/08-02-ProseMirrorModel%E4%B9%8BDOMParser/">DOMParser：parseDOM 规则与 HTML 解析</a></td></tr><tr><td>08-09</td><td><a href="/post/2017/08-09-ProseMirrorModel%E4%B9%8BDiff/">findDiffStart / findDiffEnd：两份文档怎么求差</a></td></tr><tr><td>08-16</td><td><a href="/post/2017/08-16-ProseMirrorModel%E6%94%B6%E5%AE%98Node%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95%E5%85%A8%E6%99%AF/">model 收官：Node 上的辅助方法与位置约定总结</a></td></tr><tr><td>09-06</td><td><a href="/post/2017/09-06-ProseMirrorTransform%E4%B9%8BStep%E6%8A%BD%E8%B1%A1/">ProseMirror transform（上）：Step 抽象，所有修改的最小单位</a></td></tr><tr><td>09-20</td><td><a href="/post/2017/09-20-ProseMirrorTransform%E4%B9%8BReplaceStep%E4%B8%8EFitter/">ProseMirror transform（下）：ReplaceStep 与 Fitter，最复杂的一步</a></td></tr><tr><td>10-03</td><td><a href="/post/2017/10-03-ProseMirrorTransform%E4%B9%8BStepMap/">StepMap：一步修改怎么映射每个位置</a></td></tr><tr><td>10-11</td><td><a href="/post/2017/10-11-ProseMirrorTransform%E4%B9%8BMapping%E4%B8%8ERebase/">Mapping：多步映射的链式合并，rebase 的地基</a></td></tr><tr><td>10-18</td><td><a href="/post/2017/10-18-ProseMirrorTransform%E4%B9%8B%E7%BB%93%E6%9E%84%E5%88%A4%E6%96%AD/">structure.ts：split/join/lift/wrap 的可达性判断</a></td></tr><tr><td>10-25</td><td><a href="/post/2017/10-25-ProseMirrorTransform%E4%B9%8BTransform%E7%B1%BB/">Transform 类：构建修改的 API 层</a></td></tr><tr><td>11-08</td><td><a href="/post/2017/11-08-ProseMirrorState%E4%B9%8BEditorState/">ProseMirror state（上）：EditorState，不可变编辑器状态</a></td></tr><tr><td>11-15</td><td><a href="/post/2017/11-15-ProseMirrorState%E4%B9%8BSelection%E4%BD%93%E7%B3%BB/">Selection 体系：四种选区与选区书签</a></td></tr><tr><td>11-22</td><td><a href="/post/2017/11-22-ProseMirrorState%E4%B9%8BTransaction/">Transaction：Transform 加上状态语义</a></td></tr><tr><td>12-06</td><td><a href="/post/2017/12-06-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8A/">Plugin 系统（上）：StateField 与插件状态</a></td></tr><tr><td>12-13</td><td><a href="/post/2017/12-13-ProseMirrorState%E4%B9%8BPlugin%E7%B3%BB%E7%BB%9F%E4%B8%8B/">Plugin 系统（下）：props、appendTransaction 与 filterTransaction</a></td></tr><tr><td>12-20</td><td><a href="/post/2017/12-20-ProseMirrorState%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%8F%92%E4%BB%B6%E7%A4%BA%E4%BE%8B/">state 收官：动手写三个插件验证理解</a></td></tr><tr><td>01-03</td><td><a href="/post/2018/01-03-ProseMirrorView%E4%B9%8BEditorView%E6%80%BB%E8%A7%88/">ProseMirror view（上）：EditorView，状态与 DOM 之间的桥</a></td></tr><tr><td>01-10</td><td><a href="/post/2018/01-10-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8A/">ViewDesc（上）：文档到 DOM 的描述树</a></td></tr><tr><td>01-17</td><td><a href="/post/2018/01-17-ProseMirrorView%E4%B9%8BViewDesc%E6%B8%B2%E6%9F%93%E6%A0%91%E4%B8%8B/">ViewDesc（下）：增量更新怎么做到只改动的部分</a></td></tr><tr><td>02-07</td><td><a href="/post/2018/02-07-ProseMirrorView%E4%B9%8BDOMObserver%E4%B8%8E%E8%AF%BB%E5%9B%9E/">DOMObserver 与 readDOMChange：浏览器改了 DOM，怎么读回文档</a></td></tr><tr><td>02-14</td><td><a href="/post/2018/02-14-ProseMirrorView%E4%B9%8B%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%AE%A1%E7%BA%BF/">input.ts：从 keydown 到 dispatchTransaction 的输入管线</a></td></tr><tr><td>02-21</td><td><a href="/post/2018/02-21-ProseMirrorView%E4%B9%8B%E9%80%89%E5%8C%BA%E5%90%8C%E6%AD%A5/">选区同步：state 选区与 DOM 选区的双向对齐</a></td></tr><tr><td>02-28</td><td><a href="/post/2018/02-28-ProseMirrorView%E4%B9%8BComposition%E4%B8%8EIME/">Composition 与 IME：中文输入法事件的处理</a></td></tr><tr><td>03-07</td><td><a href="/post/2018/03-07-ProseMirrorView%E4%B9%8BNodeView%E4%B8%8EMarkView/">NodeView 与 MarkView：把渲染权交给你</a></td></tr><tr><td>03-14</td><td><a href="/post/2018/03-14-ProseMirrorView%E4%B9%8BDecoration%E4%BD%93%E7%B3%BB/">Decoration 体系：不修改文档的视觉标注</a></td></tr><tr><td>03-21</td><td><a href="/post/2018/03-21-ProseMirrorView%E4%B9%8B%E5%89%AA%E8%B4%B4%E6%9D%BF/">clipboard：复制粘贴的序列化与解析</a></td></tr><tr><td>04-04</td><td><a href="/post/2018/04-04-ProseMirrorView%E4%B9%8B%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/">domcoords：屏幕坐标与文档位置的双向换算</a></td></tr><tr><td>04-11</td><td><a href="/post/2018/04-11-ProseMirrorView%E4%B9%8B%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%AE%E5%BC%82%E8%A1%A5%E4%B8%81/">browser.ts：浏览器差异补丁集</a></td></tr><tr><td>04-18</td><td><a href="/post/2018/04-18-ProseMirrorView%E6%94%B6%E5%AE%98%E6%89%8B%E5%86%99%E6%9C%80%E5%B0%8F%E7%BC%96%E8%BE%91%E5%99%A8/">view 收官：不用官方扩展，手写一个最小可用编辑器</a></td></tr><tr><td>05-09</td><td><a href="/post/2018/05-09-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bkeymap/">扩展（上）：keymap，最小的插件</a></td></tr><tr><td>05-16</td><td><a href="/post/2018/05-16-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bcommands%E5%91%BD%E4%BB%A4%E4%BD%93%E7%B3%BB/">commands：命令的签名约定与组合器</a></td></tr><tr><td>05-23</td><td><a href="/post/2018/05-23-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Bhistory/">history：undo/redo 栈与 rebasing</a></td></tr><tr><td>06-06</td><td><a href="/post/2018/06-06-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8Binputrules/">inputrules：「# 空格」变成标题是怎么实现的</a></td></tr><tr><td>06-13</td><td><a href="/post/2018/06-13-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaBasic/">schema-basic：官方基础文档结构</a></td></tr><tr><td>06-20</td><td><a href="/post/2018/06-20-ProseMirror%E6%89%A9%E5%B1%95%E4%B9%8BschemaList%E4%B8%8E%E5%88%97%E8%A1%A8%E5%91%BD%E4%BB%A4/">schema-list：列表节点与最复杂的一批命令</a></td></tr><tr><td>07-04</td><td>gapcursor：光标落不进去的地方怎么办（本篇）</td></tr></tbody></table></div>
+<h2 id="gapcursor一个不含内容的空选区">GapCursor：一个不含内容的空选区<a aria-hidden="true" tabindex="-1" href="#gapcursor一个不含内容的空选区"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>src/gapcursor.ts 的 GapCursor 继承 prosemirror-state 的 Selection（选区体系见第 20 篇）。<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">c</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord cjk_fallback">和</span></span></span></span>head 指向同一个位置，是空选区。几个接口都写得很薄：content() 返回 Slice.empty，选区不含任何文档内容；eq 只比 head 一个数字；toJSON 序列化成 {type: “gapcursor”, pos}，靠文件末尾的 Selection.jsonID(“gapcursor”, GapCursor) 注册，fromJSON 负责还原；getBookmark 返回 GapBookmark，书签只记一个 pos，resolve 时重新校验。</p>
+<p>map 和 GapBookmark.resolve 共用一条降级路径：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token keyword">let</span> $pos <span class="token operator">=</span> doc<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>mapping<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>head<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">return</span> GapCursor<span class="token punctuation">.</span><span class="token function">valid</span><span class="token punctuation">(</span>$pos<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">GapCursor</span><span class="token punctuation">(</span>$pos<span class="token punctuation">)</span> <span class="token operator">:</span> Selection<span class="token punctuation">.</span><span class="token function">near</span><span class="token punctuation">(</span>$pos<span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span></span></pre></div>
+<p>文档变更移除缝隙后（例如删除相邻 atom），映射结果会降级为 Selection.near，以查找最近的可放置位置。自定义选区类型可通过这类分支处理文档变更后的失效位置。</p>
+<p>书签的消费者在 history 包里。第 40 篇讲过 Branch 上的每个 Item 会存一份选区书签，history.ts 里落盘时调的就是 state.selection.getBookmark()，undo 回来靠书签的 resolve 还原选区。GapBookmark.resolve 同样先查 GapCursor.valid，缝隙还在就还原成 GapCursor，不在了降级为 Selection.near。undo 一组删除操作把两个 atom 恢复出来时，光标能准确回到它们之间的缝隙上，靠的就是这条链路。</p>
+<p>类声明外面还有一行 GapCursor.prototype.visible = false。Selection 基类上 visible 默认是 true（state 的 src/selection.ts），NodeSelection 同样覆写成 false。这个标记告诉 view：不要把这个选区画成浏览器可见的选区。它如何与假光标配合，放到 DOM 伪装一节讲。</p>
+<h2 id="valid什么位置才算缝隙">valid：什么位置才算缝隙<a aria-hidden="true" tabindex="-1" href="#valid什么位置才算缝隙"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>static valid($pos) 回答「这个位置允不允许放 gap cursor」，四个条件依次是：</p>
+<ul>
+<li>parent.inlineContent 为假，缝隙的父节点必须是块容器；</li>
+<li>closedBefore(<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal">os</span><span class="mclose">)</span><span class="mord cjk_fallback">与</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">ose</span><span class="mord mathnormal">d</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mopen">(</span></span></span></span>pos) 都为真，位置两侧都封闭，下面展开；</li>
+<li>parent.type.spec.allowGapCursor 不为 null 时直接采用它的值，这是留给 schema 作者的显式开关；</li>
+<li>否则要求 parent.contentMatchAt($pos.index()).defaultType 是 textblock。</li>
+</ul>
+<p>contentMatchAt 返回该位置的内容匹配状态（第 6 篇讲过 ContentMatch），defaultType 表示这里默认可创建的节点。要求它是 textblock，表示 gap cursor 只出现在本来就能放段落的缝隙里。如果这个位置按 schema 只能放其他块，用户无法在此输入文本，不应创建光标。allowGapCursor 和下文 needsGap 里的 createGapCursor 都是插件直接读 type.spec 的原始字段，prosemirror-model 的 schema.ts 没有为它们声明类型，属于插件与 schema 作者之间的约定字段。</p>
+<p>closedBefore 与 closedAfter 就是标题里的方向语义，两者镜像。看 closedBefore（src/gapcursor.ts）：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> d <span class="token operator">=</span> $pos<span class="token punctuation">.</span>depth<span class="token punctuation">;</span> d <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> d<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> index <span class="token operator">=</span> $pos<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span><span class="token punctuation">,</span> parent <span class="token operator">=</span> $pos<span class="token punctuation">.</span><span class="token function">node</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>index <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>parent<span class="token punctuation">.</span>type<span class="token punctuation">.</span>spec<span class="token punctuation">.</span>isolating<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span>
+    <span class="token keyword">continue</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> before <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">child</span><span class="token punctuation">(</span>index <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">;</span> before <span class="token operator">=</span> before<span class="token punctuation">.</span>lastChild<span class="token operator">!</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>before<span class="token punctuation">.</span>childCount <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&#x26;&#x26;</span> <span class="token operator">!</span>before<span class="token punctuation">.</span>inlineContent<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">needsGap</span><span class="token punctuation">(</span>before<span class="token punctuation">.</span>type<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>before<span class="token punctuation">.</span>inlineContent<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> <span class="token boolean">true</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>从光标所在层逐层向外。index 为 0 说明位置在该层第一个子节点之前，本层没有前面的兄弟可查：parent 是 isolating 就直接算封闭（isolating 边界本来就把内外的选区行为隔开），否则继续向上一层。有前兄弟时沿 lastChild 链一路下钻到最深的右下角：途中遇到「空且非 inline」的节点或 needsGap 的节点（isAtom、isolating、createGapCursor 满足其一）算封闭；遇到有 inlineContent 的节点算开放。一路走到文档顶也算封闭。</p>
+<p>封闭的直观含义：光标这一侧没有贴着一个能接收文本的位置。拿两个具体文档走一遍。doc(horizontal_rule, horizontal_rule) 中间的位置：parent 是 doc，没有 inlineContent；closedBefore 在 depth 0 层查到 index 为 1，前兄弟是第一个 hr，它是叶子，childCount 为 0 且非 inline，返回 true；closedAfter 对称地命中第二个 hr，也是 true；contentMatchAt(1).defaultType 是 paragraph，属于 textblock，valid 通过。对照 doc(paragraph, horizontal_rule) 里段落与 hr 之间的位置：closedBefore 沿段落的 lastChild 钻到文本，段落有 inlineContent，直接返回 false，valid 不通过。后一种情况不需要 gap cursor，段落末尾本身就能放 TextSelection，光标有地方去。closedAfter 换成 indexAfter 和 firstChild 链，逻辑完全对称。test/test-gapcursor.ts 的用例可以当判定表读：文档首尾贴 atom 合法、贴段落不合法，空块内部合法（index 为 0 一路走到文档顶，两侧都算封闭）。</p>
+<h2 id="findgapcursorfrom方向键怎么找到下一条缝">findGapCursorFrom：方向键怎么找到下一条缝<a aria-hidden="true" tabindex="-1" href="#findgapcursorfrom方向键怎么找到下一条缝"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>static findGapCursorFrom($pos, dir, mustMove) 是移动逻辑。dir 取 ±1，mustMove 表示当前位置必须离开（已经站在 gap cursor 上再按方向键时不能原地不动）。外层是一个带 search 标签的循环，每轮分两段。</p>
+<p>向上扫：从 $pos.depth 逐层向外，找方向上还有兄弟的那一层。找到就把兄弟记为 next，转入下钻；扫到 d == 0 仍没有，返回 null。每跨越一层边界 pos 加 dir，跨过的每个位置都顺手查一次 valid，所以缝隙出现在上一层时也能被接住。</p>
+<p>向下钻：拿到 next 后沿 firstChild（dir 为正）或 lastChild 链钻到叶子，途中每个位置查 valid。钻到叶子有个特例：叶子是 atom、不是文本、且 NodeSelection.isSelectable 为假，这种节点既不能放文本光标也不能被选中，直接整体跳过（pos 加 next.nodeSize 乘 dir，mustMove 置假，continue search）接着找。其余情况返回 null。</p>
+<p>返回 null 的语义是「这里管不了」，调用方会把按键放行给后面的 handler。于是可选中的 atom（比如默认的 image）在钻到它面前时返回 null，方向键交给浏览器默认行为或 baseKeymap 去选节点；不可选中的 atom 被跳过，搜索继续。</p>
+<p>两个 hr 场景中的导航过程如下。NodeSelection 选中第二个 hr 时按 ArrowLeft，arrow 命令里 sel 不是 TextSelection，跳过文本块分支，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">t</span><span class="mord cjk_fallback">取</span><span class="mord mathnormal">se</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord">.</span></span></span></span>from，正好是两个 hr 之间的缝隙位置，mustMove 是 sel.empty 即 false。findGapCursorFrom 第一步 valid 检查直接命中，dispatch 出 GapCursor。站在缝隙上再按 ArrowLeft，mustMove 为真，当前位置被跳过，向上扫找到第一个 hr，下钻时发现它是可选中的 atom 叶子，返回 null，按键放行，最终选中第一个 hr。整条链走下来，gap cursor 是导航上的一站，插在两个 NodeSelection 之间，可选中节点本身的选中行为没有被它接管。</p>
+<h2 id="插件装配五个入口">插件装配：五个入口<a aria-hidden="true" tabindex="-1" href="#插件装配五个入口"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>src/index.ts 的 gapCursor() 返回一个 Plugin，props 挂了五项。decorations 留到下一节，先讲另外四个。</p>
+<p>createSelectionBetween 是 view 提供的 prop。view 从 DOM 读回选区时（src/selection.ts 的 selectionBetween，第 30 篇讲过这条读回链路）先依次问各插件，都返回 null 再退回 TextSelection.between。gapcursor 的实现只有一行：<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">c</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span><span class="mord">.</span><span class="mord mathnormal">p</span><span class="mord mathnormal">os</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">==</span></span></span></span>head.pos 且 GapCursor.valid($head) 就造 GapCursor，否则放行。鼠标点进缝隙、DOM 选区读回来后变成 gap cursor，走的就是这里。</p>
+<p>handleClick 是对点击的主动处理。先 resolve 点击落点，valid 才继续；再用 posAtCoords 按像素坐标反查文档位置（坐标换算见第 35 篇），如果点击实际落在某个可选中节点内部，返回 false 放行，让正常流程产出 NodeSelection。两个检查都通过，才 dispatch 一个把选区设成 GapCursor 的 transaction。第二个检查的存在是因为点击和缝隙经常共享同一片屏幕区域：image 这类 atom 节点本身就渲染在缝隙旁边，用户点击图片期望选中图片，点图片旁边的空白才期望落光标。posAtCoords 返回的 inside 字段标出坐标是否落在某个节点边界内部，配合 NodeSelection.isSelectable 正好把这两种意图分开。</p>
+<p>handleKeyDown 复用 keymap 包的 keydownHandler（第 38 篇），注册四个方向键，共用 arrow(axis, dir) 生成的 Command：</p>
+<div class="gatsby-highlight" data-language="ts"><pre style="counter-reset: linenumber NaN" class="language-ts line-numbers"><code class="language-ts"><span class="token keyword">let</span> $start <span class="token operator">=</span> dir <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">?</span> sel<span class="token punctuation">.</span>$to <span class="token operator">:</span> sel<span class="token punctuation">.</span>$from<span class="token punctuation">,</span> mustMove <span class="token operator">=</span> sel<span class="token punctuation">.</span>empty
+<span class="token keyword">if</span> <span class="token punctuation">(</span>sel <span class="token keyword">instanceof</span> <span class="token class-name">TextSelection</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>view<span class="token operator">!</span><span class="token punctuation">.</span><span class="token function">endOfTextblock</span><span class="token punctuation">(</span>dirStr<span class="token punctuation">)</span> <span class="token operator">||</span> $start<span class="token punctuation">.</span>depth <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span>
+  mustMove <span class="token operator">=</span> <span class="token boolean">false</span>
+  $start <span class="token operator">=</span> state<span class="token punctuation">.</span>doc<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">?</span> $start<span class="token punctuation">.</span><span class="token function">after</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> $start<span class="token punctuation">.</span><span class="token function">before</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">let</span> $found <span class="token operator">=</span> GapCursor<span class="token punctuation">.</span><span class="token function">findGapCursorFrom</span><span class="token punctuation">(</span>$start<span class="token punctuation">,</span> dir<span class="token punctuation">,</span> mustMove<span class="token punctuation">)</span></code><span aria-hidden="true" class="line-numbers-rows" style="white-space: normal; width: auto; left: 0;"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre></div>
+<p>TextSelection 先问 endOfTextblock（第 35 篇拆过这个函数）：光标不在文本块该方向的边缘，块内还有位置可走，返回 false 放行。在边缘时用 before() 或 after() 跨出文本块一格，mustMove 置假，从新位置查起。$start.depth == 0 的排除有实际作用：光标所在文本块直接挂在文档顶层时，before() 会越界抛错，这里提前放行。已经在 GapCursor 上时它是空选区，mustMove 为真，必须移动。</p>
+<p>handleDOMEvents.beforeinput 是给 IME 的补救，注释里自己写明是 hack。选区是 GapCursor 时收到 insertCompositionText，先用 contentMatchAt($from.index()).findWrapping(schema.nodes.text) 找到能包住文本的节点链（findWrapping 见第 17 篇），然后一个从里向外的循环把节点链逐个 createAndFill 成嵌套 Fragment，replace 进缝隙，再用 TextSelection.near 把选区放进新段落，让 composition 有 inline 上下文可用。背景在第 31 篇：composition 期间选区被搬进非法位置，浏览器会中止这次输入，所以要在 insertCompositionText 到达的这一刻先把落点换成合法的文本块内部。handler 最后返回 false：上下文已经造好，事件本身照常走原有管线，由正常的 composition 流程接管后续输入。</p>
+<h2 id="dom-伪装假光标是怎么画出来的">DOM 伪装：假光标是怎么画出来的<a aria-hidden="true" tabindex="-1" href="#dom-伪装假光标是怎么画出来的"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>GapCursor 落在文档里只是状态，屏幕上那条闪烁的线完全是画出来的，分三层配合。</p>
+<span class="prose-figure prose-figure-svg" style="aspect-ratio:760 / 560"><img src="/linked/4f92df7dc8dc3bb4075dd177ba6f66d6-gapcursor-dom-disguise.svg" alt="gap cursor 的文档位置与渲染层伪装" width="760" height="560" loading="lazy" decoding="async" class="prose-img-placeholder"></span>
+<p>第一层是 decorations。drawGapCursor（src/index.ts）在选区是 GapCursor 时创建一个 div，className 为 ProseMirror-gapcursor，以 Decoration.widget 的形式插在 selection.head 处，key 固定为 “gapcursor”（widget 装饰的机制见第 33 篇）。固定 key 的作用是复用：选区在缝隙之间移动时，新旧的 widget 装饰被判定为同一个，DOM 节点跟着移动位置即可，不用销毁重建。包的 style/gapcursor.css 给这个 div 的 :after 伪元素画一条 20px 宽、1px 高的横线，挂一个 1.1 秒的闪烁动画，且只在 .ProseMirror-focused 下显示，编辑器失焦时光标跟着消失。用户看到的光标就是这个 widget。</p>
+<p>第二层是藏起真光标。前面提到 visible = false，view 的 selectionToDOM 读到这个标记后给编辑器根节点加 ProseMirror-hideselection 类，view 包 style/prosemirror.css 里这个类把 caret-color 设为 transparent、::selection 背景设为透明。浏览器原生 caret 和选区高亮都被藏起来，不会和假光标重影。这个类还带一个守卫：hideselection 生效期间 DOM 选区若发生变化，selectionchange 监听器会延迟检查一次，编辑器不再持有选区或者 state 选区已经可见时把类摘掉，避免编辑器一直停留在隐藏状态。</p>
+<p>第三层是真实 DOM 选区照样设置。visible 只影响可见性：selectionToDOM 照常调 docView.setSelection 把 DOM 选区放到缝隙位置，浏览器焦点和键盘输入才不中断。缝隙两侧都是不可编辑的块时，部分浏览器不接受这种 caret，view 里 temporarilyEditableNear 的补丁临时把相邻节点翻成 contentEditable，设完选区再翻回去（浏览器补丁见第 36 篇）。</p>
+<p>三层合起来的效果：真实选区在缝隙位置但不可见，可见光标是 widget，输入焦点始终在编辑器里。所谓「光标落不进去的地方」，落到实现上就是状态层多一种选区类型，渲染层多一个装饰，再把原生行为各自藏好。</p>
+<h2 id="机制边界">机制边界<a aria-hidden="true" tabindex="-1" href="#机制边界"><svg t="1685947446267" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4780" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25"><path d="M282.453333 676.693333m-181.333333 0a181.333333 181.333333 0 1 0 362.666667 0 181.333333 181.333333 0 1 0-362.666667 0Z" fill="#FFCA5F" p-id="4781"></path><path d="M570.453333 111.36m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#FFCA5F" p-id="4782"></path><path d="M388.053333 866.346667A208 208 0 0 1 241.066667 512l106.666666-106.666667 45.226667 45.226667-106.666667 106.666667A144 144 0 1 0 490.666667 760.32l107.733333-106.666667 45.226667 45.226667-107.733334 106.666667a207.146667 207.146667 0 0 1-147.84 60.8zM723.413333 617.173333l-45.226666-45.226666 100.906666-100.906667A144 144 0 1 0 576 267.52l-100.906667 100.906667-45.226666-45.44 100.906666-100.906667A208 208 0 0 1 824.32 516.266667z" fill="#5C1CF7" p-id="4783"></path><path d="M442.794667 558.506667l134.570666-134.549334 45.248 45.269334-134.549333 134.549333z" fill="#5C1CF7" p-id="4784"></path></svg></a></h2>
+<p>两个 horizontal_rule 之间可以通过 createSelectionBetween 或 handleClick 创建 GapCursor；方向键通过 arrow 和 findGapCursorFrom 移动到该位置。valid 要求位置两侧封闭，且默认可创建 textblock。beforeinput 的 IME 处理通过 findWrapping 使用同一内容表达式计算出的包装链。</p>
+<p>GapCursor 只提供缝隙处的选区。输入内容仍依赖 schema 默认类型的填充或 IME 处理。自定义节点可在 spec 中通过 allowGapCursor 与 createGapCursor 声明相邻位置允许或需要 gap cursor；插件会优先读取这些字段。</p>
+<p>该包只使用公开扩展点：Selection 的继承与 jsonID 注册、visible 标记、createSelectionBetween、handleKeyDown、decorations 和 handleDOMEvents。它将 state 的选区机制与 view 的 props 管线组合为一种插件选区类型。</p></div><hr class="my-8 border-theme-subtle"><astro-island uid="Z1GGPPK" prefix="r6" component-url="/_astro/PostEngagement.BDc321B6.js" component-export="PostEngagement" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/07-04-ProseMirror扩展之gapcursor/&quot;],&quot;words&quot;:[0,1151],&quot;paragraphs&quot;:[0,44]}" ssr client="load" opts="{&quot;name&quot;:&quot;PostEngagement&quot;,&quot;value&quot;:true}" await-children><div class="flex justify-between items-center text-xs text-foreground-muted mb-8"><span class="font-medium">共 <!-- -->1151<!-- --> 字 · <!-- -->44<!-- --> 段落</span></div><!--astro:end--></astro-island><div class="mb-10"><div style="display:flex;align-items:center"><img src="/_astro/profile-pic.CfB-s2yk_9LBFR.jpg" width="50" height="50" alt="ximing" loading="lazy" decoding="async" style="margin-right:0.5rem;margin-bottom:0;min-width:50px;border-radius:100%"/><p class="flex flex-wrap items-center gap-x-1.5 gap-y-2 text-foreground-secondary"><span>Follow on</span><a href="https://github.com/ximing" target="_blank" rel="external nofollow noopener noreferrer" class="inline-flex items-center gap-1 rounded-md bg-accent-subtle px-2 py-1 text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" aria-label="Follow on GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104v8a48,48,0,0,1-48,48H136a32,32,0,0,1,32,32v40H104V192a32,32,0,0,1,32-32H112a48,48,0,0,1-48-48v-8a49.28,49.28,0,0,1,8.51-27.3A51.92,51.92,0,0,1,76,32a52,52,0,0,1,43.83,24h32.34A52,52,0,0,1,196,32a51.92,51.92,0,0,1,3.49,44.7A49.28,49.28,0,0,1,208,104Z" opacity="0.2"></path><path d="M208.3,75.68A59.74,59.74,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58,58,0,0,0,208.3,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.76,41.76,0,0,1,200,104Z"></path></svg>GitHub</a></p></div></div><div><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="文章导航"><div class="sm:col-start-1"><a href="/post/2018/06-20-ProseMirror扩展之schemaList与列表命令/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">schema-list：列表节点与最复杂的一批命令</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/07-11-ProseMirror扩展之dropcursor/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">dropcursor：拖拽时的插入位置指示</span></a></div></nav><nav class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10" aria-label="系列导航"><div class="sm:col-span-2 flex items-center gap-1.5 text-[11px] text-foreground-muted"><span class="text-accent">📖</span><a href="/series/prosemirror/" class="hover:text-accent transition-colors duration-200">《ProseMirror 源码分析》</a><span>· 第 44 篇 · 共 60 篇</span></div><div class="sm:col-start-1"><a href="/post/2018/06-20-ProseMirror扩展之schemaList与列表命令/" rel="prev" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">← 系列上一篇</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">schema-list：列表节点与最复杂的一批命令</span></a></div><div class="sm:col-start-2 sm:text-right"><a href="/post/2018/07-11-ProseMirror扩展之dropcursor/" rel="next" class="group block p-3.5 sm:p-4 rounded-xl bg-background-secondary hover:bg-background-tertiary transition-all duration-200 min-h-[40px]"><span class="text-[11px] text-foreground-muted mb-1.5 block">系列下一篇 →</span><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">dropcursor：拖拽时的插入位置指示</span></a></div></nav><section class="mb-10" aria-label="相关文章"><h2 class="text-sm font-bold text-foreground font-serif mb-3">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><a href="/post/2018/12-19-ProseMirror系列总结/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror 系列收官：从这套代码里能拿走的设计</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-19</time></a><a href="/post/2018/12-05-ProseMirror与其他编辑器架构对比/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">ProseMirror vs Draft.js / Slate / Quill：文档模型与更新模型对比</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-12-05</time></a><a href="/post/2018/11-21-ProseMirror之多包构建工程/" class="group block p-4 bg-background-card rounded-2xl shadow-xs hover:shadow-md transition-shadow duration-200"><span class="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2">多包仓库的构建与发布工程</span><time class="mt-2 block text-[11px] text-foreground-muted tabular-nums">2018-11-21</time></a></div></section><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="1tuVj4" prefix="r7" component-url="/_astro/CommentsSection.H-BHBL9a.js" component-export="CommentsSection" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;postPath&quot;:[0,&quot;/post/2018/07-04-ProseMirror扩展之gapcursor/&quot;]}" ssr client="idle" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="rounded-xl bg-background-secondary p-4 sm:p-6 shadow-xs"></section><!--astro:end--></astro-island></div></div><div class="toc-slot hidden xl:block"><script>(()=>{var n=(a,t)=>{let i=async()=>{await(await a())()};if(t.value){let e=matchMedia(t.value);e.matches?i():e.addEventListener("change",i,{once:!0})}};(self.Astro||(self.Astro={})).media=n;window.dispatchEvent(new Event("astro:media"));})();</script><astro-island uid="ZLGubV" prefix="r8" component-url="/_astro/TableOfContents.iYWWd8WL.js" component-export="TableOfContents" renderer-url="/_astro/client.BVif_RUp.js" props="{&quot;html&quot;:[0,&quot;&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95\&quot;&gt;系列目录&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#gapcursor%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%90%AB%E5%86%85%E5%AE%B9%E7%9A%84%E7%A9%BA%E9%80%89%E5%8C%BA\&quot;&gt;GapCursor：一个不含内容的空选区&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#valid%E4%BB%80%E4%B9%88%E4%BD%8D%E7%BD%AE%E6%89%8D%E7%AE%97%E7%BC%9D%E9%9A%99\&quot;&gt;valid：什么位置才算缝隙&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#findgapcursorfrom%E6%96%B9%E5%90%91%E9%94%AE%E6%80%8E%E4%B9%88%E6%89%BE%E5%88%B0%E4%B8%8B%E4%B8%80%E6%9D%A1%E7%BC%9D\&quot;&gt;findGapCursorFrom：方向键怎么找到下一条缝&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%8F%92%E4%BB%B6%E8%A3%85%E9%85%8D%E4%BA%94%E4%B8%AA%E5%85%A5%E5%8F%A3\&quot;&gt;插件装配：五个入口&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#dom-%E4%BC%AA%E8%A3%85%E5%81%87%E5%85%89%E6%A0%87%E6%98%AF%E6%80%8E%E4%B9%88%E7%94%BB%E5%87%BA%E6%9D%A5%E7%9A%84\&quot;&gt;DOM 伪装：假光标是怎么画出来的&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;#%E6%9C%BA%E5%88%B6%E8%BE%B9%E7%95%8C\&quot;&gt;机制边界&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;&quot;]}" ssr client="media" opts="{&quot;name&quot;:&quot;TableOfContents&quot;,&quot;value&quot;:&quot;(min-width: 1280px)&quot;}"></astro-island></div></div></article></main><footer class="w-full bg-background-secondary"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row items-center justify-center gap-6"><div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-sm text-foreground-secondary"><a href="/rss.xml" target="_blank" class="group flex items-center gap-2 hover:text-primary transition-colors duration-200" aria-label="RSS Feed"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256" class="transition-transform duration-200 group-hover:scale-110"><path d="M216,200H56V40A160,160,0,0,1,216,200Z" opacity="0.2"></path><path d="M106.91,149.09A71.53,71.53,0,0,1,128,200a8,8,0,0,1-16,0,56,56,0,0,0-56-56,8,8,0,0,1,0-16A71.53,71.53,0,0,1,106.91,149.09ZM56,80a8,8,0,0,0,0,16A104,104,0,0,1,160,200a8,8,0,0,0,16,0A120,120,0,0,0,56,80Zm118.79,1.21A166.89,166.89,0,0,0,56,32a8,8,0,0,0,0,16A151,151,0,0,1,163.48,92.52,151,151,0,0,1,208,200a8,8,0,0,0,16,0A166.9,166.9,0,0,0,174.79,81.21ZM60,184a12,12,0,1,0,12,12A12,12,0,0,0,60,184Z"></path></svg><span>RSS</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span>© <!-- -->2026<!-- --> <!-- -->ximing</span></div></div><div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-xs text-foreground-secondary"><a href="mailto:morningxm@hotmail.com" class="flex items-center gap-1 hover:text-primary transition-colors duration-200" aria-label="邮箱联系方式"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"></path></svg><span>morningxm@hotmail.com</span></a><span class="hidden sm:inline text-foreground-muted">·</span><span class="flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><span>京ICP备16033518号-6</span></span><span class="hidden sm:inline text-foreground-muted">·</span><span>Design By XiMing</span></div></div></footer></div><script>
+      // 导航高亮(方案 §6.2):SiteChrome 加了 transition:persist,岛 props 跨页
+      // 不更新,Gatsby 的 activeClassName/partiallyActive 机制同步作废;改由本
+      // 脚本按 location.pathname 对 Header 输出的 a[data-nav-to] 增删高亮类。
+      // 两套规则复刻 Header 现状:
+      // - 桌面(a.nav-link,原 Header.tsx:128-136):加 nav-link-active;
+      //   "/" 精确匹配,其余前缀匹配(partiallyActive={link.to !== "/"})。
+      // - 移动(#mobile-menu a,原 Header.tsx:250-263):加 text-accent
+      //   bg-accent-subtle;仅精确匹配(移动 Link 未传 partiallyActive)。
+      // astro:page-load 首屏与每次换页都触发,一处监听覆盖两种场景。
+      // 首屏时序坑:page-load 可能先于 SiteChrome 岛的 React hydration,
+      // 此时加的高亮类会被 hydration 按 vdom 抹掉(实测);astro-island 水合
+      // 完成时派发 astro:hydrate,补挂一次性监听重放一遍。本脚本内容跨页
+      // 逐字相同,ClientRouter 对其去重只执行一次,监听不会累积。
+      function updateNavHighlight() {
+        var path = location.pathname;
+        document
+          .querySelectorAll("a.nav-link[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = to === "/" ? path === "/" : path.indexOf(to) === 0;
+            a.classList.toggle("nav-link-active", active);
+          });
+        document
+          .querySelectorAll("#mobile-menu a[data-nav-to]")
+          .forEach(function (a) {
+            var to = a.getAttribute("data-nav-to");
+            var active = path === to;
+            a.classList.toggle("text-accent", active);
+            a.classList.toggle("bg-accent-subtle", active);
+          });
+      }
+      document.addEventListener("astro:page-load", updateNavHighlight);
+      var chromeIsland = document.querySelector(
+        'astro-island[data-astro-transition-persist="chrome"]'
+      );
+      if (chromeIsland) {
+        chromeIsland.addEventListener("astro:hydrate", updateNavHighlight, {
+          once: true,
+        });
+      }
+    </script><script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DjG2Mx9T.js"></script><script type="text/javascript" async src="https://s4.cnzz.com/z_stat.php?id=1278634919&web_id=1278634919"></script></body></html>

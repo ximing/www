@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- Layer 1: pi-coding-agent -->
+  <rect x="40" y="20" width="720" height="128" rx="10" fill="#f4f4f5"/>
+  <text x="64" y="54" font-size="16" font-weight="600" fill="#18181b">@earendil-works/pi-coding-agent · CLI 本体</text>
+  <text x="64" y="82" font-size="13" fill="#3f3f46">管：内置工具（read / bash / edit / write）、系统提示词生成、扩展与 Skill 加载、</text>
+  <text x="64" y="104" font-size="13" fill="#3f3f46">　　自动 compaction 触发、project trust</text>
+  <text x="64" y="128" font-size="13" fill="#3f3f46"><tspan fill="#b45309">不管</tspan>：provider 协议、agent 主循环、终端渲染</text>
+
+  <!-- Arrows from layer 1 -->
+  <line x1="255" y1="150" x2="255" y2="192" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="640" y1="150" x2="640" y2="192" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: pi-agent-core -->
+  <rect x="40" y="198" width="420" height="172" rx="10" fill="#ededf0"/>
+  <text x="62" y="230" font-size="16" font-weight="600" fill="#18181b">@earendil-works/pi-agent-core</text>
+  <text x="62" y="254" font-size="13" fill="#52525b">agent 运行时</text>
+  <text x="62" y="280" font-size="13" fill="#3f3f46">管：agent 主循环（agent-loop.ts 792 行）、</text>
+  <text x="62" y="301" font-size="13" fill="#3f3f46">　　事件流、会话模型、compaction 零件</text>
+  <text x="62" y="327" font-size="13" fill="#3f3f46"><tspan fill="#b45309">不管</tspan>：不内置 provider，streamFn 宿主注入；</text>
+  <text x="62" y="348" font-size="13" fill="#3f3f46">　　不自动 compaction，shouldCompact 是纯函数</text>
+
+  <!-- Layer 2 side: pi-tui -->
+  <rect x="500" y="198" width="260" height="172" rx="10" fill="#ededf0"/>
+  <text x="522" y="230" font-size="16" font-weight="600" fill="#18181b">@earendil-works/pi-tui</text>
+  <text x="522" y="254" font-size="13" fill="#52525b">终端 UI 库</text>
+  <text x="522" y="280" font-size="13" fill="#3f3f46">管：终端组件、差分渲染、</text>
+  <text x="522" y="301" font-size="13" fill="#3f3f46">　　同步输出（CSI 2026）</text>
+  <text x="522" y="327" font-size="13" fill="#3f3f46"><tspan fill="#b45309">不管</tspan>：不认识 agent 与 LLM，</text>
+  <text x="522" y="348" font-size="13" fill="#3f3f46">　　组件只产出字符串行</text>
+
+  <!-- Arrow from layer 2 to layer 3 -->
+  <line x1="255" y1="372" x2="255" y2="414" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: pi-ai -->
+  <rect x="40" y="420" width="420" height="150" rx="10" fill="#e4e4e7"/>
+  <text x="62" y="452" font-size="16" font-weight="600" fill="#18181b">@earendil-works/pi-ai</text>
+  <text x="62" y="476" font-size="13" fill="#52525b">统一多 provider LLM API</text>
+  <text x="62" y="502" font-size="13" fill="#3f3f46">管：约 10 个线缆协议实现、38 家 provider</text>
+  <text x="62" y="523" font-size="13" fill="#3f3f46">　　的 catalog 与鉴权</text>
+  <text x="62" y="549" font-size="13" fill="#3f3f46"><tspan fill="#b45309">不管</tspan>：只收支持 tool calling 的模型</text>
+
+  <!-- caption -->
+  <text x="500" y="452" font-size="12.5" fill="#71717a">箭头为编译期依赖方向。</text>
+  <text x="500" y="474" font-size="12.5" fill="#71717a">下层只提供机制，策略全部由上层决定：</text>
+  <text x="500" y="496" font-size="12.5" fill="#71717a">用哪家模型、何时压缩、什么命令要审批，</text>
+  <text x="500" y="518" font-size="12.5" fill="#71717a">都不在运行时内核里。</text>
+</svg>

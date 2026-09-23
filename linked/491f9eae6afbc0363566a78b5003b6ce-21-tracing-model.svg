@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 760" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+    <marker id="arrBlu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+  </defs>
+
+  <rect width="1120" height="760" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">一次跨服务请求的 Trace / Span 树与上下文传递</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">入口生成 traceId，每跳生成新 spanId 并记 parentId；上下文随请求头透传，采样决策在入口层做一次</text>
+
+  <!-- ============ 时间轴 ============ -->
+  <line x1="220" y1="92" x2="1060" y2="92" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="220" y="84" font-size="9" fill="#94a3b8">t=0</text>
+  <text x="540" y="84" font-size="9" fill="#94a3b8" text-anchor="middle">50ms</text>
+  <text x="860" y="84" font-size="9" fill="#94a3b8" text-anchor="middle">100ms</text>
+  <text x="1060" y="84" font-size="9" fill="#94a3b8" text-anchor="end">150ms</text>
+
+  <!-- ============ Span 树（时间条 + 树形缩进） ============ -->
+
+  <!-- S1 根 span: Gateway -->
+  <rect x="220" y="108" width="800" height="44" rx="5" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+  <text x="232" y="128" font-size="11" font-weight="600" fill="#1d4ed8">S1  Gateway.handleRequest</text>
+  <text x="232" y="144" font-size="9" fill="#475569">traceId=T0a1  spanId=S1  parentId=null  dur=140ms</text>
+  <text x="1012" y="134" font-size="10" font-weight="600" fill="#1d4ed8" text-anchor="end">根 span</text>
+
+  <!-- 树连线 S1 -> S2 -->
+  <line x1="240" y1="152" x2="240" y2="186" stroke="#475569" stroke-width="1"/>
+  <line x1="240" y1="186" x2="258" y2="186" stroke="#475569" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- S2 Order RPC -->
+  <rect x="260" y="164" width="640" height="44" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.2"/>
+  <text x="272" y="184" font-size="11" font-weight="600" fill="#15803d">S2  OrderService.createOrder (RPC)</text>
+  <text x="272" y="200" font-size="9" fill="#475569">traceId=T0a1  spanId=S2  parentId=S1  dur=110ms</text>
+  <text x="892" y="190" font-size="10" font-weight="600" fill="#15803d" text-anchor="end">子 span</text>
+
+  <!-- 树连线 S2 -> S3 -->
+  <line x1="280" y1="208" x2="280" y2="242" stroke="#475569" stroke-width="1"/>
+  <line x1="280" y1="242" x2="298" y2="242" stroke="#475569" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- S3 DB query -->
+  <rect x="300" y="220" width="200" height="44" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="312" y="240" font-size="11" font-weight="600" fill="#92400e">S3  MySQL.insert</text>
+  <text x="312" y="256" font-size="9" fill="#475569">parentId=S2  dur=35ms</text>
+
+  <!-- 树连线 S2 -> S4 -->
+  <line x1="280" y1="208" x2="280" y2="298" stroke="#475569" stroke-width="1"/>
+  <line x1="280" y1="298" x2="298" y2="298" stroke="#475569" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- S4 Inventory RPC -->
+  <rect x="300" y="276" width="340" height="44" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="312" y="296" font-size="11" font-weight="600" fill="#b91c1c">S4  InventoryService.deduct (RPC)</text>
+  <text x="312" y="312" font-size="9" fill="#475569">parentId=S2  dur=60ms  ← 慢调用 / 错误</text>
+
+  <!-- 慢调用标注 -->
+  <line x1="640" y1="298" x2="700" y2="298" stroke="#dc2626" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrRed)"/>
+  <text x="708" y="294" font-size="10" font-weight="600" fill="#b91c1c">耗时集中于此</text>
+  <text x="708" y="308" font-size="9" fill="#dc2626">trace 只说"慢在这"</text>
+  <text x="708" y="320" font-size="9" fill="#dc2626">不说"为什么慢"</text>
+
+  <!-- ============ 上下文透传 ============ -->
+  <rect x="24" y="360" width="1072" height="150" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="384" font-size="12" font-weight="600" fill="#1f2937">上下文随请求头透传（traceId / spanId / parentId + sampled 标志）</text>
+
+  <!-- Gateway -> Order -->
+  <rect x="48" y="402" width="150" height="40" rx="5" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="123" y="420" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">Gateway</text>
+  <text x="123" y="434" font-size="9" fill="#475569" text-anchor="middle">生成 T0a1 / S1</text>
+
+  <line x1="198" y1="422" x2="282" y2="422" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arrBlu)"/>
+  <text x="240" y="414" font-size="9" fill="#1d4ed8" text-anchor="middle">X-Trace-Id: T0a1</text>
+  <text x="240" y="438" font-size="9" fill="#1d4ed8" text-anchor="middle">X-Parent-Span-Id: S1</text>
+
+  <rect x="288" y="402" width="150" height="40" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="363" y="420" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">OrderService</text>
+  <text x="363" y="434" font-size="9" fill="#475569" text-anchor="middle">生成 S2，记 parentId=S1</text>
+
+  <line x1="438" y1="422" x2="522" y2="422" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrGrn)"/>
+  <text x="480" y="414" font-size="9" fill="#15803d" text-anchor="middle">X-Trace-Id: T0a1</text>
+  <text x="480" y="438" font-size="9" fill="#15803d" text-anchor="middle">X-Parent-Span-Id: S2</text>
+
+  <rect x="528" y="402" width="150" height="40" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="603" y="420" font-size="11" font-weight="600" fill="#b91c1c" text-anchor="middle">InventoryService</text>
+  <text x="603" y="434" font-size="9" fill="#475569" text-anchor="middle">生成 S4，记 parentId=S2</text>
+
+  <text x="700" y="418" font-size="10" fill="#475569">traceId 全程不变；每跳生成新 spanId，parentId 指向上一跳的 spanId</text>
+  <text x="700" y="434" font-size="10" fill="#475569">树形关系靠 parentId 还原，不依赖时钟同步</text>
+
+  <!-- 采样决策标注 -->
+  <rect x="48" y="462" width="980" height="36" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="64" y="484" font-size="10" font-weight="600" fill="#c2410c">采样决策在入口层做一次（sampled=true/false）</text>
+  <text x="330" y="484" font-size="10" fill="#ea580c">sampled 标志随上下文透传，下游不再二次决策；整条 trace 要么全采要么全不采，否则树会断</text>
+
+  <!-- ============ 底部：三组取舍 ============ -->
+  <rect x="24" y="528" width="1072" height="216" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="552" font-size="12" font-weight="600" fill="#1f2937">链路追踪的三组取舍</text>
+
+  <!-- 取舍 1 -->
+  <text x="40" y="580" font-size="10" font-weight="600" fill="#1d4ed8">模型 vs 埋点</text>
+  <text x="160" y="580" font-size="10" fill="#475569">Trace/Span 树形模型简单；难在埋点：手动侵入业务易漏，Agent 字节码增强降低侵入但带来框架兼容与性能开销</text>
+
+  <!-- 取舍 2 -->
+  <text x="40" y="610" font-size="10" font-weight="600" fill="#92400e">采样 vs 全量</text>
+  <text x="160" y="610" font-size="10" fill="#475569">全量上报存储成本高（每条 span 含时间戳/标签/上下文，万级 QPS 下日均 TB 级）；采样在存储成本与问题复现概率间取舍</text>
+
+  <!-- 取舍 3 -->
+  <text x="40" y="640" font-size="10" font-weight="600" fill="#15803d">慢在哪 vs 为什么慢</text>
+  <text x="160" y="640" font-size="10" fill="#475569">trace 定位耗时集中在哪一跳、错在哪一跳；为什么慢（GC、锁、慢 SQL）要靠 metrics 与 logs 各管一段，三者按维度互补</text>
+
+  <!-- 采样策略 -->
+  <text x="40" y="672" font-size="10" font-weight="600" fill="#b91c1c">采样策略</text>
+  <text x="160" y="672" font-size="10" fill="#475569">固定采样率（head-based，入口抽样）简单但低频问题难复现；自适应采样按流量自动调；tail-based 后置采样能保留异常链路但全量先入内存、成本高</text>
+
+  <!-- 边界 -->
+  <text x="40" y="702" font-size="10" font-weight="600" fill="#475569">边界</text>
+  <text x="160" y="702" font-size="10" fill="#475569">trace 依赖埋点覆盖：未埋点的调用（裸 JDBC、手动 HTTP 客户端）在树上断掉；异步线程/MQ 链路需显式传递上下文，否则 trace 断裂</text>
+
+  <text x="40" y="726" font-size="9" fill="#94a3b8">模型来自 Google Dapper 论文（2010）；OpenTracing 规范统一了 API 语义，OpenTelemetry 后续合并了 metrics/traces/logs 三路</text>
+</svg>

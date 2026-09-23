@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="474" viewBox="0 0 840 474" font-family="system-ui, sans-serif">
+  <text x="420" y="34" text-anchor="middle" font-size="15" font-weight="600" fill="#27272a">pi 工具批处理：串行预检、并发执行、按源序写回 transcript</text>
+
+  <rect x="28" y="64" width="240" height="356" rx="12" fill="#f4f4f5"/>
+  <text x="52" y="94" font-size="13" font-weight="600" fill="#52525b">1. Preflight（串行）</text>
+  <text x="52" y="115" font-size="10.5" fill="#71717a">按 assistant 消息中的 tool call 源序遍历</text>
+
+  <rect x="52" y="138" width="192" height="52" rx="7" fill="#ffffff"/>
+  <text x="68" y="160" font-size="12" fill="#27272a">lookup tool</text>
+  <text x="68" y="178" font-size="10.5" fill="#71717a">工具不存在 → 错误结果</text>
+
+  <rect x="52" y="202" width="192" height="52" rx="7" fill="#ffffff"/>
+  <text x="68" y="224" font-size="12" fill="#27272a">prepareArguments + schema</text>
+  <text x="68" y="242" font-size="10.5" fill="#71717a">参数无效 → 错误结果</text>
+
+  <rect x="52" y="266" width="192" height="52" rx="7" fill="#ffffff"/>
+  <text x="68" y="288" font-size="12" fill="#27272a">beforeToolCall hook</text>
+  <text x="68" y="306" font-size="10.5" fill="#71717a">被 block → 错误结果</text>
+
+  <rect x="52" y="342" width="192" height="54" rx="7" fill="#fef3c7"/>
+  <text x="68" y="364" font-size="12" fill="#92400e">可执行项封装为 thunk</text>
+  <text x="68" y="383" font-size="10.5" fill="#a16207">不在此阶段实际执行</text>
+
+  <path d="M 268 242 H 305" fill="none" stroke="#a1a1aa" stroke-width="2"/>
+  <path d="M 300 237 L 307 242 L 300 247" fill="none" stroke="#a1a1aa" stroke-width="2"/>
+
+  <rect x="306" y="64" width="236" height="356" rx="12" fill="#f4f4f5"/>
+  <text x="330" y="94" font-size="13" font-weight="600" fill="#52525b">2. Execute（并发）</text>
+  <text x="330" y="115" font-size="10.5" fill="#71717a">Promise.all 同时执行所有 thunk</text>
+
+  <rect x="330" y="146" width="188" height="64" rx="7" fill="#ffffff"/>
+  <text x="346" y="172" font-size="12" fill="#27272a">call A</text>
+  <text x="346" y="192" font-size="10.5" fill="#71717a">完成较早</text>
+
+  <rect x="330" y="230" width="188" height="64" rx="7" fill="#ffffff"/>
+  <text x="346" y="256" font-size="12" fill="#27272a">call B</text>
+  <text x="346" y="276" font-size="10.5" fill="#71717a">完成较晚</text>
+
+  <rect x="330" y="314" width="188" height="64" rx="7" fill="#ffffff"/>
+  <text x="346" y="340" font-size="12" fill="#27272a">call C</text>
+  <text x="346" y="360" font-size="10.5" fill="#71717a">完成最早</text>
+
+  <text x="330" y="402" font-size="10.5" fill="#71717a">每项完成后立即发 tool_execution_end</text>
+
+  <path d="M 542 242 H 579" fill="none" stroke="#a1a1aa" stroke-width="2"/>
+  <path d="M 574 237 L 581 242 L 574 247" fill="none" stroke="#a1a1aa" stroke-width="2"/>
+
+  <rect x="582" y="64" width="230" height="356" rx="12" fill="#f4f4f5"/>
+  <text x="606" y="94" font-size="13" font-weight="600" fill="#52525b">3. Commit（按源序）</text>
+  <text x="606" y="115" font-size="10.5" fill="#71717a">等待全部完成后再写回 context</text>
+
+  <rect x="606" y="148" width="182" height="56" rx="7" fill="#ffffff"/>
+  <text x="622" y="171" font-size="12" fill="#27272a">toolResult A</text>
+  <text x="622" y="189" font-size="10.5" fill="#71717a">message_start / end</text>
+
+  <rect x="606" y="218" width="182" height="56" rx="7" fill="#ffffff"/>
+  <text x="622" y="241" font-size="12" fill="#27272a">toolResult B</text>
+  <text x="622" y="259" font-size="10.5" fill="#71717a">message_start / end</text>
+
+  <rect x="606" y="288" width="182" height="56" rx="7" fill="#ffffff"/>
+  <text x="622" y="311" font-size="12" fill="#27272a">toolResult C</text>
+  <text x="622" y="329" font-size="10.5" fill="#71717a">message_start / end</text>
+
+  <text x="606" y="382" font-size="10.5" fill="#71717a">A → B → C 与原始 tool call 顺序一致</text>
+  <text x="420" y="454" text-anchor="middle" font-size="11" fill="#a1a1aa">执行事件按完成时间到达；会话 transcript 依赖源序写入，两个顺序分别服务于观测与可复现性</text>
+</svg>

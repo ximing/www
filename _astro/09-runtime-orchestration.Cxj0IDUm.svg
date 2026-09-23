@@ -1,0 +1,59 @@
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#8b949e"/></marker>
+  </defs>
+  <rect width="700" height="400" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">Agent 运行时与编排</text>
+  <text x="350" y="46" text-anchor="middle" fill="#8b949e" font-size="11">Loop · Topology · Handoff · Stop / Resume</text>
+
+  <rect x="40" y="62" width="300" height="30" rx="4" fill="#3a1a1a" stroke="#f85149" stroke-width="1"/>
+  <text x="190" y="82" text-anchor="middle" fill="#f85149" font-size="12">问题：只有 Planner / Coder / Validator</text>
+
+  <text x="55" y="110" fill="#8b949e" font-size="11">角色名代替调度规则</text>
+  <text x="55" y="130" fill="#8b949e" font-size="11">固定路径和开放循环没有选用条件</text>
+  <text x="55" y="150" fill="#8b949e" font-size="11">子任务结果整段灌回父上下文</text>
+  <text x="55" y="170" fill="#8b949e" font-size="11">失败后重新开一轮，没有停止条件</text>
+  <text x="55" y="190" fill="#8b949e" font-size="11">审查和实现共用同一段历史</text>
+
+  <text x="348" y="130" fill="#fd7e14" font-size="16" font-weight="bold">→</text>
+
+  <rect x="360" y="62" width="300" height="30" rx="4" fill="#1a3a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="510" y="82" text-anchor="middle" fill="#3fb950" font-size="12">解决：这一层实际要管的内容</text>
+
+  <text x="375" y="110" fill="#8b949e" font-size="11">Agent Loop：think → act → observe</text>
+  <text x="375" y="130" fill="#8b949e" font-size="11">Workflow / Agent 选用</text>
+  <text x="375" y="150" fill="#8b949e" font-size="11">角色、工具集、模型路由</text>
+  <text x="375" y="170" fill="#8b949e" font-size="11">Sub-agent / Handoff 契约</text>
+  <text x="375" y="190" fill="#8b949e" font-size="11">停止、重试、从状态续跑</text>
+
+  <rect x="40" y="218" width="620" height="158" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="55" y="240" fill="#e6edf3" font-size="12" font-weight="bold">一次任务的调度</text>
+
+  <rect x="55" y="258" width="100" height="48" rx="4" fill="#1a365d" stroke="#2a4a7f" stroke-width="1"/>
+  <text x="105" y="278" text-anchor="middle" fill="#58a6ff" font-size="11">Task Spec</text>
+  <text x="105" y="294" text-anchor="middle" fill="#8b949e" font-size="10">层① 目标与范围</text>
+
+  <line x1="155" y1="282" x2="178" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="185" y="258" width="110" height="48" rx="4" fill="#3a2a1a" stroke="#5c4228" stroke-width="1"/>
+  <text x="240" y="278" text-anchor="middle" fill="#d29922" font-size="11">调度</text>
+  <text x="240" y="294" text-anchor="middle" fill="#8b949e" font-size="10">Workflow 或 Loop</text>
+
+  <line x1="295" y1="282" x2="318" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="325" y="258" width="170" height="48" rx="4" fill="#1a4731" stroke="#236b4a" stroke-width="1"/>
+  <text x="410" y="278" text-anchor="middle" fill="#3fb950" font-size="11">角色 Loop</text>
+  <text x="410" y="294" text-anchor="middle" fill="#8b949e" font-size="10">Coder ⇄ Validator</text>
+
+  <line x1="495" y1="282" x2="518" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="525" y="258" width="120" height="48" rx="4" fill="#3a1a1a" stroke="#5c2828" stroke-width="1"/>
+  <text x="585" y="278" text-anchor="middle" fill="#f85149" font-size="11">停止</text>
+  <text x="585" y="294" text-anchor="middle" fill="#8b949e" font-size="10">DoD / 步数 / 预算</text>
+
+  <text x="55" y="332" fill="#8b949e" font-size="11">路径事先确定时由代码编排节点；步骤数量事先不确定时由模型选下一步。</text>
+  <text x="55" y="350" fill="#8b949e" font-size="11">子 Agent 只回传结果和产物引用。审查节点不继承实现过程的对话。</text>
+  <text x="55" y="368" fill="#484f58" font-size="11">工具怎么执行：层②。计划存在哪：层⑤。是否算完成：层⑦。</text>
+</svg>

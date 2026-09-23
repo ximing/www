@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="55%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="90" cy="72" r="2.5"/><circle cx="192" cy="72" r="2.5"/><circle cx="294" cy="72" r="2.5"/><circle cx="396" cy="72" r="2.5"/><circle cx="498" cy="72" r="2.5"/><circle cx="600" cy="72" r="2.5"/><circle cx="702" cy="72" r="2.5"/><circle cx="804" cy="72" r="2.5"/><circle cx="906" cy="72" r="2.5"/><circle cx="1008" cy="72" r="2.5"/><circle cx="1110" cy="72" r="2.5"/>
+    <circle cx="90" cy="828" r="2.5"/><circle cx="192" cy="828" r="2.5"/><circle cx="294" cy="828" r="2.5"/><circle cx="396" cy="828" r="2.5"/><circle cx="498" cy="828" r="2.5"/><circle cx="600" cy="828" r="2.5"/><circle cx="702" cy="828" r="2.5"/><circle cx="804" cy="828" r="2.5"/><circle cx="906" cy="828" r="2.5"/><circle cx="1008" cy="828" r="2.5"/><circle cx="1110" cy="828" r="2.5"/>
+  </g>
+
+  <!-- spreadsheet -->
+  <rect x="320" y="140" width="560" height="440" rx="12" fill="#f0fdf4"/>
+  <!-- header row -->
+  <rect x="320" y="140" width="560" height="56" rx="12" fill="#bbf7d0"/>
+  <rect x="320" y="168" width="560" height="28" fill="#bbf7d0"/>
+  <!-- grid lines -->
+  <g stroke="#86efac" stroke-width="2">
+    <path d="M 320 196 L 880 196 M 320 260 L 880 260 M 320 324 L 880 324 M 320 388 L 880 388 M 320 452 L 880 452 M 320 516 L 880 516"/>
+    <path d="M 460 140 L 460 580 M 600 140 L 600 580 M 740 140 L 740 580"/>
+  </g>
+  <!-- column letters -->
+  <g fill="#15803d" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" text-anchor="middle" opacity="0.85">
+    <text x="390" y="176">A</text>
+    <text x="530" y="176">B</text>
+    <text x="670" y="176">C</text>
+    <text x="810" y="176">D</text>
+  </g>
+  <!-- active cell -->
+  <rect x="600" y="324" width="140" height="64" fill="#dcfce7" opacity="0.7"/>
+  <rect x="600" y="324" width="140" height="64" fill="none" stroke="#15803d" stroke-width="5"/>
+
+  <!-- collaboration cursors with name chips -->
+  <path d="M 800 460 L 800 496 L 810 486 L 818 502 L 825 498 L 817 482 L 831 482 Z" fill="#f97316"/>
+  <rect x="806" y="506" width="46" height="24" rx="12" fill="#f97316"/>
+  <text x="829" y="523" fill="#ffffff" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="13" text-anchor="middle">U1</text>
+  <path d="M 400 250 L 400 286 L 410 276 L 418 292 L 425 288 L 417 272 L 431 272 Z" fill="#3b82f6"/>
+  <rect x="406" y="296" width="46" height="24" rx="12" fill="#3b82f6"/>
+  <text x="429" y="313" fill="#ffffff" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="13" text-anchor="middle">U2</text>
+
+  <!-- title -->
+  <text x="600" y="752" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">XmExcel</text>
+  <text x="600" y="808" fill="#bbf7d0" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="6">实时协作 Excel 转换工具</text>
+</svg>

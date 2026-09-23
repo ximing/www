@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="system-ui, sans-serif">
+  <!-- column headers -->
+  <text x="40" y="44" font-size="14" font-weight="600" fill="#18181b">v2r-agent 死因（按影响排序）</text>
+  <text x="480" y="44" font-size="14" font-weight="600" fill="#18181b">v2r-studio 设计原则</text>
+
+  <!-- edges -->
+  <g stroke="#b45309" stroke-width="1.8" opacity="0.5" fill="none">
+    <line x1="320" y1="108" x2="480" y2="162"/>
+    <line x1="320" y1="204" x2="480" y2="326"/>
+    <line x1="320" y1="204" x2="480" y2="402"/>
+    <line x1="320" y1="300" x2="480" y2="186"/>
+    <line x1="320" y1="396" x2="480" y2="470"/>
+    <line x1="320" y1="492" x2="480" y2="486"/>
+  </g>
+
+  <!-- left: causes -->
+  <rect x="40" y="66" width="280" height="84" rx="10" fill="#f4f4f5"/>
+  <text x="62" y="100" font-size="14" font-weight="600" fill="#18181b">Top 1 门禁链路断裂</text>
+  <text x="62" y="126" font-size="12" fill="#52525b">整仓检查，环境噪声淹没信号</text>
+
+  <rect x="40" y="162" width="280" height="84" rx="10" fill="#f4f4f5"/>
+  <text x="62" y="196" font-size="14" font-weight="600" fill="#18181b">Top 2 知识库冷启动</text>
+  <text x="62" y="222" font-size="12" fill="#52525b">53 条全 draft，LLM 只能猜</text>
+
+  <rect x="40" y="258" width="280" height="84" rx="10" fill="#f4f4f5"/>
+  <text x="62" y="292" font-size="14" font-weight="600" fill="#18181b">Top 3 修复循环空转</text>
+  <text x="62" y="318" font-size="12" fill="#52525b">错误反馈不进修复 prompt</text>
+
+  <rect x="40" y="354" width="280" height="84" rx="10" fill="#f4f4f5"/>
+  <text x="62" y="388" font-size="14" font-weight="600" fill="#18181b">Top 4 治理机制零运转</text>
+  <text x="62" y="414" font-size="12" fill="#52525b">83 个 unknown 全 pending</text>
+
+  <rect x="40" y="450" width="280" height="84" rx="10" fill="#f4f4f5"/>
+  <text x="62" y="484" font-size="14" font-weight="600" fill="#18181b">Top 5 仪式超过吞吐</text>
+  <text x="62" y="510" font-size="12" fill="#52525b">6223 行计划，0 行实现</text>
+
+  <!-- right: principles -->
+  <rect x="480" y="66" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="94" font-size="14" font-weight="600" fill="#18181b">pi 不写业务代码</text>
+  <text x="502" y="116" font-size="12" fill="#52525b">留痕是执行的副产品</text>
+
+  <rect x="480" y="142" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="170" font-size="14" font-weight="600" fill="#18181b">门禁不经过 LLM</text>
+  <text x="502" y="192" font-size="12" fill="#52525b">判定全是确定性代码</text>
+
+  <rect x="480" y="218" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="246" font-size="14" font-weight="600" fill="#18181b">一切留痕可恢复</text>
+  <text x="502" y="268" font-size="12" fill="#52525b">会话可接续，状态可重建</text>
+
+  <rect x="480" y="294" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="322" font-size="14" font-weight="600" fill="#18181b">事实源只读机器强制</text>
+  <text x="502" y="344" font-size="12" fill="#52525b">不靠 prompt 愿望</text>
+
+  <rect x="480" y="370" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="398" font-size="14" font-weight="600" fill="#18181b">证据准入</text>
+  <text x="502" y="420" font-size="12" fill="#52525b">入库即须带证据，禁止 draft 堆积</text>
+
+  <rect x="480" y="446" width="280" height="64" rx="10" fill="#ededf0"/>
+  <text x="502" y="474" font-size="14" font-weight="600" fill="#18181b">能力滞后于负载</text>
+  <text x="502" y="496" font-size="12" fill="#52525b">最小闭环先行，再堆能力</text>
+
+  <!-- caption -->
+  <text x="400" y="556" font-size="13" fill="#71717a" text-anchor="middle">连线 = 原则直接对应的死因；「pi 不写业务代码」与「一切留痕可恢复」</text>
+  <text x="400" y="578" font-size="13" fill="#71717a" text-anchor="middle">不对应单个死因，来自 fork 搁浅与执行留痕的教训。</text>
+</svg>

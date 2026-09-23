@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" role="img" aria-labelledby="title desc">
+  <title id="title">贪吃蛇一拍的判断路径</title>
+  <desc id="desc">浏览器持有棋盘；代码算出候选事实；服务端调用 Jev；compose 用阈值选出方向后再走一步。</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; fill: #182230; }
+    .title { font-size: 24px; font-weight: 700; }
+    .label { font-size: 17px; font-weight: 700; }
+    .sub { font-size: 14px; fill: #526176; }
+  </style>
+  <rect width="1100" height="360" rx="18" fill="#f8fafc"/>
+  <text x="40" y="46" class="title">贪吃蛇的一拍</text>
+
+  <rect x="36" y="80" width="196" height="220" rx="14" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+  <text x="58" y="124" class="label">棋盘状态</text>
+  <text x="52" y="160" class="sub">蛇、食物、路障</text>
+  <text x="52" y="184" class="sub">浏览器持有局面</text>
+  <text x="52" y="220" class="sub">密钥不进前端</text>
+
+  <rect x="256" y="80" width="196" height="220" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="286" y="124" class="label">候选事实</text>
+  <text x="272" y="160" class="sub">合法方向</text>
+  <text x="272" y="184" class="sub">立刻死亡</text>
+  <text x="272" y="208" class="sub">曼哈顿、连通空间</text>
+  <text x="272" y="244" class="sub">确定性，不调模型</text>
+
+  <rect x="476" y="80" width="196" height="220" rx="14" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="530" y="124" class="label">Jev</text>
+  <text x="492" y="160" class="sub">危险度 Score</text>
+  <text x="492" y="184" class="sub">是否保命 Noul</text>
+  <text x="492" y="208" class="sub">建议方向 Choice</text>
+  <text x="492" y="232" class="sub">每方向安全/进度</text>
+  <text x="492" y="268" class="sub">一次请求并行</text>
+
+  <rect x="696" y="80" width="196" height="220" rx="14" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="736" y="124" class="label">compose</text>
+  <text x="712" y="160" class="sub">保命阈值</text>
+  <text x="712" y="184" class="sub">Choice 置信度</text>
+  <text x="712" y="208" class="sub">不在安全集则忽略</text>
+  <text x="712" y="244" class="sub">代码拍板方向</text>
+
+  <rect x="916" y="80" width="148" height="220" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  <text x="950" y="124" class="label">走一步</text>
+  <text x="938" y="160" class="sub">应用方向</text>
+  <text x="938" y="184" class="sub">写入决策台</text>
+  <text x="938" y="220" class="sub">等下一拍</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="620" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">请求经 nginx 接入层到业务进程的路径</text>
+
+  <!-- ===== Client ===== -->
+  <rect x="30" y="246" width="110" height="68" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.4"/>
+  <text x="85" y="276" font-size="13" font-weight="600" fill="#1f2937" text-anchor="middle">Client</text>
+  <text x="85" y="296" font-size="11" fill="#64748b" text-anchor="middle">HTTPS 请求</text>
+
+  <!-- arrow client -> nginx -->
+  <line x1="140" y1="280" x2="196" y2="280" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ===== nginx 接入层大框 ===== -->
+  <rect x="200" y="86" width="500" height="430" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="216" y="110" font-size="13" font-weight="600" fill="#2563eb">nginx 接入层（master / worker，epoll 事件循环）</text>
+
+  <!-- Phase: TLS 终止 -->
+  <rect x="220" y="128" width="460" height="42" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="232" y="154" font-size="12" font-weight="600" fill="#1f2937">TLS 终止</text>
+  <text x="330" y="154" font-size="11" fill="#64748b">HTTPS → HTTP，证书与加解密集中在此</text>
+  <text x="640" y="154" font-size="10" fill="#16a34a" text-anchor="end">通用</text>
+
+  <!-- Phase: 限流 -->
+  <rect x="220" y="178" width="460" height="42" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="232" y="204" font-size="12" font-weight="600" fill="#1f2937">限流 / 访问控制</text>
+  <text x="330" y="204" font-size="11" fill="#64748b">limit_req · limit_conn · allow/deny</text>
+  <text x="640" y="204" font-size="10" fill="#16a34a" text-anchor="end">通用</text>
+
+  <!-- Phase: 改写与头注入 -->
+  <rect x="220" y="228" width="460" height="42" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="232" y="254" font-size="12" font-weight="600" fill="#1f2937">请求改写 / 头注入</text>
+  <text x="330" y="254" font-size="11" fill="#64748b">rewrite · proxy_set_header（X-Real-IP 等）</text>
+  <text x="640" y="254" font-size="10" fill="#16a34a" text-anchor="end">通用</text>
+
+  <!-- Phase: OpenResty Lua -->
+  <rect x="220" y="278" width="460" height="56" rx="5" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4"/>
+  <text x="232" y="300" font-size="12" font-weight="600" fill="#1f2937">OpenResty Lua（access_by_lua 等）</text>
+  <text x="232" y="320" font-size="11" fill="#64748b">鉴权、文件寻址、灰度、A/B —— 可写业务逻辑的位置</text>
+  <text x="640" y="300" font-size="10" fill="#ca8a04" text-anchor="end">边界</text>
+  <text x="640" y="320" font-size="10" fill="#ca8a04" text-anchor="end">需清单治理</text>
+
+  <!-- Phase: proxy_pass -->
+  <rect x="220" y="344" width="460" height="50" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="232" y="367" font-size="12" font-weight="600" fill="#1f2937">proxy_pass → upstream</text>
+  <text x="232" y="385" font-size="11" fill="#64748b">轮询 / 权重 / ip_hash / least_conn · 失败重试 proxy_next_upstream</text>
+  <text x="640" y="367" font-size="10" fill="#16a34a" text-anchor="end">通用</text>
+
+  <!-- Phase: 请求日志 -->
+  <rect x="220" y="404" width="460" height="42" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="232" y="430" font-size="12" font-weight="600" fill="#1f2937">请求日志（log_by_lua / log_format）</text>
+  <text x="430" y="430" font-size="11" fill="#64748b">状态码、耗时、上游响应时间</text>
+  <text x="640" y="430" font-size="10" fill="#16a34a" text-anchor="end">通用</text>
+
+  <!-- 接入层内提示：文件字节不进业务进程 -->
+  <rect x="220" y="458" width="460" height="42" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="232" y="478" font-size="11" fill="#9a3412">文件转发：proxy_pass 直接代理（或 X-Accel-Redirect）</text>
+  <text x="232" y="494" font-size="11" fill="#9a3412">字节经 nginx 直达客户端，不经过业务进程</text>
+
+  <!-- arrow nginx -> 业务进程 -->
+  <line x1="700" y1="280" x2="756" y2="280" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- ===== 业务进程 ===== -->
+  <rect x="760" y="246" width="110" height="68" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="815" y="276" font-size="13" font-weight="600" fill="#1f2937" text-anchor="middle">业务进程</text>
+  <text x="815" y="296" font-size="11" fill="#64748b" text-anchor="middle">upstream</text>
+
+  <!-- ===== 图例 ===== -->
+  <rect x="30" y="540" width="840" height="64" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="46" y="562" font-size="12" font-weight="600" fill="#1f2937">边界判断</text>
+  <rect x="46" y="572" width="14" height="14" rx="3" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="66" y="584" font-size="11" fill="#475569">通用、无状态、与业务弱耦合 → 留在接入层</text>
+  <rect x="380" y="572" width="14" height="14" rx="3" fill="#fefce8" stroke="#ca8a04"/>
+  <text x="400" y="584" font-size="11" fill="#475569">可写逻辑的位置，需「通用 + 无状态」两问把关</text>
+  <rect x="680" y="572" width="14" height="14" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="700" y="584" font-size="11" fill="#475569">业务规则、有状态逻辑 → 推回业务进程</text>
+</svg>
