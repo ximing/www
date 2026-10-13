@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 880" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+    <marker id="arrBlu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+  </defs>
+
+  <rect width="1120" height="880" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">2PC / TCC / Saga / 消息最终一致：步骤与失败窗口对照</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">四种模式按"协调在哪一层、失败时谁持锁、回退靠什么"三轴对照；阻塞窗口越长、侵入越深，高并发链路越难承受</text>
+
+  <!-- ============ 列标题 ============ -->
+  <rect x="24" y="80" width="264" height="32" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="0.8"/>
+  <text x="156" y="101" font-size="13" font-weight="600" fill="#b91c1c" text-anchor="middle">2PC（两阶段提交）</text>
+
+  <rect x="300" y="80" width="264" height="32" rx="4" fill="#fff7ed" stroke="#ea580c" stroke-width="0.8"/>
+  <text x="432" y="101" font-size="13" font-weight="600" fill="#c2410c" text-anchor="middle">TCC（Try/Confirm/Cancel）</text>
+
+  <rect x="576" y="80" width="264" height="32" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="0.8"/>
+  <text x="708" y="101" font-size="13" font-weight="600" fill="#1d4ed8" text-anchor="middle">Saga（长事务+补偿）</text>
+
+  <rect x="852" y="80" width="244" height="32" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="0.8"/>
+  <text x="974" y="101" font-size="13" font-weight="600" fill="#15803d" text-anchor="middle">消息最终一致</text>
+
+  <!-- ============ 2PC 列 ============ -->
+  <rect x="36" y="128" width="240" height="150" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="48" y="148" font-size="11" font-weight="600" fill="#475569">步骤</text>
+  <text x="48" y="168" font-size="10" fill="#475569">① 协调者发 prepare，各参与者</text>
+  <text x="48" y="182" font-size="10" fill="#475569">　 锁资源、写 redo/undo、应答</text>
+  <text x="48" y="202" font-size="10" fill="#475569">② 协调者收齐应答，发 commit</text>
+  <text x="48" y="216" font-size="10" fill="#475569">　 或 abort，参与者提交/回滚</text>
+  <text x="48" y="236" font-size="10" fill="#475569">③ 参与者释放锁</text>
+  <text x="48" y="258" font-size="9" fill="#94a3b8">协调者全程掌控提交决策</text>
+
+  <rect x="36" y="292" width="240" height="96" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="48" y="312" font-size="11" font-weight="600" fill="#b91c1c">失败窗口：阻塞</text>
+  <text x="48" y="332" font-size="10" fill="#475569">prepare 后、commit 前，协调者宕机</text>
+  <text x="48" y="348" font-size="10" fill="#dc2626">参与者持锁等待，无法自行决定</text>
+  <text x="48" y="364" font-size="10" fill="#dc2626">超时也释放不了（不知对方是否提交）</text>
+  <text x="48" y="380" font-size="9" fill="#94a3b8">锁持有时间 = 协调者恢复时间</text>
+
+  <rect x="36" y="402" width="240" height="78" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="48" y="422" font-size="11" font-weight="600" fill="#475569">协调层</text>
+  <text x="48" y="442" font-size="10" fill="#475569">独立协调者（单点）</text>
+  <text x="48" y="458" font-size="10" fill="#475569">XA 由 DB 实现，业务无感</text>
+  <text x="48" y="474" font-size="9" fill="#94a3b8">代价：协调者可用性=全链路瓶颈</text>
+
+  <rect x="36" y="494" width="240" height="60" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="48" y="514" font-size="11" font-weight="600" fill="#475569">业务侵入</text>
+  <text x="48" y="534" font-size="10" fill="#16a34a">低（XA 透明，SQL 不改）</text>
+  <text x="48" y="548" font-size="9" fill="#94a3b8">代价转到协调者与锁等待上</text>
+
+  <rect x="36" y="568" width="240" height="64" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="48" y="588" font-size="11" font-weight="600" fill="#475569">回退方式</text>
+  <text x="48" y="608" font-size="10" fill="#475569">abort 阶段统一回滚</text>
+  <text x="48" y="622" font-size="9" fill="#94a3b8">由 undo log 保证</text>
+
+  <rect x="36" y="648" width="240" height="50" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <text x="48" y="668" font-size="10" font-weight="600" fill="#92400e">实际使用率</text>
+  <text x="48" y="686" font-size="9" fill="#475569">MySQL XA 支持但生产极少用</text>
+
+  <!-- ============ TCC 列 ============ -->
+  <rect x="312" y="128" width="240" height="150" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="324" y="148" font-size="11" font-weight="600" fill="#475569">步骤</text>
+  <text x="324" y="168" font-size="10" fill="#475569">① Try：预留资源（冻结额 度、</text>
+  <text x="324" y="182" font-size="10" fill="#475569">　 预占库存，不真正扣减）</text>
+  <text x="324" y="202" font-size="10" fill="#475569">② Confirm：确认扣减，幂等</text>
+  <text x="324" y="222" font-size="10" fill="#475569">③ Cancel：释放预留，幂等</text>
+  <text x="324" y="244" font-size="10" fill="#475569">　（Try 失败或全局回滚时）</text>
+  <text x="324" y="266" font-size="9" fill="#94a3b8">三阶段，无长期持锁</text>
+
+  <rect x="312" y="292" width="240" height="96" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="324" y="312" font-size="11" font-weight="600" fill="#c2410c">失败窗口：异常分支</text>
+  <text x="324" y="332" font-size="10" fill="#475569">空回滚：Try 未到，Cancel 先到</text>
+  <text x="324" y="348" font-size="10" fill="#c2410c">　需记录"已 Cancel"挡住迟到的 Try</text>
+  <text x="324" y="364" font-size="10" fill="#475569">悬挂：Cancel 已到，Try 迟到</text>
+  <text x="324" y="380" font-size="10" fill="#c2410c">　需 Try 前查"是否已 Cancel"拦截</text>
+
+  <rect x="312" y="402" width="240" height="78" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="324" y="422" font-size="11" font-weight="600" fill="#475569">协调层</text>
+  <text x="324" y="442" font-size="10" fill="#475569">事务协调器（独立或框架内置）</text>
+  <text x="324" y="458" font-size="10" fill="#475569">记录每个分支的 Try/Confirm/Cancel</text>
+  <text x="324" y="474" font-size="9" fill="#94a3b8">超时由协调器驱动 Cancel</text>
+
+  <rect x="312" y="494" width="240" height="60" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="324" y="514" font-size="11" font-weight="600" fill="#475569">业务侵入</text>
+  <text x="324" y="534" font-size="10" fill="#c2410c">高（每操作三接口+幂等+异常分支）</text>
+  <text x="324" y="548" font-size="9" fill="#94a3b8">资源要能"预留"是硬约束</text>
+
+  <rect x="312" y="568" width="240" height="64" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="324" y="588" font-size="11" font-weight="600" fill="#475569">回退方式</text>
+  <text x="324" y="608" font-size="10" fill="#475569">Cancel 释放预留（业务定义）</text>
+  <text x="324" y="622" font-size="9" fill="#94a3b8">非数据库自动回滚</text>
+
+  <rect x="312" y="648" width="240" height="50" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <text x="324" y="668" font-size="10" font-weight="600" fill="#92400e">适用场景</text>
+  <text x="324" y="686" font-size="9" fill="#475569">资金扣减、库存扣减（需强一致）</text>
+
+  <!-- ============ Saga 列 ============ -->
+  <rect x="588" y="128" width="240" height="150" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="600" y="148" font-size="11" font-weight="600" fill="#475569">步骤</text>
+  <text x="600" y="168" font-size="10" fill="#475569">① T1 提交（本地事务）</text>
+  <text x="600" y="184" font-size="10" fill="#475569">② T2 提交（本地事务）</text>
+  <text x="600" y="200" font-size="10" fill="#475569">③ T3 提交（本地事务）…</text>
+  <text x="600" y="220" font-size="10" fill="#475569">若 Tk 失败：</text>
+  <text x="600" y="236" font-size="10" fill="#475569">④ 反向执行 Ck-1…C1 补偿</text>
+  <text x="600" y="256" font-size="9" fill="#94a3b8">每步即提交，中间状态可见</text>
+  <text x="600" y="270" font-size="9" fill="#94a3b8">补偿操作由业务实现</text>
+
+  <rect x="588" y="292" width="240" height="96" rx="5" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="600" y="312" font-size="11" font-weight="600" fill="#1d4ed8">失败窗口：隔离性缺失</text>
+  <text x="600" y="332" font-size="10" fill="#475569">T1 已提交、T2 未完成时</text>
+  <text x="600" y="348" font-size="10" fill="#1d4ed8">外部读到 T1 的中间状态（脏读）</text>
+  <text x="600" y="364" font-size="10" fill="#475569">对策：语义锁 / 版本号</text>
+  <text x="600" y="380" font-size="9" fill="#94a3b8">中途状态对业务/外部不可见</text>
+
+  <rect x="588" y="402" width="240" height="78" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="600" y="422" font-size="11" font-weight="600" fill="#475569">协调层</text>
+  <text x="600" y="442" font-size="10" fill="#475569">编排器（中心化或事件驱动）</text>
+  <text x="600" y="458" font-size="10" fill="#475569">记录每步状态，失败触发补偿链</text>
+  <text x="600" y="474" font-size="9" fill="#94a3b8">补偿必须幂等（重试可能重复执行）</text>
+
+  <rect x="588" y="494" width="240" height="60" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="600" y="514" font-size="11" font-weight="600" fill="#475569">业务侵入</text>
+  <text x="600" y="534" font-size="10" fill="#1d4ed8">中（每步写补偿操作+幂等）</text>
+  <text x="600" y="548" font-size="9" fill="#94a3b8">不需"预留"，但要能"抵消"</text>
+
+  <rect x="588" y="568" width="240" height="64" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="600" y="588" font-size="11" font-weight="600" fill="#475569">回退方式</text>
+  <text x="600" y="608" font-size="10" fill="#475569">反向补偿操作（业务定义）</text>
+  <text x="600" y="622" font-size="9" fill="#94a3b8">已提交的 T1 靠 C1 抵消，非回滚</text>
+
+  <rect x="588" y="648" width="240" height="50" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <text x="600" y="668" font-size="10" font-weight="600" fill="#92400e">适用场景</text>
+  <text x="600" y="686" font-size="9" fill="#475569">长流程业务（旅行预订、订单履约）</text>
+
+  <!-- ============ 消息最终一致 列 ============ -->
+  <rect x="864" y="128" width="220" height="150" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="876" y="148" font-size="11" font-weight="600" fill="#475569">步骤</text>
+  <text x="876" y="168" font-size="10" fill="#475569">① 本地事务 + 写事件表</text>
+  <text x="876" y="184" font-size="10" fill="#475569">　（同库原子提交）</text>
+  <text x="876" y="204" font-size="10" fill="#475569">② 扫描/事务消息投递</text>
+  <text x="876" y="220" font-size="10" fill="#475569">③ 消费方幂等处理</text>
+  <text x="876" y="238" font-size="10" fill="#475569">④ 对账兜底</text>
+  <text x="876" y="262" font-size="9" fill="#94a3b8">无全局协调者，靠本地事务+MQ</text>
+
+  <rect x="864" y="292" width="220" height="96" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="876" y="312" font-size="11" font-weight="600" fill="#15803d">失败窗口：最终一致</text>
+  <text x="876" y="332" font-size="10" fill="#475569">本地事务提交但消息延迟可见</text>
+  <text x="876" y="348" font-size="10" fill="#16a34a">不一致窗口=扫描间隔或回查上限</text>
+  <text x="876" y="364" font-size="10" fill="#475569">无锁等待，吞吐不受协调者约束</text>
+  <text x="876" y="380" font-size="9" fill="#94a3b8">见本系列第 11、15 篇</text>
+
+  <rect x="864" y="402" width="220" height="78" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="876" y="422" font-size="11" font-weight="600" fill="#475569">协调层</text>
+  <text x="876" y="442" font-size="10" fill="#475569">无独立协调者</text>
+  <text x="876" y="458" font-size="10" fill="#475569">本地事务 + MQ + 对账分担</text>
+  <text x="876" y="474" font-size="9" fill="#94a3b8">RocketMQ 事务消息把协调收进 broker</text>
+
+  <rect x="864" y="494" width="220" height="60" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="876" y="514" font-size="11" font-weight="600" fill="#475569">业务侵入</text>
+  <text x="876" y="534" font-size="10" fill="#16a34a">中低（消费幂等+对账）</text>
+  <text x="876" y="548" font-size="9" fill="#94a3b8">不要求资源"可预留"或"可抵消"</text>
+
+  <rect x="864" y="568" width="220" height="64" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="876" y="588" font-size="11" font-weight="600" fill="#475569">回退方式</text>
+  <text x="876" y="608" font-size="10" fill="#475569">无回滚，靠补偿消息或对账</text>
+  <text x="876" y="622" font-size="9" fill="#94a3b8">反向操作以消息形式驱动</text>
+
+  <rect x="864" y="648" width="220" height="50" rx="5" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <text x="876" y="668" font-size="10" font-weight="600" fill="#92400e">适用场景</text>
+  <text x="876" y="686" font-size="9" fill="#475569">多数业务（容忍秒级延迟一致）</text>
+
+  <!-- ============ 底部：三轴对照 ============ -->
+  <rect x="24" y="716" width="1072" height="148" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="740" font-size="12" font-weight="600" fill="#1f2937">三轴对照：协调在哪、失败持锁、回退靠什么</text>
+
+  <text x="40" y="764" font-size="10" font-weight="600" fill="#92400e">协调层</text>
+  <text x="120" y="764" font-size="10" fill="#475569">2PC 独立协调者（单点）｜ TCC 协调器+三接口 ｜ Saga 编排器+补偿链 ｜ 消息方案 无协调者（本地事务+MQ+对账）</text>
+
+  <text x="40" y="788" font-size="10" font-weight="600" fill="#92400e">失败持锁</text>
+  <text x="120" y="788" font-size="10" fill="#475569">2PC prepare 后持锁等待（最长）｜ TCC 无长期持锁，靠 Cancel 释放 ｜ Saga 无持锁，中间状态可见 ｜ 消息方案 无持锁</text>
+
+  <text x="40" y="812" font-size="10" font-weight="600" fill="#92400e">回退靠</text>
+  <text x="120" y="812" font-size="10" fill="#475569">2PC undo log 自动 ｜ TCC 业务 Cancel ｜ Saga 业务补偿操作 ｜ 消息方案 补偿消息/对账，无回滚</text>
+
+  <text x="40" y="836" font-size="10" font-weight="600" fill="#92400e">侵入</text>
+  <text x="120" y="836" font-size="10" fill="#475569">2PC 最低（XA 透明）｜ TCC 最高（三接口+幂等+空回滚/悬挂）｜ Saga 中（每步写补偿）｜ 消息方案 中低（消费幂等）</text>
+
+  <text x="40" y="856" font-size="9" fill="#94a3b8">规律：业务侵入越低，协调层/锁代价越重；侵入越深，业务要自己承担回退语义。多数系统选消息最终一致，TCC/Saga 留给资金、库存这类不能错的场景。</text>
+</svg>

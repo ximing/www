@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="600" viewBox="0 0 840 600" font-family="system-ui, sans-serif">
+  <text x="420" y="34" text-anchor="middle" font-size="15" font-weight="600" fill="#27272a">pi agent 运行时：主循环与闭合事件序列</text>
+
+  <!-- 左：控制流 -->
+  <text x="30" y="68" font-size="13" font-weight="600" fill="#52525b">控制流：runLoop（agent-loop.ts:155）</text>
+  <rect x="24" y="78" width="380" height="470" rx="10" fill="#f4f4f5"/>
+  <rect x="54" y="98" width="320" height="46" rx="8" fill="#ffffff"/>
+  <text x="74" y="118" font-size="12.5" fill="#27272a">agentLoop() / agentLoopContinue()</text>
+  <text x="74" y="134" font-size="11" fill="#71717a">两个入口汇入 runLoop(...)，双层 while</text>
+  <rect x="42" y="160" width="344" height="370" rx="8" fill="#e9e9ed"/>
+  <text x="58" y="180" font-size="11.5" fill="#52525b">外层 while：followUp 队列非空则续跑</text>
+  <rect x="58" y="190" width="312" height="228" rx="8" fill="#ffffff"/>
+  <text x="72" y="208" font-size="11.5" fill="#52525b">内层 while：有 tool call 或待注入消息</text>
+  <rect x="74" y="216" width="280" height="40" rx="6" fill="#f4f4f5"/>
+  <rect x="74" y="216" width="3" height="40" rx="1.5" fill="#b45309"/>
+  <text x="90" y="241" font-size="12" fill="#27272a">① 注入排队消息（turn 边界，不中断当前流）</text>
+  <rect x="74" y="262" width="280" height="40" rx="6" fill="#f4f4f5"/>
+  <text x="90" y="287" font-size="12" fill="#27272a">② 流式获取 assistant 响应（契约禁止抛异常）</text>
+  <rect x="74" y="308" width="280" height="48" rx="6" fill="#f4f4f5"/>
+  <text x="90" y="328" font-size="12" fill="#27272a">③ 执行 tool call 批</text>
+  <text x="90" y="345" font-size="10.5" fill="#71717a">stopReason=length 则整批拒绝，让模型重发</text>
+  <rect x="74" y="362" width="280" height="40" rx="6" fill="#f4f4f5"/>
+  <text x="90" y="387" font-size="12" fill="#27272a">④ turn_end，回到内层条件判断</text>
+  <text x="58" y="452" font-size="11.5" fill="#52525b">外层退出：无 followUp</text>
+  <text x="58" y="472" font-size="11.5" fill="#52525b">→ 发出 <tspan fill="#b45309" font-weight="600">agent_end</tspan>，事件序列闭合</text>
+
+  <!-- 右：事件序列 -->
+  <text x="442" y="68" font-size="13" font-weight="600" fill="#52525b">事件流：UI 与扩展的唯一通道（types.ts:422-437）</text>
+  <rect x="436" y="78" width="380" height="470" rx="10" fill="#f4f4f5"/>
+  <line x1="458" y1="104" x2="458" y2="506" stroke="#d4d4d8" stroke-width="2"/>
+  <circle cx="458" cy="112" r="4" fill="#a1a1aa"/>
+  <text x="478" y="116" font-size="12" fill="#27272a">agent_start</text>
+  <circle cx="458" cy="146" r="4" fill="#a1a1aa"/>
+  <text x="478" y="150" font-size="12" fill="#27272a">turn_start</text>
+  <circle cx="458" cy="180" r="4" fill="#a1a1aa"/>
+  <text x="478" y="184" font-size="12" fill="#27272a">message_start / end（user）</text>
+  <text x="478" y="200" font-size="10.5" fill="#71717a">仅 agentLoop() 接收的新 prompt；continue 不产生此项</text>
+  <circle cx="458" cy="226" r="4" fill="#a1a1aa"/>
+  <text x="478" y="230" font-size="12" fill="#27272a">message_start（assistant）</text>
+  <text x="478" y="246" font-size="10.5" fill="#71717a">message_update × n（流式增量）</text>
+  <circle cx="458" cy="272" r="4" fill="#a1a1aa"/>
+  <text x="478" y="276" font-size="12" fill="#27272a">message_end（assistant）</text>
+  <text x="478" y="292" font-size="10.5" fill="#71717a">stopReason：stop / length / error / aborted</text>
+  <circle cx="458" cy="320" r="4" fill="#a1a1aa"/>
+  <text x="478" y="324" font-size="12" fill="#27272a">tool_execution_start / update / end</text>
+  <text x="478" y="340" font-size="10.5" fill="#71717a">preflight 串行 → 并发执行，按完成序发出</text>
+  <circle cx="458" cy="368" r="4" fill="#a1a1aa"/>
+  <text x="478" y="372" font-size="12" fill="#27272a">message_start / end × k（toolResult）</text>
+  <text x="478" y="388" font-size="10.5" fill="#71717a">按 assistant 源序写入，transcript 顺序确定</text>
+  <circle cx="458" cy="416" r="4" fill="#a1a1aa"/>
+  <text x="478" y="420" font-size="12" fill="#27272a">turn_end</text>
+  <circle cx="458" cy="448" r="4" fill="#d4d4d8"/>
+  <text x="478" y="452" font-size="11.5" fill="#71717a">… 下一 turn（回到 turn_start）</text>
+  <circle cx="458" cy="480" r="5" fill="#b45309"/>
+  <text x="478" y="484" font-size="12.5" font-weight="600" fill="#b45309">agent_end</text>
+  <text x="478" y="500" font-size="10.5" fill="#71717a">await 所有 listener 完成后，run 才结束</text>
+  <text x="420" y="582" text-anchor="middle" font-size="11" fill="#a1a1aa">steering 在 turn 边界注入；失败编码为 stopReason=error 的 assistant 消息，事件序列照常闭合</text>
+</svg>

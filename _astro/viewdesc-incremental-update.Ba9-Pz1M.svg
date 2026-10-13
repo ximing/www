@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="600" viewBox="0 0 760 600" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8a7a4a"/>
+    </marker>
+  </defs>
+
+  <!-- main flow: left column -->
+  <rect x="30" y="24" width="370" height="58" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="215" y="46" text-anchor="middle" font-size="12" fill="#2c4a73">① updateStateInner（index.ts）</text>
+  <text x="215" y="66" text-anchor="middle" font-size="10" fill="#555">docView.matchesNode 不通过 → docView.update</text>
+
+  <line x1="215" y1="82" x2="215" y2="102" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="30" y="106" width="370" height="58" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="215" y="128" text-anchor="middle" font-size="12" fill="#2c4a73">② NodeViewDesc.update</text>
+  <text x="215" y="148" text-anchor="middle" font-size="10" fill="#555">sameMarkup 通过 → updateInner → updateChildren</text>
+
+  <line x1="215" y1="164" x2="215" y2="184" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="30" y="188" width="370" height="64" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="215" y="210" text-anchor="middle" font-size="12" fill="#2c4a73">③ iterDeco 遍历内容与装饰</text>
+  <text x="215" y="228" text-anchor="middle" font-size="10" fill="#555">按序交出子节点与 widget，附上各自装饰</text>
+  <text x="215" y="244" text-anchor="middle" font-size="10" fill="#555">文本节点在装饰边界被切成两段</text>
+
+  <line x1="215" y1="252" x2="215" y2="272" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="30" y="276" width="370" height="118" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="215" y="298" text-anchor="middle" font-size="12" fill="#2c4a73">④ ViewTreeUpdater 四种放置策略</text>
+  <text x="215" y="318" text-anchor="middle" font-size="10" fill="#555">findNodeMatch：已有 desc 精确复用</text>
+  <text x="215" y="336" text-anchor="middle" font-size="10" fill="#555">updateNextNode：同类型节点就地更新</text>
+  <text x="215" y="354" text-anchor="middle" font-size="10" fill="#555">recreateWrapper：换外壳保留整个子树</text>
+  <text x="215" y="372" text-anchor="middle" font-size="10" fill="#555">addNode：新建 desc 插入</text>
+
+  <line x1="215" y1="394" x2="215" y2="414" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="30" y="418" width="370" height="58" fill="#e8f7ee" stroke="#4a8a5f" stroke-width="2"/>
+  <text x="215" y="440" text-anchor="middle" font-size="12" fill="#2c5a3c">⑤ TextViewDesc.update</text>
+  <text x="215" y="460" text-anchor="middle" font-size="10" fill="#555">nodeDOM.nodeValue = node.text，就地改文本</text>
+
+  <line x1="215" y1="476" x2="215" y2="496" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="30" y="500" width="370" height="64" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="215" y="522" text-anchor="middle" font-size="12" fill="#2c4a73">⑥ renderDescs</text>
+  <text x="215" y="540" text-anchor="middle" font-size="10" fill="#555">children 数组与 DOM 子节点对齐</text>
+  <text x="215" y="556" text-anchor="middle" font-size="10" fill="#555">只增删有差异的节点，无变化则不调用</text>
+
+  <!-- right column: supporting mechanisms -->
+  <rect x="440" y="24" width="290" height="122" fill="#fafaf5" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="585" y="46" text-anchor="middle" font-size="12" fill="#6b5d2e">复用判定（脏的一律不匹配）</text>
+  <text x="585" y="66" text-anchor="middle" font-size="10" fill="#555">matchesNode：节点与内外装饰全等</text>
+  <text x="585" y="84" text-anchor="middle" font-size="10" fill="#555">matchesMark：mark 相等，允许内容脏</text>
+  <text x="585" y="102" text-anchor="middle" font-size="10" fill="#555">matchesWidget：widget 类型相等</text>
+  <text x="585" y="120" text-anchor="middle" font-size="10" fill="#555">matchesHack：同名 BR / IMG 补丁节点</text>
+
+  <rect x="440" y="170" width="290" height="70" fill="#fafaf5" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="585" y="192" text-anchor="middle" font-size="12" fill="#6b5d2e">preMatch</text>
+  <text x="585" y="210" text-anchor="middle" font-size="10" fill="#555">从 fragment 与 children 末尾反向配对</text>
+  <text x="585" y="226" text-anchor="middle" font-size="10" fill="#555">保住尾部未变的子树不被误配</text>
+
+  <rect x="440" y="264" width="290" height="130" fill="#fafaf5" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="585" y="286" text-anchor="middle" font-size="12" fill="#6b5d2e">dirty 标记的另一来源</text>
+  <text x="585" y="306" text-anchor="middle" font-size="10" fill="#555">浏览器直接改了 DOM（普通输入）</text>
+  <text x="585" y="324" text-anchor="middle" font-size="10" fill="#555">→ domObserver.flush 算出变更区间</text>
+  <text x="585" y="342" text-anchor="middle" font-size="10" fill="#555">→ docView.markDirty(from, to) 标脏</text>
+  <text x="585" y="360" text-anchor="middle" font-size="10" fill="#555">→ 读回派发 transaction 后重画脏子树</text>
+  <text x="585" y="378" text-anchor="middle" font-size="10" fill="#777">级别：CHILD / CONTENT / NODE_DIRTY</text>
+
+  <rect x="440" y="418" width="290" height="76" fill="#fafaf5" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="585" y="440" text-anchor="middle" font-size="12" fill="#6b5d2e">未变的兄弟子树</text>
+  <text x="585" y="458" text-anchor="middle" font-size="10" fill="#555">matchesNode 通过即整棵跳过</text>
+  <text x="585" y="476" text-anchor="middle" font-size="10" fill="#555">desc 与对应 DOM 都不动</text>
+
+  <!-- dashed links from right column to main flow -->
+  <path d="M 440 85 L 403 300" fill="none" stroke="#8a7a4a" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+  <path d="M 440 205 L 403 310" fill="none" stroke="#8a7a4a" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+  <path d="M 440 329 L 403 140" fill="none" stroke="#8a7a4a" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+  <path d="M 440 456 L 403 360" fill="none" stroke="#8a7a4a" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+</svg>

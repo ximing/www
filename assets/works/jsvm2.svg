@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#134e4a"/>
+      <stop offset="55%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/><circle cx="380" cy="60" r="2"/><circle cx="460" cy="60" r="2"/><circle cx="540" cy="60" r="2"/><circle cx="620" cy="60" r="2"/><circle cx="700" cy="60" r="2"/>
+    <circle cx="60" cy="390" r="2"/><circle cx="140" cy="390" r="2"/><circle cx="220" cy="390" r="2"/><circle cx="300" cy="390" r="2"/><circle cx="380" cy="390" r="2"/><circle cx="460" cy="390" r="2"/><circle cx="540" cy="390" r="2"/><circle cx="620" cy="390" r="2"/><circle cx="700" cy="390" r="2"/>
+  </g>
+
+  <!-- stack frames (bottom = main, top = current call) -->
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" text-anchor="middle">
+    <rect x="270" y="268" width="260" height="46" rx="10" fill="#f0fdfa" opacity="0.55"/>
+    <text x="400" y="297" fill="#134e4a" opacity="0.85">main()</text>
+    <rect x="282" y="212" width="260" height="46" rx="10" fill="#f0fdfa" opacity="0.75"/>
+    <text x="412" y="241" fill="#134e4a" opacity="0.9">run(code)</text>
+    <rect x="294" y="156" width="260" height="46" rx="10" fill="#f0fdfa" opacity="0.9"/>
+    <text x="424" y="185" fill="#134e4a">eval(expr)</text>
+    <rect x="306" y="100" width="260" height="46" rx="10" fill="#ffffff"/>
+    <text x="436" y="129" fill="#0f766e" font-weight="700">add(a, b)</text>
+  </g>
+
+  <!-- pc arrow -->
+  <path d="M 620 90 L 620 130" stroke="#fde047" stroke-width="4" fill="none"/>
+  <path d="M 612 118 L 620 132 L 628 118" stroke="#fde047" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <text x="620" y="80" fill="#fde047" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" text-anchor="middle">pc</text>
+
+  <!-- sandbox hint -->
+  <rect x="120" y="120" width="90" height="60" rx="10" fill="none" stroke="#99f6e4" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>
+  <text x="165" y="156" fill="#99f6e4" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="14" text-anchor="middle" opacity="0.85">sandbox</text>
+
+  <!-- title -->
+  <text x="400" y="390" fill="#ffffff" font-family="Georgia, 'Noto Serif SC', serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="1">JSVM2</text>
+  <text x="400" y="420" fill="#99f6e4" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">JS 解释器 · 沙箱执行</text>
+</svg>

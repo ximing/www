@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="55%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.35" cy="0.4" r="0.75">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <rect width="1600" height="600" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="110" cy="520" r="2.5"/><circle cx="170" cy="520" r="2.5"/><circle cx="230" cy="520" r="2.5"/><circle cx="290" cy="520" r="2.5"/><circle cx="350" cy="520" r="2.5"/><circle cx="410" cy="520" r="2.5"/><circle cx="470" cy="520" r="2.5"/><circle cx="530" cy="520" r="2.5"/>
+    <circle cx="110" cy="556" r="2.5"/><circle cx="170" cy="556" r="2.5"/><circle cx="230" cy="556" r="2.5"/><circle cx="290" cy="556" r="2.5"/><circle cx="350" cy="556" r="2.5"/><circle cx="410" cy="556" r="2.5"/><circle cx="470" cy="556" r="2.5"/><circle cx="530" cy="556" r="2.5"/>
+  </g>
+
+  <!-- left typography block -->
+  <text x="108" y="178" fill="#c7d2fe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" letter-spacing="6">SESSION REPLAY · BINARY PROTOCOL</text>
+  <text x="104" y="292" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="96" font-weight="700" letter-spacing="2">MPE Replay</text>
+  <text x="110" y="352" fill="#e0e7ff" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="24" letter-spacing="3">快照 + 增量事件流回放</text>
+  <path d="M 110 396 L 340 396" stroke="#c7d2fe" stroke-width="2" opacity="0.6"/>
+  <text x="110" y="436" fill="#c7d2fe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" letter-spacing="2" opacity="0.9">dict + varint + gzip · &lt;1ms / frame</text>
+
+  <!-- right replay timeline -->
+  <rect x="880" y="284" width="620" height="14" rx="7" fill="#e0e7ff" opacity="0.35"/>
+  <rect x="906" y="216" width="56" height="150" rx="10" fill="#eef2ff"/>
+  <rect x="1276" y="216" width="56" height="150" rx="10" fill="#eef2ff"/>
+  <g fill="#c7d2fe">
+    <circle cx="1006" cy="291" r="8"/>
+    <circle cx="1044" cy="291" r="8"/>
+    <circle cx="1079" cy="291" r="8"/>
+    <circle cx="1118" cy="291" r="8"/>
+    <circle cx="1156" cy="291" r="8"/>
+    <circle cx="1192" cy="291" r="8"/>
+    <circle cx="1232" cy="291" r="8"/>
+    <circle cx="1366" cy="291" r="8"/>
+    <circle cx="1402" cy="291" r="8"/>
+    <circle cx="1441" cy="291" r="8"/>
+    <circle cx="1477" cy="291" r="8"/>
+  </g>
+  <!-- seek cursor -->
+  <line x1="1156" y1="196" x2="1156" y2="386" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 1140 192 L 1172 192 L 1156 216 z" fill="#ffffff"/>
+  <!-- labels -->
+  <g fill="#e0e7ff" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" text-anchor="middle" letter-spacing="2">
+    <text x="934" y="410">CHECKPOINT</text>
+    <text x="1156" y="410">SEEK</text>
+    <text x="1304" y="410">CHECKPOINT</text>
+    <text x="1156" y="470">EVENT STREAM</text>
+  </g>
+</svg>

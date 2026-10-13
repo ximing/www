@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="920" viewBox="0 0 1160 920" role="img" aria-labelledby="title desc">
+  <title id="title">四套自托管应用各自接住的原应用</title>
+  <desc id="desc">滴答清单和 Cubox 接到 Vital，flomo 接到 AIMO，MarginNote 和 Anki 接到 Inwit，家庭相册和成长记录接到 Moment。四套数据库各自独立。</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; fill: #182230; }
+    .title { font-size: 26px; font-weight: 700; }
+    .label { font-size: 22px; font-weight: 700; }
+    .name { font-size: 28px; font-weight: 700; }
+    .sub { font-size: 16px; fill: #526176; }
+    .kicker { font-size: 14px; font-weight: 700; fill: #526176; }
+  </style>
+  <rect width="1160" height="920" rx="18" fill="#f8fafc"/>
+  <text x="40" y="48" class="title">四套应用各接一件事</text>
+  <text x="40" y="78" class="sub">按每天打开时要看的第一屏拆开。库不合并。</text>
+
+  <rect x="40" y="104" width="528" height="360" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="68" y="140" class="kicker">原来</text>
+  <text x="68" y="176" class="label">滴答清单、Cubox</text>
+  <text x="68" y="220" class="kicker">接到</text>
+  <text x="68" y="260" class="name">Vital</text>
+  <text x="68" y="308" class="sub">待办、重复、提醒、习惯</text>
+  <text x="68" y="338" class="sub">稍后读抽正文，读完可转任务</text>
+  <text x="68" y="368" class="sub">复盘写日、周、月、年</text>
+  <text x="68" y="398" class="sub">提议要人采纳，才改数据</text>
+
+  <rect x="592" y="104" width="528" height="360" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="620" y="140" class="kicker">原来</text>
+  <text x="620" y="176" class="label">flomo</text>
+  <text x="620" y="220" class="kicker">接到</text>
+  <text x="620" y="260" class="name">AIMO</text>
+  <text x="620" y="308" class="sub">一张卡片记一个想法</text>
+  <text x="620" y="338" class="sub">语义搜索，并画出关联</text>
+  <text x="620" y="368" class="sub">间隔重复，和历史上的今天</text>
+  <text x="620" y="398" class="sub">外部用个人令牌调 REST</text>
+
+  <rect x="40" y="488" width="528" height="360" rx="16" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+  <text x="68" y="524" class="kicker">原来</text>
+  <text x="68" y="560" class="label">MarginNote、Anki</text>
+  <text x="68" y="604" class="kicker">接到</text>
+  <text x="68" y="644" class="name">Inwit</text>
+  <text x="68" y="692" class="sub">长文切成概念、例子、易混点</text>
+  <text x="68" y="722" class="sub">先回忆，再以三档反馈改 SM-2</text>
+  <text x="68" y="752" class="sub">知识地图上，开题要人点头</text>
+  <text x="68" y="782" class="sub">外部 Agent 只投喂和读取</text>
+
+  <rect x="592" y="488" width="528" height="360" rx="16" fill="#f5f3ff" stroke="#6d28d9" stroke-width="2"/>
+  <text x="620" y="524" class="kicker">原来</text>
+  <text x="620" y="560" class="label">家庭相册、成长记录</text>
+  <text x="620" y="604" class="kicker">接到</text>
+  <text x="620" y="644" class="name">Moment</text>
+  <text x="620" y="692" class="sub">时刻收进可邀请的时光链</text>
+  <text x="620" y="722" class="sub">长辈用只读链接，不用注册</text>
+  <text x="620" y="752" class="sub">模板记成长、旅行和日常</text>
+  <text x="620" y="782" class="sub">月初回顾，默认不调用模型</text>
+</svg>

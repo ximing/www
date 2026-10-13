@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="55%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="102" height="102" patternUnits="userSpaceOnUse">
+      <circle cx="51" cy="51" r="2.5" fill="#ffffff"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a7f3d0"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <rect width="1200" height="900" fill="url(#dots)" opacity="0.08"/>
+
+  <!-- sync arrows: upload / download between disk and cloud -->
+  <g stroke="#a7f3d0" stroke-width="5" fill="none" opacity="0.9">
+    <path d="M 445 366 C 545 326, 655 326, 775 366" marker-end="url(#arrow)"/>
+    <path d="M 775 454 C 655 494, 545 494, 445 454" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- local disk -->
+  <rect x="185" y="325" width="230" height="150" rx="18" fill="#ecfdf5"/>
+  <circle cx="300" cy="400" r="46" fill="#a7f3d0"/>
+  <circle cx="300" cy="400" r="16" fill="#064e3b"/>
+  <circle cx="300" cy="400" r="5" fill="#ecfdf5"/>
+  <path d="M 300 400 L 356 358" stroke="#064e3b" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="356" cy="358" r="8" fill="#064e3b"/>
+
+  <!-- cloud -->
+  <g fill="#ecfdf5">
+    <circle cx="848" cy="392" r="44"/>
+    <circle cx="905" cy="366" r="56"/>
+    <circle cx="962" cy="396" r="40"/>
+    <rect x="812" y="392" width="196" height="54" rx="27"/>
+  </g>
+
+  <!-- endpoint labels -->
+  <g fill="#d1fae5" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="17" text-anchor="middle" letter-spacing="2">
+    <text x="300" y="536">LOCAL</text>
+    <text x="905" y="536">S3 / OSS</text>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="752" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">CloudSync</text>
+  <text x="600" y="810" fill="#a7f3d0" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="4">本地磁盘 ⇄ S3 / OSS 同步</text>
+</svg>

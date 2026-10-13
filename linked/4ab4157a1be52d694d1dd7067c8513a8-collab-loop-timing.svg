@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="410" viewBox="0 0 760 410" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="380" y="18" text-anchor="middle" font-size="12" fill="#555">一次发送与接收的完整时序：客户端 A 发出 s1，中心确认，客户端 B 经长轮询收到</text>
+
+  <!-- lane headers -->
+  <rect x="90" y="32" width="120" height="30" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="150" y="51" text-anchor="middle" font-size="12" fill="#2c4a73">客户端 A</text>
+  <rect x="320" y="32" width="120" height="30" fill="#eef3ea" stroke="#4a7c59"/>
+  <text x="380" y="51" text-anchor="middle" font-size="12" fill="#2e5a3c">中心（服务端）</text>
+  <rect x="550" y="32" width="120" height="30" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="610" y="51" text-anchor="middle" font-size="12" fill="#6b4c22">客户端 B</text>
+
+  <!-- lifelines -->
+  <line x1="150" y1="62" x2="150" y2="380" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="380" y1="62" x2="380" y2="380" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="610" y1="62" x2="610" y2="380" stroke="#999" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- B long poll request -->
+  <line x1="610" y1="88" x2="380" y2="88" stroke="#666" stroke-width="1" marker-end="url(#arr2)"/>
+  <text x="495" y="80" text-anchor="middle" font-size="11" fill="#333">GET events?version=10，无新数据则挂起（上限 5 分钟）</text>
+
+  <!-- A local edit -->
+  <path d="M150,118 C190,112 190,132 150,126" fill="none" stroke="#666" stroke-width="1" marker-end="url(#arr2)"/>
+  <text x="155" y="114" font-size="11" fill="#333">本地输入，sendableSteps() 非空</text>
+
+  <!-- A POST -->
+  <line x1="150" y1="156" x2="380" y2="156" stroke="#666" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <text x="265" y="148" text-anchor="middle" font-size="11" fill="#333">POST {version: 10, steps: [s1], clientID: A}</text>
+
+  <!-- server processing -->
+  <path d="M380,182 C420,176 420,196 380,190" fill="none" stroke="#666" stroke-width="1" marker-end="url(#arr2)"/>
+  <text x="386" y="178" font-size="11" fill="#333">checkVersion 通过，逐步 apply，version 10 → 11</text>
+  <text x="386" y="196" font-size="11" fill="#333">sendUpdates 唤醒所有挂起的轮询</text>
+
+  <!-- server to A -->
+  <line x1="380" y1="222" x2="150" y2="222" stroke="#4a7c59" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <text x="265" y="214" text-anchor="middle" font-size="11" fill="#2e5a3c">200 OK</text>
+  <text x="150" y="240" font-size="11" fill="#2e5a3c">A 立即用 repeat(clientID, 1) 合成确认：</text>
+  <text x="150" y="256" font-size="11" fill="#2e5a3c">receiveTransaction 前缀全认，version 对齐 11，unconfirmed 清空</text>
+
+  <!-- server to B -->
+  <line x1="380" y1="286" x2="610" y2="286" stroke="#666" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <text x="495" y="278" text-anchor="middle" font-size="11" fill="#333">长轮询返回 {steps: [s1], clientIDs: [A]}</text>
+  <text x="380" y="304" font-size="11" fill="#333">B 调 receiveTransaction：本地无未确认，直接应用，version 11</text>
+
+  <!-- 409 branch -->
+  <line x1="380" y1="336" x2="150" y2="336" stroke="#a5483f" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#arr2)"/>
+  <text x="265" y="328" text-anchor="middle" font-size="11" fill="#8a3324">若 B 的 step 先入库：409 Version not current</text>
+  <text x="150" y="358" font-size="11" fill="#8a3324">A 转 poll 拉新 step，receiveTransaction 内 rebase，</text>
+  <text x="150" y="374" font-size="11" fill="#8a3324">unconfirmed 重写后由下一轮 sendableSteps 重发</text>
+</svg>

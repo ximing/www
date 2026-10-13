@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="480" viewBox="0 0 1080 480" font-family="PingFang SC, Microsoft YaHei, Helvetica Neue, sans-serif">
+  <defs>
+    <marker id="arr-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#475569"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#D97706"/>
+    </marker>
+  </defs>
+
+  <!-- Harness 边界 -->
+  <rect x="20" y="20" width="1040" height="440" rx="14" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="44" y="52" font-size="15" font-weight="600" fill="#475569">Harness：权限 · 凭证 · 证据 · 恢复</text>
+
+  <!-- 并行组 -->
+  <text x="640" y="44" font-size="13" font-weight="600" fill="#3B82F6" text-anchor="middle">并行检查（同一快照）</text>
+  <rect x="420" y="52" width="440" height="94" rx="10" fill="none" stroke="#93C5FD" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- 主流程箭头 -->
+  <line x1="190" y1="98" x2="242" y2="98" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <line x1="380" y1="98" x2="412" y2="98" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <line x1="860" y1="98" x2="892" y2="98" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <path d="M965,126 L965,200 L525,200 L525,292" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <text x="745" y="192" font-size="12" fill="#64748B" text-anchor="middle">证据</text>
+  <line x1="590" y1="328" x2="632" y2="328" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+  <line x1="780" y1="328" x2="822" y2="328" stroke="#475569" stroke-width="2" marker-end="url(#arr-slate)"/>
+
+  <!-- Loop：独立验证 -> 修复 -> 影响面分析 -->
+  <path d="M525,356 L525,410 L315,410 L315,364" fill="none" stroke="#D97706" stroke-width="2" marker-end="url(#arr-orange)"/>
+  <path d="M315,300 L315,134" fill="none" stroke="#D97706" stroke-width="2" marker-end="url(#arr-orange)"/>
+  <text x="420" y="432" font-size="13" fill="#B45309" text-anchor="middle">Loop：验证失败，带着失败截图和堆栈回到修复</text>
+
+  <!-- 写入边界 -->
+  <line x1="805" y1="290" x2="805" y2="366" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="805" y="282" font-size="12" fill="#DC2626" text-anchor="middle">写入边界</text>
+
+  <!-- 节点：Row A -->
+  <rect x="60" y="70" width="130" height="56" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="125" y="104" font-size="14" fill="#14532D" text-anchor="middle">固定快照</text>
+
+  <rect x="250" y="70" width="130" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="315" y="104" font-size="14" fill="#1E3A8A" text-anchor="middle">影响面分析</text>
+
+  <rect x="435" y="70" width="125" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="497" y="104" font-size="14" fill="#1E3A8A" text-anchor="middle">单元测试</text>
+
+  <rect x="575" y="70" width="125" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="637" y="104" font-size="14" fill="#1E3A8A" text-anchor="middle">类型检查</text>
+
+  <rect x="715" y="70" width="125" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="777" y="104" font-size="14" fill="#1E3A8A" text-anchor="middle">视觉回归</text>
+
+  <rect x="900" y="70" width="130" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="965" y="104" font-size="14" fill="#1E3A8A" text-anchor="middle">汇总证据</text>
+
+  <!-- 节点：Row B -->
+  <rect x="250" y="300" width="130" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="315" y="334" font-size="14" fill="#1E3A8A" text-anchor="middle">修复</text>
+
+  <rect x="460" y="300" width="130" height="56" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="525" y="334" font-size="14" fill="#1E3A8A" text-anchor="middle">独立验证</text>
+
+  <rect x="640" y="300" width="140" height="56" rx="8" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+  <text x="710" y="334" font-size="14" fill="#92400E" text-anchor="middle">人工 Review</text>
+
+  <rect x="830" y="300" width="150" height="56" rx="8" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="905" y="334" font-size="14" fill="#991B1B" text-anchor="middle">部署 Preview</text>
+  <text x="905" y="382" font-size="12" fill="#DC2626" text-anchor="middle">受限写，需人工闸门</text>
+</svg>

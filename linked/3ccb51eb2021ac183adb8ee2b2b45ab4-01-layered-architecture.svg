@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- Layer 1: human -->
+  <rect x="40" y="20" width="720" height="88" rx="10" fill="#f4f4f5"/>
+  <text x="64" y="50" font-size="16" font-weight="600" fill="#18181b">人</text>
+  <text x="64" y="76" font-size="13" fill="#3f3f46">对话 CLI（审批门 / 追问 / 随时下指令）　·　工单文件（批量处置 gap）</text>
+  <text x="64" y="96" font-size="12.5" fill="#71717a">两条通道都写进同一个 artifacts/ 现场</text>
+
+  <!-- Arrows 1 -> 2 -->
+  <line x1="220" y1="110" x2="220" y2="140" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="580" y1="140" x2="580" y2="110" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: apps/v2r -->
+  <rect x="40" y="144" width="720" height="120" rx="10" fill="#ededf0"/>
+  <text x="64" y="174" font-size="16" font-weight="600" fill="#18181b">apps/v2r · 迁移业务层（唯一含 Vue/React 领域知识）</text>
+  <text x="64" y="200" font-size="13" fill="#3f3f46">对话 REPL + 工单收割器（知识库唯一写者）</text>
+  <text x="64" y="222" font-size="13" fill="#3f3f46">S0-S4 workflow 定义（flow-core 代码）· 语言适配器 lang-vue2</text>
+  <text x="64" y="244" font-size="13" fill="#3f3f46"><tspan fill="#b45309">pi 编排大脑</tspan>：决定每个节点派什么活、标准化 CC 输出；不写业务代码</text>
+
+  <!-- Arrows 2 -> 3 -->
+  <line x1="220" y1="266" x2="220" y2="296" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="580" y1="296" x2="580" y2="266" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: packages -->
+  <rect x="40" y="300" width="720" height="128" rx="10" fill="#e4e4e7"/>
+  <text x="64" y="330" font-size="16" font-weight="600" fill="#18181b">packages/ · 通用能力层（七个独立可发布的包）</text>
+  <text x="64" y="356" font-size="13" fill="#3f3f46">flow-core 可恢复工作流 · cc-driver CC 协议驱动 · dep-analyzer 依赖图</text>
+  <text x="64" y="378" font-size="13" fill="#3f3f46">knowledge 知识条目 · coverage-ledger 覆盖账本 · model-router · report-model</text>
+  <text x="64" y="404" font-size="12.5" fill="#71717a">依赖方向 apps → packages 由 depcruise 强制；通用包禁领域字样（genericity lint）</text>
+
+  <!-- Arrows 3 -> 4 -->
+  <line x1="220" y1="430" x2="220" y2="460" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="580" y1="460" x2="580" y2="430" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Layer 4: workers -->
+  <rect x="40" y="464" width="720" height="64" rx="10" fill="#f4f4f5"/>
+  <text x="64" y="492" font-size="16" font-weight="600" fill="#18181b">工人层 · N 个 Claude Code 长驻进程（cc-driver 进程池）</text>
+  <text x="64" y="514" font-size="12.5" fill="#71717a">池 key = 页面单元：同单元串行、跨单元并行，上限默认 CPU 核数；所有文件读写发生在这一层</text>
+
+  <!-- Arrow 4 -> facts -->
+  <line x1="400" y1="530" x2="400" y2="556" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Fact sources: 5 read-only + 1 writable -->
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="40" y="560" width="112" height="56" rx="8" fill="#fafafa" stroke="#d4d4d8"/>
+    <text x="96" y="584" font-size="12.5" font-weight="600" fill="#18181b">shop-w</text>
+    <text x="96" y="602" fill="#52525b">Vue 2.7 源仓 · 只读</text>
+
+    <rect x="160" y="560" width="112" height="56" rx="8" fill="#fafafa" stroke="#d4d4d8"/>
+    <text x="216" y="584" font-size="12.5" font-weight="600" fill="#18181b">老组件库 A</text>
+    <text x="216" y="602" fill="#52525b">mc-* 组件 · 只读</text>
+
+    <rect x="280" y="560" width="112" height="56" rx="8" fill="#fafafa" stroke="#d4d4d8"/>
+    <text x="336" y="584" font-size="12.5" font-weight="600" fill="#18181b">老组件库 B</text>
+    <text x="336" y="602" fill="#52525b">只读</text>
+
+    <rect x="400" y="560" width="112" height="56" rx="8" fill="#fafafa" stroke="#d4d4d8"/>
+    <text x="456" y="584" font-size="12.5" font-weight="600" fill="#18181b">nova-design</text>
+    <text x="456" y="602" fill="#52525b">新设计体系 · 只读</text>
+
+    <rect x="520" y="560" width="112" height="56" rx="8" fill="#fafafa" stroke="#d4d4d8"/>
+    <text x="576" y="584" font-size="12.5" font-weight="600" fill="#18181b">foundation-web</text>
+    <text x="576" y="602" fill="#52525b">基建仓 · 只读</text>
+
+    <rect x="640" y="560" width="120" height="56" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.5"/>
+    <text x="700" y="584" font-size="12.5" font-weight="600" fill="#b45309">shop-web</text>
+    <text x="700" y="602" fill="#b45309">React 18 · 唯一可写</text>
+  </g>
+</svg>

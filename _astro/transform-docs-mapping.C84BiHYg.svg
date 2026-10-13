@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- before / doc annotations -->
+  <text x="90" y="18" text-anchor="middle" font-size="11" fill="#555">before = docs[0]</text>
+  <line x1="90" y1="24" x2="90" y2="46" stroke="#999" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="540" y="18" text-anchor="middle" font-size="11" fill="#555">doc 字段（当前文档）</text>
+  <line x1="540" y1="24" x2="540" y2="46" stroke="#999" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- document chain -->
+  <rect x="40" y="48" width="100" height="34" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="90" y="69" text-anchor="middle" font-size="12" fill="#2c4a73">doc₀</text>
+  <rect x="190" y="48" width="100" height="34" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="240" y="69" text-anchor="middle" font-size="12" fill="#2c4a73">doc₁</text>
+  <rect x="340" y="48" width="100" height="34" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="390" y="69" text-anchor="middle" font-size="12" fill="#2c4a73">doc₂</text>
+  <rect x="490" y="48" width="100" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="540" y="69" text-anchor="middle" font-size="12" fill="#2c4a73">doc₃</text>
+
+  <line x1="140" y1="65" x2="190" y2="65" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="165" y="44" text-anchor="middle" font-size="11" fill="#6b4c22">step₁</text>
+  <line x1="290" y1="65" x2="340" y2="65" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="315" y="44" text-anchor="middle" font-size="11" fill="#6b4c22">step₂</text>
+  <line x1="440" y1="65" x2="490" y2="65" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="465" y="44" text-anchor="middle" font-size="11" fill="#6b4c22">step₃</text>
+  <text x="315" y="104" text-anchor="middle" font-size="11" fill="#555">应用三步之后的 Transform 内部状态</text>
+
+  <!-- steps array -->
+  <text x="128" y="150" text-anchor="end" font-size="12" fill="#333">steps</text>
+  <rect x="140" y="132" width="110" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="195" y="153" text-anchor="middle" font-size="12" fill="#6b4c22">step₁</text>
+  <rect x="260" y="132" width="110" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="315" y="153" text-anchor="middle" font-size="12" fill="#6b4c22">step₂</text>
+  <rect x="380" y="132" width="110" height="32" fill="#f7eee4" stroke="#a5783f"/>
+  <text x="435" y="153" text-anchor="middle" font-size="12" fill="#6b4c22">step₃</text>
+
+  <!-- docs array -->
+  <text x="128" y="192" text-anchor="end" font-size="12" fill="#333">docs</text>
+  <rect x="140" y="174" width="110" height="32" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="195" y="195" text-anchor="middle" font-size="12" fill="#2c4a73">doc₀</text>
+  <rect x="260" y="174" width="110" height="32" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="315" y="195" text-anchor="middle" font-size="12" fill="#2c4a73">doc₁</text>
+  <rect x="380" y="174" width="110" height="32" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="435" y="195" text-anchor="middle" font-size="12" fill="#2c4a73">doc₂</text>
+
+  <!-- mapping array -->
+  <text x="128" y="234" text-anchor="end" font-size="12" fill="#333">mapping.maps</text>
+  <rect x="140" y="216" width="110" height="32" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="195" y="237" text-anchor="middle" font-size="12" fill="#2e5a3c">map₁</text>
+  <rect x="260" y="216" width="110" height="32" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="315" y="237" text-anchor="middle" font-size="12" fill="#2e5a3c">map₂</text>
+  <rect x="380" y="216" width="110" height="32" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="435" y="237" text-anchor="middle" font-size="12" fill="#2e5a3c">map₃</text>
+
+  <text x="320" y="282" text-anchor="middle" font-size="11" fill="#555">steps[i] 作用于 docs[i] 得到 docs[i+1]；mapᵢ = steps[i].getMap()；三个数组在 addStep 里同步增长</text>
+</svg>

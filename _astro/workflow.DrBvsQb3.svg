@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <rect width="1600" height="600" fill="#faf9f7" rx="12"/>
+  <text x="800" y="48" text-anchor="middle" font-size="26" font-weight="700" fill="#1f1e1c">agent-skills：一次改动的完整闭环</text>
+  <text x="800" y="78" text-anchor="middle" font-size="15" fill="#6e6a63">Matt Pocock「Skills For Real Engineers」仓库中 engineering 类技能的典型串联方式</text>
+
+  <!-- legend -->
+  <rect x="1080" y="96" width="16" height="16" rx="4" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="1104" y="109" font-size="13" fill="#4a463f">user-invoked（只能手动触发，负责编排）</text>
+  <rect x="1080" y="120" width="16" height="16" rx="4" fill="#f1eefb" stroke="#6b4fbb" stroke-width="2"/>
+  <text x="1104" y="133" font-size="13" fill="#4a463f">model-invoked（agent 可自动调用，承载纪律）</text>
+
+  <!-- setup band -->
+  <rect x="60" y="100" width="880" height="64" rx="10" fill="#f4f2ee" stroke="#d8d4cc" stroke-width="1.5"/>
+  <text x="84" y="126" font-size="15" font-weight="700" fill="#4a463f">每仓库一次：/setup-matt-pocock-skills</text>
+  <text x="84" y="150" font-size="13" fill="#6e6a63">选定 issue tracker（GitHub / Linear / 本地文件）· triage 标签 · 文档存放位置</text>
+
+  <!-- main flow boxes: centers 150, 406, 662, 918, 1174, 1430 -->
+  <!-- 1 grill-with-docs -->
+  <rect x="60" y="230" width="180" height="104" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="150" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#b5512f">grill-with-docs</text>
+  <text x="150" y="288" text-anchor="middle" font-size="12.5" fill="#4a463f">逐题追问，对齐需求</text>
+  <text x="150" y="308" text-anchor="middle" font-size="12.5" fill="#4a463f">同步 CONTEXT.md / ADR</text>
+
+  <!-- 2 to-spec -->
+  <rect x="316" y="230" width="180" height="104" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="406" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#b5512f">to-spec</text>
+  <text x="406" y="288" text-anchor="middle" font-size="12.5" fill="#4a463f">对话沉淀为规格</text>
+  <text x="406" y="308" text-anchor="middle" font-size="12.5" fill="#4a463f">发布到 issue tracker</text>
+
+  <!-- 3 to-tickets -->
+  <rect x="572" y="230" width="180" height="104" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="662" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#b5512f">to-tickets</text>
+  <text x="662" y="288" text-anchor="middle" font-size="12.5" fill="#4a463f">拆成 tracer-bullet 票据</text>
+  <text x="662" y="308" text-anchor="middle" font-size="12.5" fill="#4a463f">声明互相阻塞关系</text>
+
+  <!-- 4 implement (contains tdd) -->
+  <rect x="828" y="230" width="180" height="104" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="918" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#b5512f">implement</text>
+  <text x="918" y="288" text-anchor="middle" font-size="12.5" fill="#4a463f">按票据实现</text>
+  <rect x="856" y="296" width="124" height="26" rx="6" fill="#f1eefb" stroke="#6b4fbb" stroke-width="1.5"/>
+  <text x="918" y="313" text-anchor="middle" font-size="12" fill="#56439e">在约定 seam 上跑 tdd</text>
+
+  <!-- 5 code-review -->
+  <rect x="1084" y="230" width="180" height="104" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="1174" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#b5512f">code-review</text>
+  <text x="1174" y="288" text-anchor="middle" font-size="12.5" fill="#4a463f">Standards × Spec 双轴</text>
+  <text x="1174" y="308" text-anchor="middle" font-size="12.5" fill="#4a463f">并行子代理，互不污染</text>
+
+  <!-- 6 commit -->
+  <rect x="1340" y="230" width="180" height="104" rx="10" fill="#f4f2ee" stroke="#8a857c" stroke-width="2"/>
+  <text x="1430" y="262" text-anchor="middle" font-size="15" font-weight="700" fill="#4a463f">commit</text>
+  <text x="1430" y="288" text-anchor="middle" font-size="12.5" fill="#6e6a63">提交当前分支</text>
+  <text x="1430" y="308" text-anchor="middle" font-size="12.5" fill="#6e6a63">规格与代码可追溯</text>
+
+  <!-- arrows -->
+  <g stroke="#d97757" stroke-width="2" fill="#d97757">
+    <line x1="240" y1="282" x2="310" y2="282"/><polygon points="316,282 306,277 306,287"/>
+    <line x1="496" y1="282" x2="566" y2="282"/><polygon points="572,282 562,277 562,287"/>
+    <line x1="752" y1="282" x2="822" y2="282"/><polygon points="828,282 818,277 818,287"/>
+    <line x1="1008" y1="282" x2="1078" y2="282"/><polygon points="1084,282 1074,277 1074,287"/>
+    <line x1="1264" y1="282" x2="1334" y2="282"/><polygon points="1340,282 1330,277 1330,287"/>
+  </g>
+
+  <!-- connector from setup to flow -->
+  <line x1="150" y1="164" x2="150" y2="224" stroke="#b6b0a5" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  <!-- side skills band -->
+  <text x="60" y="396" font-size="15" font-weight="700" fill="#4a463f">主线之外的辅助技能</text>
+
+  <rect x="60" y="412" width="340" height="76" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="84" y="440" font-size="14" font-weight="700" fill="#b5512f">wayfinder</text>
+  <text x="84" y="462" font-size="12.5" fill="#4a463f">单个会话装不下的大工程：decision ticket 地图</text>
+
+  <rect x="424" y="412" width="340" height="76" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="448" y="440" font-size="14" font-weight="700" fill="#b5512f">triage</text>
+  <text x="448" y="462" font-size="12.5" fill="#4a463f">用标签状态机把 issue 推过 triage 各角色</text>
+
+  <rect x="788" y="412" width="340" height="76" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="812" y="440" font-size="14" font-weight="700" fill="#b5512f">handoff</text>
+  <text x="812" y="462" font-size="12.5" fill="#4a463f">压缩当前会话为交接文档，下个 agent 接着干</text>
+
+  <rect x="1152" y="412" width="368" height="76" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="2"/>
+  <text x="1176" y="440" font-size="14" font-weight="700" fill="#b5512f">improve-codebase-architecture</text>
+  <text x="1176" y="462" font-size="12.5" fill="#4a463f">定期扫描大泥球倾向，输出可视化报告再逐个 grill</text>
+
+  <!-- model-invoked note -->
+  <text x="60" y="540" font-size="13" fill="#6e6a63">model-invoked 纪律类技能：tdd · diagnosing-bugs · research · codebase-design · domain-modeling · prototype · resolving-merge-conflicts</text>
+  <text x="60" y="564" font-size="13" fill="#6e6a63">user-invoked 技能之间不允许互相调用；编排技能可以调用纪律技能（如 implement → tdd）</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1000" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="55%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.35" cy="0.4" r="0.75">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="2000" height="1000" fill="url(#bg)"/>
+  <rect width="2000" height="1000" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="140" cy="830" r="3"/><circle cx="200" cy="830" r="3"/><circle cx="260" cy="830" r="3"/><circle cx="320" cy="830" r="3"/><circle cx="380" cy="830" r="3"/><circle cx="440" cy="830" r="3"/><circle cx="500" cy="830" r="3"/><circle cx="560" cy="830" r="3"/><circle cx="620" cy="830" r="3"/><circle cx="680" cy="830" r="3"/>
+    <circle cx="140" cy="880" r="3"/><circle cx="200" cy="880" r="3"/><circle cx="260" cy="880" r="3"/><circle cx="320" cy="880" r="3"/><circle cx="380" cy="880" r="3"/><circle cx="440" cy="880" r="3"/><circle cx="500" cy="880" r="3"/><circle cx="560" cy="880" r="3"/><circle cx="620" cy="880" r="3"/><circle cx="680" cy="880" r="3"/>
+  </g>
+
+  <!-- left typography block -->
+  <text x="136" y="330" fill="#a7f3d0" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="20" letter-spacing="8">AI FIRST · CALM PRODUCTIVITY</text>
+  <text x="130" y="520" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="150" font-weight="700" letter-spacing="3">Vital</text>
+  <text x="140" y="610" fill="#d1fae5" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="34" letter-spacing="4">收集 → 执行 → 复盘,一个安静的个人操作系统</text>
+  <path d="M 140 668 L 470 668" stroke="#a7f3d0" stroke-width="3" opacity="0.6"/>
+  <text x="140" y="728" fill="#a7f3d0" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="20" letter-spacing="3" opacity="0.9">React · Fastify · Drizzle · PostgreSQL</text>
+
+  <!-- right loop: inbox -> todos -> reports -->
+  <ellipse cx="1470" cy="470" rx="300" ry="170" fill="none" stroke="#a7f3d0" stroke-width="4" opacity="0.55"/>
+  <!-- arrowheads along the loop -->
+  <path d="M 1458 286 L 1484 300 L 1458 314 z" fill="#a7f3d0" opacity="0.85"/>
+  <path d="M 1728 584 L 1754 570 L 1748 602 z" fill="#a7f3d0" opacity="0.85"/>
+  <path d="M 1186 570 L 1212 584 L 1192 602 z" fill="#a7f3d0" opacity="0.85"/>
+
+  <!-- node: inbox -->
+  <rect x="1075" y="432" width="190" height="76" rx="18" fill="#ecfdf5"/>
+  <text x="1170" y="480" fill="#065f46" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="26" font-weight="600" text-anchor="middle" letter-spacing="2">收集 Inbox</text>
+  <!-- node: todos -->
+  <rect x="1675" y="432" width="190" height="76" rx="18" fill="#ecfdf5"/>
+  <text x="1770" y="480" fill="#065f46" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="26" font-weight="600" text-anchor="middle" letter-spacing="2">执行 Todos</text>
+  <!-- node: reports -->
+  <rect x="1375" y="602" width="190" height="76" rx="18" fill="#ecfdf5"/>
+  <text x="1470" y="650" fill="#065f46" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="26" font-weight="600" text-anchor="middle" letter-spacing="2">复盘 Reports</text>
+
+  <!-- center check -->
+  <circle cx="1470" cy="470" r="48" fill="#ffffff" opacity="0.12"/>
+  <path d="M 1448 470 l 16 16 l 30 -32" fill="none" stroke="#ecfdf5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- agent chip -->
+  <rect x="1640" y="780" width="260" height="52" rx="26" fill="none" stroke="#a7f3d0" stroke-width="2.5" opacity="0.85"/>
+  <text x="1770" y="815" fill="#a7f3d0" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" text-anchor="middle" letter-spacing="1">agent-ready API + skill</text>
+</svg>

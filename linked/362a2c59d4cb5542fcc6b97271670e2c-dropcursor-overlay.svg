@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="540" viewBox="0 0 760 540" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Flow strip -->
+  <text x="30" y="22" font-size="13" fill="#333" font-weight="bold">dragover 一次事件的处理链（src/dropcursor.ts）</text>
+
+  <rect x="30" y="34" width="128" height="44" fill="#f7f7f5" stroke="#999" stroke-width="1.2" rx="4"/>
+  <text x="94" y="52" text-anchor="middle" font-size="11" fill="#333">posAtCoords</text>
+  <text x="94" y="68" text-anchor="middle" font-size="10" fill="#666">坐标换文档位置</text>
+
+  <line x1="158" y1="56" x2="176" y2="56" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="178" y="34" width="150" height="44" fill="#f7f7f5" stroke="#999" stroke-width="1.2" rx="4"/>
+  <text x="253" y="52" text-anchor="middle" font-size="11" fill="#333">disableDropCursor?</text>
+  <text x="253" y="68" text-anchor="middle" font-size="10" fill="#666">节点 spec 的显式开关</text>
+
+  <line x1="328" y1="56" x2="346" y2="56" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="348" y="34" width="150" height="44" fill="#f7f7f5" stroke="#999" stroke-width="1.2" rx="4"/>
+  <text x="423" y="52" text-anchor="middle" font-size="11" fill="#333">dropPoint</text>
+  <text x="423" y="68" text-anchor="middle" font-size="10" fill="#666">内部拖拽做 schema 校验</text>
+
+  <line x1="498" y1="56" x2="516" y2="56" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="518" y="34" width="100" height="44" fill="#f7f7f5" stroke="#999" stroke-width="1.2" rx="4"/>
+  <text x="568" y="52" text-anchor="middle" font-size="11" fill="#333">setCursor</text>
+  <text x="568" y="68" text-anchor="middle" font-size="10" fill="#666">记录 cursorPos</text>
+
+  <line x1="618" y1="56" x2="636" y2="56" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="638" y="34" width="112" height="44" fill="#f7f7f5" stroke="#999" stroke-width="1.2" rx="4"/>
+  <text x="694" y="52" text-anchor="middle" font-size="11" fill="#333">updateOverlay</text>
+  <text x="694" y="68" text-anchor="middle" font-size="10" fill="#666">算矩形并定位 div</text>
+
+  <!-- Panel A: block case -->
+  <text x="30" y="116" font-size="13" fill="#333" font-weight="bold">块级位置：横向指示线（prosemirror-dropcursor-block）</text>
+
+  <rect x="30" y="128" width="470" height="200" fill="#fbfbfd" stroke="#bbb" stroke-width="1.2"/>
+  <text x="44" y="150" font-size="11" fill="#666">编辑区 DOM</text>
+
+  <rect x="60" y="160" width="410" height="56" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5" rx="3"/>
+  <text x="265" y="184" text-anchor="middle" font-size="11" fill="#2c4a73">paragraph「上面一段文字」</text>
+  <text x="265" y="202" text-anchor="middle" font-size="10" fill="#555">nodeRect.bottom 作为参考边</text>
+
+  <rect x="60" y="228" width="410" height="8" fill="#d4574a"/>
+  <text x="482" y="236" font-size="10" fill="#d4574a">指示线 div，宽 = nodeRect 宽，高 = width 选项（默认 1px）</text>
+
+  <rect x="60" y="248" width="410" height="56" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5" rx="3"/>
+  <text x="265" y="272" text-anchor="middle" font-size="11" fill="#6b5c2e">image（atom 块）</text>
+  <text x="265" y="290" text-anchor="middle" font-size="10" fill="#555">nodeRect.top 作为参考边</text>
+
+  <line x1="90" y1="222" x2="90" y2="222" stroke="none"/>
+  <text x="70" y="132" font-size="0" fill="none">.</text>
+  <path d="M 540 216 L 540 232" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="540" y="206" font-size="10" fill="#555" text-anchor="middle">两侧都有节点时取</text>
+  <text x="540" y="252" font-size="10" fill="#555" text-anchor="middle">bottom 与 top 的中点</text>
+  <path d="M 540 246 L 540 240" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <text x="30" y="352" font-size="10.5" fill="#555">isBlock 分支：用相邻节点的 getBoundingClientRect 拼矩形，不依赖光标位置的字符盒</text>
+
+  <!-- Panel B: inline case -->
+  <text x="30" y="392" font-size="13" fill="#333" font-weight="bold">行内位置：竖向指示线（prosemirror-dropcursor-inline）</text>
+
+  <rect x="30" y="404" width="470" height="110" fill="#fbfbfd" stroke="#bbb" stroke-width="1.2"/>
+  <text x="44" y="426" font-size="11" fill="#666">编辑区 DOM</text>
+
+  <rect x="60" y="438" width="410" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5" rx="3"/>
+  <text x="80" y="470" font-size="14" fill="#2c4a73">拖到这里可以插入<tspan fill="#d4574a" font-weight="bold">|</tspan>文字中间</text>
+
+  <line x1="222" y1="438" x2="222" y2="490" stroke="#d4574a" stroke-width="3"/>
+  <path d="M 540 460 L 240 460" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="560" y="452" font-size="10" fill="#555">coordsAtPos 拿字符盒</text>
+  <text x="560" y="468" font-size="10" fill="#555">宽 = width 选项</text>
+  <text x="560" y="484" font-size="10" fill="#555">高 = 行高</text>
+
+  <text x="30" y="536" font-size="10.5" fill="#555">矩形换算到 offsetParent 坐标系后，以 position: absolute 的 div 落到编辑区旁边，pointer-events: none 不挡事件</text>
+</svg>

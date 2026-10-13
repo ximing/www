@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="system-ui, sans-serif">
+  <text x="400" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#292524">pi-ai 分层：统一类型 → 线缆协议 → Provider → Models</text>
+
+  <!-- Layer 1: unified types -->
+  <rect x="60" y="58" width="680" height="96" rx="12" fill="#f5f4f2"/>
+  <text x="84" y="86" font-size="15" font-weight="700" fill="#44403c">统一类型层（types.ts）</text>
+  <text x="84" y="110" font-size="12.5" fill="#78716c">3 种消息 · 13 种流式事件 · StopReason 6 值 + rawStopReason · Usage 统一五字段</text>
+  <text x="84" y="132" font-size="12.5" fill="#78716c">StreamFunction 契约：不抛异常，失败编码进事件流</text>
+
+  <!-- arrow -->
+  <path d="M400 154 L400 178" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M394 172 L400 180 L406 172" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+
+  <!-- Layer 2: API implementations -->
+  <rect x="60" y="182" width="680" height="176" rx="12" fill="#f0efec"/>
+  <text x="84" y="210" font-size="15" font-weight="700" fill="#44403c">API 实现层：10 个线缆协议</text>
+  <text x="84" y="233" font-size="12.5" fill="#78716c">官方 SDK 钉版本，.lazy.ts 动态 import，首次调用才加载</text>
+  <!-- chips row 1 -->
+  <rect x="84" y="248" width="148" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="158" y="265" text-anchor="middle" font-size="11.5" fill="#57534e">openai-completions</text>
+  <rect x="240" y="248" width="132" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="306" y="265" text-anchor="middle" font-size="11.5" fill="#57534e">openai-responses</text>
+  <rect x="380" y="248" width="160" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="460" y="265" text-anchor="middle" font-size="11.5" fill="#57534e">azure-openai-responses</text>
+  <rect x="548" y="248" width="168" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="632" y="265" text-anchor="middle" font-size="11.5" fill="#57534e">openai-codex-responses</text>
+  <!-- chips row 2 -->
+  <rect x="84" y="282" width="148" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="158" y="299" text-anchor="middle" font-size="11.5" fill="#57534e">anthropic-messages</text>
+  <rect x="240" y="282" width="152" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="316" y="299" text-anchor="middle" font-size="11.5" fill="#57534e">google-generative-ai</text>
+  <rect x="400" y="282" width="112" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="456" y="299" text-anchor="middle" font-size="11.5" fill="#57534e">google-vertex</text>
+  <rect x="520" y="282" width="172" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="606" y="299" text-anchor="middle" font-size="11.5" fill="#57534e">bedrock-converse-stream</text>
+  <!-- chips row 3 -->
+  <rect x="84" y="316" width="156" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="162" y="333" text-anchor="middle" font-size="11.5" fill="#57534e">mistral-conversations</text>
+  <rect x="248" y="316" width="104" height="26" rx="6" fill="#e7e5e4"/>
+  <text x="300" y="333" text-anchor="middle" font-size="11.5" fill="#57534e">pi-messages</text>
+
+  <!-- arrow -->
+  <path d="M400 358 L400 382" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M394 376 L400 384 L406 376" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+
+  <!-- Layer 3: providers -->
+  <rect x="60" y="386" width="680" height="128" rx="12" fill="#f5f4f2"/>
+  <text x="84" y="414" font-size="15" font-weight="700" fill="#44403c">Provider 层：38 家 = catalog + auth + lazy wrapper</text>
+  <text x="84" y="437" font-size="12.5" fill="#78716c">xAI / Groq / OpenRouter / DeepSeek 等复用 openai-completions，不各自实现协议</text>
+  <rect x="84" y="450" width="420" height="30" rx="6" fill="#fae8e2"/>
+  <text x="294" y="469" text-anchor="middle" font-size="12" fill="#b5512f">GitHub Copilot：一个 provider 挂三种 API，按模型派发</text>
+  <text x="84" y="500" font-size="12.5" fill="#78716c">OAuth 订阅登录（Claude Pro/Max · ChatGPT Plus · Copilot）· 凭据锁内双检刷新</text>
+
+  <!-- arrow -->
+  <path d="M400 514 L400 538" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M394 532 L400 540 L406 532" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+
+  <!-- Layer 4: Models -->
+  <rect x="60" y="542" width="680" height="60" rx="12" fill="#f0efec"/>
+  <text x="84" y="568" font-size="15" font-weight="700" fill="#44403c">Models 集合层</text>
+  <text x="84" y="590" font-size="12.5" fill="#78716c">解析 auth → 按模型路由到所属 provider → transformMessages 整备后发请求</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+  </defs>
+  <rect width="700" height="340" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">任务定义与完成条件</text>
+  <text x="350" y="46" text-anchor="middle" fill="#8b949e" font-size="11">Task Definition &amp; Completion Criteria</text>
+
+  <!-- Problem side -->
+  <rect x="40" y="62" width="300" height="30" rx="4" fill="#3a1a1a" stroke="#f85149" stroke-width="1"/>
+  <text x="190" y="82" text-anchor="middle" fill="#f85149" font-size="12">问题：没有任务定义的 Agent</text>
+
+  <text x="55" y="108" fill="#8b949e" font-size="11">❌ Agent 不知道什么时候该停止</text>
+  <text x="55" y="128" fill="#8b949e" font-size="11">❌ Planner 无法正确分解工作</text>
+  <text x="55" y="148" fill="#8b949e" font-size="11">❌ Validator 不知道该验证什么</text>
+  <text x="55" y="168" fill="#8b949e" font-size="11">❌ 长任务容易跑偏或过度执行</text>
+
+  <!-- Arrow -->
+  <text x="348" y="108" fill="#fd7e14" font-size="16" font-weight="bold">→</text>
+
+  <!-- Solution side -->
+  <rect x="360" y="62" width="300" height="30" rx="4" fill="#1a3a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="510" y="82" text-anchor="middle" fill="#3fb950" font-size="12">解决：任务定义包含的内容</text>
+
+  <text x="375" y="108" fill="#8b949e" font-size="11">✅ Goal：明确的目标陈述</text>
+  <text x="375" y="128" fill="#8b949e" font-size="11">✅ Scope：允许/禁止修改的范围</text>
+  <text x="375" y="148" fill="#8b949e" font-size="11">✅ Constraints：约束条件</text>
+  <text x="375" y="168" fill="#8b949e" font-size="11">✅ Acceptance Criteria：完成标准</text>
+  <text x="375" y="188" fill="#8b949e" font-size="11">✅ Definition of Done：可执行的验证器</text>
+  <text x="375" y="208" fill="#8b949e" font-size="11">✅ Evidence：完成证据要求</text>
+
+  <!-- Example YAML Block -->
+  <rect x="40" y="230" width="620" height="100" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="55" y="250" fill="#e6edf3" font-size="12" font-weight="bold">任务定义示例</text>
+  <text x="55" y="270" fill="#8b949e" font-size="11">goal: 修复订单页面首次渲染卡顿</text>
+  <text x="55" y="288" fill="#8b949e" font-size="11">scope: allowed_paths: [app/order/**]  forbidden_paths: [infrastructure/**]</text>
+  <text x="55" y="306" fill="#8b949e" font-size="11">acceptance: [首屏 P95 &lt; 1200ms, 所有测试通过, 不改变接口 Schema]</text>
+  <text x="55" y="324" fill="#8b949e" font-size="11">evidence: [benchmark-before.json, benchmark-after.json, test-report.xml]</text>
+</svg>

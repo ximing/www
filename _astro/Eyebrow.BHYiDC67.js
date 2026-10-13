@@ -1,0 +1,1 @@
+import{t as e}from"./react.CYoUnH_4.js";import{t}from"./jsx-runtime.BW4-RLRh.js";e();var n=t();function r({children:e}){return(0,n.jsx)(`div`,{className:`mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent`,children:e})}export{r as t};

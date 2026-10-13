@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="330" viewBox="0 0 640 330" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <text x="40" y="24" font-size="12" fill="#555">拖拽中的表格：手柄装饰、colgroup 与文档 colwidth 的对应关系</text>
+
+  <!-- table: origin (40,44), col widths 110/130/110, row height 36 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="40" y="44" width="110" height="36" fill="#f5f5f5" stroke="#999"/>
+    <text x="95" y="67" fill="#555">A1</text>
+    <rect x="150" y="44" width="130" height="36" fill="#f5f5f5" stroke="#999"/>
+    <text x="215" y="67" fill="#555">B1（拖拽目标列）</text>
+    <rect x="280" y="44" width="110" height="36" fill="#f5f5f5" stroke="#999"/>
+    <text x="335" y="67" fill="#555">C1</text>
+    <rect x="40" y="80" width="110" height="36" fill="#f5f5f5" stroke="#999"/>
+    <text x="95" y="103" fill="#555">A2</text>
+    <rect x="150" y="80" width="130" height="36" fill="#dce8f7" stroke="#999"/>
+    <text x="215" y="103" fill="#2c4a73">B2（column-resize-dragging）</text>
+    <rect x="280" y="80" width="110" height="36" fill="#f5f5f5" stroke="#999"/>
+    <text x="335" y="103" fill="#555">C2</text>
+  </g>
+
+  <!-- handle at right edge of column B -->
+  <rect x="277" y="44" width="6" height="72" fill="#c0392b" opacity="0.75"/>
+  <line x1="283" y1="58" x2="420" y2="50" stroke="#c0392b" stroke-width="1"/>
+  <text x="424" y="46" font-size="11" fill="#c0392b">div.column-resize-handle</text>
+  <text x="424" y="62" font-size="11" fill="#777">widget 装饰，位置在格末尾 -1</text>
+
+  <text x="424" y="92" font-size="11" fill="#333">拖拽中：只改 col 的 style.width</text>
+  <text x="424" y="110" font-size="11" fill="#333">松手：写回 attrs.colwidth</text>
+
+  <!-- DOM tree -->
+  <text x="40" y="150" font-size="12" fill="#555">TableView 的 DOM 结构</text>
+  <g font-size="12" font-family="SF Mono, Menlo, monospace" fill="#333">
+    <text x="40" y="172">div.tableWrapper（NodeView.dom）</text>
+    <text x="40" y="192">└─ table（--default-cell-min-width: 100px）</text>
+    <text x="64" y="212">├─ colgroup → col × n（style.width 来自 colwidth）</text>
+    <text x="64" y="232">└─ tbody（contentDOM，行与格交给 ViewDesc 渲染）</text>
+  </g>
+
+  <text x="40" y="270" font-size="11" fill="#777">updateColumnsOnResize 负责 colgroup 与文档 colwidth 的同步：构造、update、拖拽预览都走它。</text>
+  <text x="40" y="290" font-size="11" fill="#777">拖拽预览经 overrideCol / overrideValue 只改 DOM；松手后 updateColumnWidth 用 setNodeMarkup 一次写回整列。</text>
+  <text x="40" y="310" font-size="11" fill="#777">TableView.ignoreMutation 忽略 table 与 colgroup 上的 attributes 变化，预览不会被 DOMObserver 读回。</text>
+</svg>

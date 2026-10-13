@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600" role="img" aria-labelledby="title desc">
+  <title id="title">每句话写在哪里</title>
+  <desc id="desc">system prompt 放 schema 表达不了的政策，工具 schema 放参数和格式，harness 注入放会变的项目事实，稳定的编码习惯和具体判断留给模型。</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; fill: #182230; }
+    .title { font-size: 24px; font-weight: 700; }
+    .label { font-size: 20px; font-weight: 700; }
+    .sub { font-size: 15px; fill: #526176; }
+  </style>
+  <rect width="1100" height="600" rx="18" fill="#f8fafc"/>
+  <text x="40" y="46" class="title">每句话写在哪里</text>
+  <text x="40" y="76" class="sub">判断依据：这句约束的是哪个运行时。换模型或换循环时，改的就是对应位置的那几句。</text>
+
+  <rect x="40" y="96" width="1020" height="104" rx="14" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="68" y="136" class="label">system prompt</text>
+  <text x="68" y="166" class="sub">schema 表达不了的政策：什么时候只回答、什么时候改文件、编辑前先读、语气、安全段</text>
+  <text x="68" y="190" class="sub">工具选择政策，例如「有专用搜索就不要用 shell」「编辑每轮一次，读取可以并行」</text>
+
+  <rect x="40" y="216" width="1020" height="104" rx="14" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+  <text x="68" y="256" class="label">工具 schema</text>
+  <text x="68" y="286" class="sub">名字、参数、枚举、会让调用失败的格式：SEARCH/REPLACE 标记、一次读多少行、附件是字符串还是数组</text>
+  <text x="68" y="310" class="sub">Windsurf_Tools、Replit_Functions、Manus_Functions、ZCode Tools.json 都是这个位置</text>
+
+  <rect x="40" y="336" width="1020" height="104" rx="14" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+  <text x="68" y="376" class="label">harness 注入</text>
+  <text x="68" y="406" class="sub">会变的项目事实和状态：CLAUDE.md / AGENTS.md、git status、当前诊断、打开的文件、模式字符串</text>
+  <text x="68" y="430" class="sub">注入块要在 prompt 里说明来源，否则模型会把它当成用户的要求</text>
+
+  <rect x="40" y="456" width="1020" height="104" rx="14" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="68" y="496" class="label">留给模型</text>
+  <text x="68" y="526" class="sub">已经稳定的编码习惯，「先看相邻文件」一句就够；工具返回结构化之后的具体判断</text>
+  <text x="68" y="550" class="sub">不要写进这份任务不存在的流程：空项目的美观要求、另一个评分器的提交义务</text>
+</svg>

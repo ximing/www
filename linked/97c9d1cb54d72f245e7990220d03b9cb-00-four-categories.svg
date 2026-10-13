@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="640" viewBox="0 0 1160 640" role="img" aria-labelledby="title desc">
+  <title id="title">四类 system prompt 各自承担的职责</title>
+  <desc id="desc">按 prompt 替谁干活分成四类：编码 harness、从零生成应用、带计算机或浏览器的长程任务、模型自带的对话人设和安全提示。</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; fill: #182230; }
+    .title { font-size: 26px; font-weight: 700; }
+    .name { font-size: 24px; font-weight: 700; }
+    .sub { font-size: 16px; fill: #526176; }
+  </style>
+  <rect width="1160" height="640" rx="18" fill="#f8fafc"/>
+  <text x="40" y="48" class="title">分类看这段 prompt 替谁干活</text>
+  <text x="40" y="78" class="sub">同一厂商可以同时出现在两类：Claude 的对话提示和 Claude Code 的 CLI 提示写的是两件事。</text>
+
+  <rect x="40" y="104" width="528" height="240" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="68" y="152" class="name">编码 harness</text>
+  <text x="68" y="196" class="sub">默认 git 仓库已经存在，模型搜索、改代码、跑命令</text>
+  <text x="68" y="226" class="sub">循环可长可短：写成阶段，或只剩「提交才算完成」</text>
+  <text x="68" y="256" class="sub">Claude Code、Cursor、Cline、Windsurf、Codex、Droid</text>
+  <text x="68" y="286" class="sub">ZCode、Grok Code Fast</text>
+
+  <rect x="592" y="104" width="528" height="240" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="620" y="152" class="name">从零生成应用</text>
+  <text x="620" y="196" class="sub">用户盯着预览，prompt 的主体是输出契约</text>
+  <text x="620" y="226" class="sub">一次回复交一个代码包，写清沙箱跑不了什么</text>
+  <text x="620" y="256" class="sub">Bolt、Lovable、v0、Replit、Same</text>
+
+  <rect x="40" y="368" width="528" height="240" rx="16" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+  <text x="68" y="416" class="name">长程计算机 / 浏览器</text>
+  <text x="68" y="460" class="sub">环境是一台机器或一个浏览器，任务跨很多步</text>
+  <text x="68" y="490" class="sub">规定怎么观察、怎么停、计划可以在模型外</text>
+  <text x="68" y="520" class="sub">Manus、Devin、MultiOn</text>
+
+  <rect x="592" y="368" width="528" height="240" rx="16" fill="#f5f3ff" stroke="#6d28d9" stroke-width="2"/>
+  <text x="620" y="416" class="name">对话人设和安全提示</text>
+  <text x="620" y="460" class="sub">规定模型是谁、拒绝什么、用什么语气</text>
+  <text x="620" y="490" class="sub">没有仓库循环，最容易被误当成 Agent prompt</text>
+  <text x="620" y="520" class="sub">Claude 4、ChatGPT 4o、Gemini、Grok 4、Kimi</text>
+</svg>

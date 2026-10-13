@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1000 670" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <marker id="arrBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#58a6ff"/></marker>
+    <marker id="arrGreen" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3fb950"/></marker>
+    <marker id="arrYellow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#d29922"/></marker>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+  </defs>
+
+  <rect width="1000" height="670" fill="url(#bg)" rx="8"/>
+
+  <text x="500" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">InstructGPT / ChatGPT：预训练之后的三段训练流水线</text>
+  <text x="500" y="54" text-anchor="middle" fill="#8b949e" font-size="12">SFT → 奖励模型训练 → PPO 优化，训练信号从「文本统计规律」换成「人类偏好」</text>
+
+  <!-- ============ 面板一：SFT ============ -->
+  <rect x="40" y="84" width="270" height="440" rx="8" fill="#0d1117" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="56" y="114" fill="#58a6ff" font-size="15" font-weight="bold">第一步：SFT 指令微调</text>
+  <text x="56" y="132" fill="#8b949e" font-size="11">先教会「答题格式」</text>
+
+  <rect x="56" y="146" width="238" height="70" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="68" y="168" fill="#c9d1d9" font-size="12" font-weight="bold">标注员手写示范</text>
+  <text x="68" y="186" fill="#8b949e" font-size="11">（指令, 期望回答）示范对</text>
+  <text x="68" y="202" fill="#8b949e" font-size="11">一万多条 + API 用户提交</text>
+
+  <line x1="175" y1="216" x2="175" y2="240" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrBlue)"/>
+
+  <rect x="56" y="244" width="238" height="70" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="68" y="266" fill="#c9d1d9" font-size="12" font-weight="bold">在 GPT-3 上有监督微调</text>
+  <text x="68" y="284" fill="#8b949e" font-size="11">目标：逐词预测示范回答</text>
+  <text x="68" y="300" fill="#8b949e" font-size="11">方法同 GPT-1 微调，换数据</text>
+
+  <line x1="175" y1="314" x2="175" y2="338" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrBlue)"/>
+
+  <rect x="56" y="342" width="238" height="56" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1"/>
+  <text x="68" y="364" fill="#c9d1d9" font-size="12" font-weight="bold">得到 SFT 模型</text>
+  <text x="68" y="382" fill="#8b949e" font-size="11">见到指令会正经回答</text>
+
+  <text x="56" y="428" fill="#8b949e" font-size="10.5">局限：示范盖不住提问花样；</text>
+  <text x="56" y="444" fill="#8b949e" font-size="10.5">也没法表达「这个比那个好一点」</text>
+  <text x="56" y="460" fill="#8b949e" font-size="10.5">的细粒度偏好差别</text>
+
+  <!-- ============ 面板二：奖励模型 ============ -->
+  <rect x="340" y="84" width="300" height="440" rx="8" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="356" y="114" fill="#3fb950" font-size="15" font-weight="bold">第二步：训练奖励模型</text>
+  <text x="356" y="132" fill="#8b949e" font-size="11">把「人觉得哪个好」变成分数</text>
+
+  <rect x="356" y="146" width="268" height="56" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="368" y="168" fill="#c9d1d9" font-size="12" font-weight="bold">同一 prompt 采样多个回答</text>
+  <text x="368" y="186" fill="#8b949e" font-size="11">SFT 模型出 4~9 个候选</text>
+
+  <line x1="490" y1="202" x2="490" y2="226" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arrGreen)"/>
+
+  <rect x="356" y="230" width="268" height="70" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="368" y="252" fill="#c9d1d9" font-size="12" font-weight="bold">标注员排序，不打分</text>
+  <text x="368" y="270" fill="#8b949e" font-size="11">从最好到最差，相对比较更稳定</text>
+  <text x="368" y="286" fill="#8b949e" font-size="11">每一对（好, 差）都是一条数据</text>
+
+  <line x1="490" y1="300" x2="490" y2="324" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arrGreen)"/>
+
+  <rect x="356" y="328" width="268" height="70" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="368" y="350" fill="#c9d1d9" font-size="12" font-weight="bold">训练奖励模型 RM</text>
+  <text x="368" y="368" fill="#8b949e" font-size="11">6B 参数，从 SFT 模型改造</text>
+  <text x="368" y="384" fill="#8b949e" font-size="11">输出一个标量分数，pairwise 损失</text>
+
+  <line x1="490" y1="398" x2="490" y2="422" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arrGreen)"/>
+
+  <rect x="356" y="426" width="268" height="52" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="1"/>
+  <text x="368" y="448" fill="#c9d1d9" font-size="12" font-weight="bold">得到「人类偏好打分器」</text>
+  <text x="368" y="466" fill="#8b949e" font-size="11">充当标注员群体的代理</text>
+
+  <!-- ============ 面板三：PPO ============ -->
+  <rect x="670" y="84" width="290" height="440" rx="8" fill="#0d1117" stroke="#d29922" stroke-width="1.5"/>
+  <text x="686" y="114" fill="#d29922" font-size="15" font-weight="bold">第三步：PPO 优化</text>
+  <text x="686" y="132" fill="#8b949e" font-size="11">照着打分把模型往高奖励方向挪</text>
+
+  <rect x="686" y="146" width="258" height="56" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="698" y="168" fill="#c9d1d9" font-size="12" font-weight="bold">新 prompt，当前模型生成回答</text>
+  <text x="698" y="186" fill="#8b949e" font-size="11">模型即强化学习里的「策略」</text>
+
+  <line x1="815" y1="202" x2="815" y2="226" stroke="#d29922" stroke-width="1.5" marker-end="url(#arrYellow)"/>
+
+  <rect x="686" y="230" width="258" height="52" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="698" y="252" fill="#c9d1d9" font-size="12" font-weight="bold">RM 给回答打分</text>
+  <text x="698" y="270" fill="#8b949e" font-size="11">分数即奖励信号</text>
+
+  <line x1="815" y1="282" x2="815" y2="306" stroke="#d29922" stroke-width="1.5" marker-end="url(#arrYellow)"/>
+
+  <rect x="686" y="310" width="258" height="88" rx="6" fill="#161b22" stroke="#d29922" stroke-width="1"/>
+  <text x="698" y="332" fill="#c9d1d9" font-size="12" font-weight="bold">PPO 更新模型参数</text>
+  <text x="698" y="350" fill="#8b949e" font-size="11">目标：奖励分 − KL 惩罚</text>
+  <text x="698" y="366" fill="#8b949e" font-size="11">KL 约束：不许偏离 SFT 太远</text>
+  <text x="698" y="382" fill="#8b949e" font-size="11">防止模型钻打分器空子</text>
+
+  <!-- PPO 循环回路 -->
+  <path d="M 944 354 L 976 354 L 976 174 L 948 174" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrGray)"/>
+  <text x="983" y="268" fill="#8b949e" font-size="11" transform="rotate(90 983 268)">循环多轮</text>
+
+  <!-- ============ 面板间箭头 ============ -->
+  <line x1="312" y1="290" x2="336" y2="290" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="324" y="278" text-anchor="middle" fill="#8b949e" font-size="10.5">SFT</text>
+  <line x1="642" y1="290" x2="666" y2="290" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="654" y="278" text-anchor="middle" fill="#8b949e" font-size="10.5">RM</text>
+
+  <!-- ============ 底部注记 ============ -->
+  <rect x="40" y="545" width="920" height="105" rx="6" fill="#0d1117" stroke="#30363d"/>
+  <text x="56" y="572" fill="#8b949e" font-size="10.5">标注团队：约 40 人（Upwork / Scale AI 招募），先用标注员自写示范做 SFT，再收集排序数据训 RM</text>
+  <text x="56" y="595" fill="#8b949e" font-size="10.5">结果：标注员盲测偏好上，1.3B 的 InstructGPT 胜过 175B 的 GPT-3；ChatGPT 是同套方法换 GPT-3.5 底座加对话数据</text>
+  <text x="56" y="618" fill="#8b949e" font-size="10.5">代价：alignment tax，部分传统 NLP 基准掉分；PPO-ptx 变体混入预训练梯度可补回大部分</text>
+  <text x="56" y="640" fill="#8b949e" font-size="10.5">出处：RLHF 思路出自 Christiano et al. 2017；PPO 出自 Schulman et al. 2017；本流程出自 InstructGPT 论文（2022-03）</text>
+</svg>

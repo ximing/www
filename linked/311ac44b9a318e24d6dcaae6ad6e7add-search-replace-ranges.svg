@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="250" viewBox="0 0 720 250" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <rect width="720" height="250" fill="#ffffff"/>
+
+  <text x="30" y="30" font-size="14" fill="#333333">正则 /(\d+)/ 在文本块字符串 "abc123def" 中命中 "123"，替换文本为 "[$1]"</text>
+
+  <!-- textblock content boxes -->
+  <rect x="60" y="55" width="120" height="44" rx="4" fill="#f0f0f0" stroke="#aaaaaa" stroke-width="1.5"/>
+  <text x="120" y="83" font-size="18" text-anchor="middle" font-family="Menlo, monospace" fill="#1a1a1a">abc</text>
+
+  <rect x="180" y="55" width="120" height="44" rx="4" fill="#fdeec8" stroke="#d9a527" stroke-width="1.5"/>
+  <text x="240" y="83" font-size="18" text-anchor="middle" font-family="Menlo, monospace" fill="#1a1a1a">123</text>
+
+  <rect x="300" y="55" width="120" height="44" rx="4" fill="#f0f0f0" stroke="#aaaaaa" stroke-width="1.5"/>
+  <text x="360" y="83" font-size="18" text-anchor="middle" font-family="Menlo, monospace" fill="#1a1a1a">def</text>
+
+  <!-- match bracket: only over "123" -->
+  <path d="M180 110 L180 118 L300 118 L300 110" fill="none" stroke="#888888" stroke-width="1.2"/>
+  <text x="240" y="134" font-size="12" text-anchor="middle" fill="#666666">命中区间 result.from .. result.to（组 1 同区间）</text>
+
+  <!-- annotations -->
+  <text x="120" y="162" font-size="12" text-anchor="middle" fill="#666666">命中区间外，不参与替换</text>
+  <text x="240" y="162" font-size="12" text-anchor="middle" fill="#a5781a">$1 对应内容，skip，保留不动</text>
+  <text x="360" y="162" font-size="12" text-anchor="middle" fill="#666666">命中区间外，不参与替换</text>
+
+  <!-- zero-width insertion markers -->
+  <path d="M180 55 L180 43" fill="none" stroke="#2f6db3" stroke-width="1.5"/>
+  <text x="180" y="40" font-size="12" text-anchor="middle" fill="#2f6db3">区间 1：零宽，插入 "["</text>
+  <text x="330" y="40" font-size="12" text-anchor="middle" fill="#2f6db3">区间 2：零宽，插入 "]"</text>
+  <path d="M300 43 L300 55" fill="none" stroke="#2f6db3" stroke-width="1.5"/>
+
+  <!-- arrow -->
+  <path d="M470 77 L540 77" fill="none" stroke="#888888" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#888888"/>
+    </marker>
+  </defs>
+
+  <!-- result -->
+  <rect x="555" y="55" width="135" height="44" rx="4" fill="#eef5ec" stroke="#6aa566" stroke-width="1.5"/>
+  <text x="622" y="83" font-size="16" text-anchor="middle" font-family="Menlo, monospace" fill="#1a1a1a">abc[123]def</text>
+  <text x="622" y="118" font-size="12" text-anchor="middle" fill="#666666">替换结果</text>
+
+  <!-- bottom note -->
+  <text x="30" y="216" font-size="13" fill="#333333">getReplacements 产出两条区间，都相对旧文档坐标；调用方倒序应用，或逐条过 transaction 的 mapping。</text>
+</svg>

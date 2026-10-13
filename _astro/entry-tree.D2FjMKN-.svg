@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 680" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b867d"/>
+    </marker>
+    <marker id="accentArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c25b38"/>
+    </marker>
+  </defs>
+
+  <text x="490" y="31" text-anchor="middle" font-size="18" font-weight="700" fill="#1f1e1c">Session：entry 通过 parentId 组成一棵树</text>
+  <text x="490" y="52" text-anchor="middle" font-size="12" fill="#6e6a63">实线表示 child.parentId → parent；橙色路径是当前 context 从 leafId 回溯出的分支</text>
+
+  <!-- 根路径 -->
+  <g>
+    <rect x="370" y="78" width="240" height="54" rx="9" fill="#f4f2ee"/>
+    <text x="490" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#4a463f">e1 · message / user（首条用户输入）</text>
+    <text x="490" y="119" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: null · system prompt 不在树中</text>
+
+    <rect x="370" y="172" width="240" height="54" rx="9" fill="#faf9f7" stroke="#d8d4cc"/>
+    <text x="490" y="194" text-anchor="middle" font-size="14" font-weight="700" fill="#4a463f">e2 · message / assistant</text>
+    <text x="490" y="213" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: e1</text>
+
+    <rect x="370" y="266" width="240" height="54" rx="9" fill="#efedea"/>
+    <text x="490" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#4a463f">e3 · model_change</text>
+    <text x="490" y="307" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: e2</text>
+
+    <rect x="370" y="360" width="240" height="54" rx="9" fill="#fff7f2" stroke="#c25b38" stroke-width="2"/>
+    <text x="490" y="382" text-anchor="middle" font-size="14" font-weight="700" fill="#9f472a">e4 · message / user（分叉点）</text>
+    <text x="490" y="401" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: e3</text>
+  </g>
+
+  <!-- 当前分支 -->
+  <g>
+    <rect x="120" y="468" width="240" height="54" rx="9" fill="#fdf0ea" stroke="#c25b38" stroke-width="1.5"/>
+    <text x="240" y="490" text-anchor="middle" font-size="14" font-weight="700" fill="#9f472a">e5 · branch_summary</text>
+    <text x="240" y="509" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: e4 · fromId: e4</text>
+
+    <rect x="120" y="562" width="240" height="54" rx="9" fill="#fff7f2" stroke="#c25b38" stroke-width="2"/>
+    <text x="240" y="584" text-anchor="middle" font-size="14" font-weight="700" fill="#9f472a">e8 · message / assistant</text>
+    <text x="240" y="603" text-anchor="middle" font-size="11" fill="#6e6a63">parentId: e5 · 当前 leafId</text>
+  </g>
+
+  <!-- 旧分支 -->
+  <g>
+    <rect x="620" y="468" width="240" height="54" rx="9" fill="#f4f2ee"/>
+    <text x="740" y="490" text-anchor="middle" font-size="14" font-weight="700" fill="#6e6a63">e5-old · message / assistant</text>
+    <text x="740" y="509" text-anchor="middle" font-size="11" fill="#8b867d">parentId: e4</text>
+
+    <rect x="620" y="562" width="240" height="54" rx="9" fill="#f4f2ee" stroke="#a8a39a" stroke-dasharray="4 3"/>
+    <text x="740" y="584" text-anchor="middle" font-size="14" font-weight="700" fill="#6e6a63">e6 · leaf</text>
+    <text x="740" y="603" text-anchor="middle" font-size="11" fill="#8b867d">parentId: e5-old · targetId: e4</text>
+  </g>
+
+  <!-- parentId 边（方向：child -> parent） -->
+  <g stroke="#8b867d" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+    <path d="M490 172 L490 136"/>
+    <path d="M490 266 L490 230"/>
+    <path d="M490 360 L490 324"/>
+    <path d="M240 468 C240 437 370 441 475 414"/>
+    <path d="M240 562 L240 526"/>
+    <path d="M740 468 C740 437 610 441 505 414"/>
+    <path d="M740 562 L740 526"/>
+  </g>
+  <g font-size="11" fill="#6e6a63">
+    <text x="503" y="156">parentId</text>
+    <text x="302" y="448">parentId: e4</text>
+    <text x="675" y="448">parentId: e4</text>
+  </g>
+
+  <!-- leaf 的跳转目标 -->
+  <path d="M620 589 C520 560 500 480 490 418" fill="none" stroke="#c25b38" stroke-width="1.7" stroke-dasharray="5 4" marker-end="url(#accentArrow)"/>
+  <text x="530" y="535" font-size="12" fill="#9f472a">leaf.targetId = e4：跳回分叉点</text>
+
+  <!-- 当前 leafId 指针 -->
+  <rect x="20" y="567" width="82" height="44" rx="8" fill="#fff7f2" stroke="#c25b38" stroke-width="1.5"/>
+  <text x="61" y="585" text-anchor="middle" font-size="12" font-weight="700" fill="#9f472a">Session</text>
+  <text x="61" y="601" text-anchor="middle" font-size="11" fill="#9f472a">leafId = e8</text>
+  <path d="M105 589 L116 589" fill="none" stroke="#c25b38" stroke-width="1.7" marker-end="url(#accentArrow)"/>
+
+  <!-- 图例及解释 -->
+  <g font-size="12" fill="#4a463f">
+    <text x="370" y="645">从 e6 执行 moveTo(e4)：先追加 leaf entry（e6，parentId 接在旧分支，targetId=e4），随后 Session.leafId 改为 e4。</text>
+    <text x="370" y="665">后续 entry 以 e4 为 parentId 长出新分支；旧分支的 entry 不会被删除。当前 context 只沿 e8 → e5 → e4 → e3… 回溯。</text>
+  </g>
+</svg>

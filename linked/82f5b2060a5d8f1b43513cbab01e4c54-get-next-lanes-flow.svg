@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 480" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="680" height="480" fill="#ffffff"/>
+
+  <rect x="40" y="20" width="440" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="56" y="46" font-size="13" fill="#0f172a">1. pendingLanes 为空 → 返回 NoLanes，无可调度渲染</text>
+
+  <line x1="260" y1="62" x2="260" y2="78" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="82" width="440" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="56" y="108" font-size="13" fill="#0f172a">2. 只看 non-idle 位：pendingLanes &amp; NonIdleLanes</text>
+
+  <line x1="260" y1="124" x2="260" y2="140" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="144" width="440" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="56" y="170" font-size="13" fill="#0f172a">3. 排除 suspendedLanes；全挂起则退到 pingedLanes</text>
+  <text x="496" y="170" font-size="12" fill="#b91c1c">仍为空 → 返回 NoLanes</text>
+
+  <line x1="260" y1="186" x2="260" y2="202" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="206" width="440" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="56" y="224" font-size="13" fill="#0f172a">4. getHighestPriorityLanes 取最高优先级所在的组</text>
+  <text x="56" y="240" font-size="11" fill="#64748b">transition 组整组返回，多个挂起 transition 自动合批</text>
+
+  <line x1="260" y1="248" x2="260" y2="264" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="268" width="440" height="56" rx="6" fill="#fefce8" stroke="#ca8a04"/>
+  <text x="56" y="288" font-size="13" fill="#0f172a">5. 与 wipLanes 比较：新工作不更紧急则返回 wipLanes</text>
+  <text x="56" y="306" font-size="11" fill="#64748b">位值小者优先级高；Default 不打断 transition 是特例</text>
+  <text x="496" y="292" font-size="12" fill="#b91c1c">位值更小 → 打断</text>
+  <text x="496" y="308" font-size="12" fill="#b91c1c">旧渲染进度丢弃</text>
+
+  <line x1="260" y1="324" x2="260" y2="340" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="344" width="440" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="56" y="370" font-size="13" fill="#0f172a">6. sync-by-default 下 InputContinuous 并入 Default</text>
+
+  <line x1="260" y1="386" x2="260" y2="402" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="406" width="440" height="42" rx="6" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="56" y="432" font-size="13" fill="#0f172a">7. 并入 entangled lanes，返回 nextLanes</text>
+</svg>

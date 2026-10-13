@@ -1,0 +1,45 @@
+<svg viewBox="0 0 980 680" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="unit" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="case" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="spec" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a16"/><stop offset="100%" stop-color="#62451e"/></linearGradient>
+    <linearGradient id="framework" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+  </defs>
+  <rect width="980" height="680" rx="8" fill="url(#bg)"/>
+  <text x="490" y="38" text-anchor="middle" fill="#e6edf3" font-family="'Segoe UI','SF Pro',sans-serif" font-size="18" font-weight="bold">JSVM3 测试分层：由可观察行为建立兼容性证据</text>
+  <text x="490" y="61" text-anchor="middle" fill="#8b949e" font-size="11">统计口径：仓库当前未注释的 Jest it/test 声明；四层均通过 helper.run() 走完整编译与执行路径</text>
+
+  <path d="M490 102 L150 550 L830 550 Z" fill="#0d1117" stroke="#30363d" stroke-width="1.5"/>
+  <path d="M490 102 L392 232 L588 232 Z" fill="url(#framework)" filter="url(#glow)"/>
+  <path d="M392 242 L302 362 L678 362 L588 242 Z" fill="url(#spec)" filter="url(#glow)"/>
+  <path d="M302 372 L212 492 L768 492 L678 372 Z" fill="url(#case)" filter="url(#glow)"/>
+  <path d="M212 502 L150 585 L830 585 L768 502 Z" fill="url(#unit)" filter="url(#glow)"/>
+
+  <text x="490" y="161" text-anchor="middle" fill="#d2a8ff" font-size="13" font-weight="bold">第三方构建产物验证</text>
+  <text x="490" y="183" text-anchor="middle" fill="#c9d1d9" font-size="10.5">lodash：4 文件 / 35 用例，加载 framework/lodash/lodash.out.js</text>
+  <text x="490" y="202" text-anchor="middle" fill="#8b949e" font-size="10">React case 位于 framework/react-case，但调用 old-src/vm，不是当前 JSVM3 的 Jest 验证</text>
+
+  <text x="490" y="288" text-anchor="middle" fill="#f2cc60" font-size="13" font-weight="bold">规范片段</text>
+  <text x="490" y="310" text-anchor="middle" fill="#c9d1d9" font-size="10.5">es5-testsuite：7 文件 / 39 用例</text>
+  <text x="490" y="329" text-anchor="middle" fill="#8b949e" font-size="10">覆盖 10.6、11.1、11.4、11.13、12.14、15.2、15.7 节的选取条目</text>
+
+  <text x="490" y="414" text-anchor="middle" fill="#56d364" font-size="13" font-weight="bold">语义 case</text>
+  <text x="490" y="436" text-anchor="middle" fill="#c9d1d9" font-size="10.5">case：7 文件 / 13 用例</text>
+  <text x="490" y="455" text-anchor="middle" fill="#8b949e" font-size="10">回调命名、链式调用、for-in、apply this、esbuild 输出等组合路径</text>
+
+  <text x="490" y="537" text-anchor="middle" fill="#79c0ff" font-size="13" font-weight="bold">语法单元与基础行为</text>
+  <text x="490" y="559" text-anchor="middle" fill="#c9d1d9" font-size="10.5">es5：27 文件 / 172 用例　　es2015：2 个实际 .test.ts 文件 / 5 用例</text>
+  <text x="490" y="578" text-anchor="middle" fill="#8b949e" font-size="10">表达式、语句、函数、作用域、原型链、异常；并非独立 parse 或 compile-only 测试</text>
+
+  <text x="52" y="122" fill="#8b949e" font-size="10">证据对象</text>
+  <path d="M96 117 L170 117 L170 532" fill="none" stroke="#8b949e" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <text x="52" y="143" fill="#8b949e" font-size="10">组合行为</text>
+  <text x="52" y="164" fill="#8b949e" font-size="10">规范细节</text>
+  <text x="52" y="185" fill="#8b949e" font-size="10">局部语义</text>
+
+  <rect x="110" y="612" width="760" height="42" rx="5" fill="#161b22" stroke="#30363d"/>
+  <text x="490" y="638" text-anchor="middle" fill="#c9d1d9" font-size="11">兼容性结论的最小单位是：给定输入、上下文与结果断言下，程序产生了预期的可观察行为。</text>
+</svg>

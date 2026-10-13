@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 420" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="680" height="420" fill="#ffffff"/>
+
+  <rect x="150" y="20" width="380" height="44" rx="6" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="340" y="38" font-size="13" fill="#1e1b4b" text-anchor="middle">start(callback)（useTransition 返回的函数）</text>
+  <text x="340" y="54" font-size="11" fill="#4338ca" text-anchor="middle">或 React.startTransition(scope)</text>
+
+  <line x1="340" y1="64" x2="340" y2="86" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="90" width="380" height="42" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="340" y="108" font-size="13" fill="#0f172a" text-anchor="middle">ReactCurrentBatchConfig.transition = 1</text>
+  <text x="340" y="124" font-size="11" fill="#64748b" text-anchor="middle">模块级上下文，reconciler 经 ReactSharedInternals 读到同一份</text>
+
+  <line x1="240" y1="132" x2="160" y2="168" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="440" y1="132" x2="520" y2="168" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="172" width="270" height="56" rx="6" fill="#fef3c7" stroke="#d97706"/>
+  <text x="175" y="192" font-size="12" fill="#78350f" text-anchor="middle">setPending(true)（仅 useTransition）</text>
+  <text x="175" y="208" font-size="11" fill="#92400e" text-anchor="middle">updatePriority 提到 ContinuousEventPriority</text>
+  <text x="175" y="222" font-size="11" fill="#92400e" text-anchor="middle">在 transition 置 1 之前发出</text>
+
+  <rect x="370" y="172" width="270" height="56" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="505" y="192" font-size="12" fill="#0f172a" text-anchor="middle">setPending(false) + callback()</text>
+  <text x="505" y="208" font-size="11" fill="#64748b" text-anchor="middle">在 transition = 1 的作用域内发出</text>
+  <text x="505" y="222" font-size="11" fill="#64748b" text-anchor="middle">同一事件，合并进同一批渲染</text>
+
+  <line x1="175" y1="228" x2="175" y2="262" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="505" y1="228" x2="505" y2="262" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="266" width="270" height="52" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="175" y="288" font-size="12" fill="#0f172a" text-anchor="middle">requestUpdateLane 返回 InputContinuousLane</text>
+  <text x="175" y="306" font-size="11" fill="#64748b" text-anchor="middle">连续输入优先级，抢先提交</text>
+
+  <rect x="370" y="266" width="270" height="52" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="505" y="288" font-size="12" fill="#0f172a" text-anchor="middle">requestUpdateLane 走 transition 分支</text>
+  <text x="505" y="306" font-size="11" fill="#64748b" text-anchor="middle">claimNextTransitionLane 领一条 TransitionLane</text>
+
+  <line x1="175" y1="318" x2="175" y2="352" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="505" y1="318" x2="505" y2="352" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="40" y="356" width="270" height="44" rx="6" fill="#ecfdf5" stroke="#059669"/>
+  <text x="175" y="376" font-size="12" fill="#065f46" text-anchor="middle">第一次提交：isPending = true</text>
+  <text x="175" y="392" font-size="11" fill="#047857" text-anchor="middle">界面显示加载态，旧内容保持可交互</text>
+
+  <rect x="370" y="356" width="270" height="44" rx="6" fill="#ecfdf5" stroke="#059669"/>
+  <text x="505" y="376" font-size="12" fill="#065f46" text-anchor="middle">第二次提交：transition 渲染完成</text>
+  <text x="505" y="392" font-size="11" fill="#047857" text-anchor="middle">isPending = false，新内容上屏</text>
+</svg>

@@ -1,0 +1,132 @@
+<svg viewBox="0 0 980 700" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="stageSource" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a365d"/><stop offset="100%" stop-color="#2a4a7f"/></linearGradient>
+    <linearGradient id="stageAst" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="stageEmitter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#5c4228"/></linearGradient>
+    <linearGradient id="stageScript" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="stageFiber" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="stageFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a1a1a"/><stop offset="100%" stop-color="#5c2828"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+  </defs>
+
+  <rect width="980" height="700" fill="url(#bg)" rx="8"/>
+
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">JSVM3 编译与执行分层</text>
+  <text x="490" y="54" text-anchor="middle" fill="#8b949e" font-size="12">从源码到 Script，再由 Fiber/Frame 逐条执行</text>
+
+  <!-- Phase labels -->
+  <rect x="30" y="76" width="560" height="26" rx="4" fill="none" stroke="#d29922" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="310" y="94" text-anchor="middle" fill="#d29922" font-size="12" font-weight="bold">编译期（compiler/index.ts · transform）</text>
+
+  <rect x="620" y="76" width="330" height="26" rx="4" fill="none" stroke="#56d4dd" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="785" y="94" text-anchor="middle" fill="#56d4dd" font-size="12" font-weight="bold">运行期（vm/vm.ts · JSVM.exec）</text>
+
+  <!-- Stage 1: Source -->
+  <rect x="30" y="120" width="150" height="90" rx="6" fill="url(#stageSource)" filter="url(#glow)"/>
+  <text x="105" y="144" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">① 源码字符串</text>
+  <text x="105" y="164" text-anchor="middle" fill="#c9d1d9" font-size="11">const a = 1 + 2;</text>
+  <text x="105" y="184" text-anchor="middle" fill="#8b949e" font-size="10">@babel/preset-env</text>
+  <text x="105" y="198" text-anchor="middle" fill="#8b949e" font-size="10">降级到 ES5</text>
+
+  <!-- Stage 2: AST -->
+  <rect x="210" y="120" width="150" height="90" rx="6" fill="url(#stageAst)" filter="url(#glow)"/>
+  <text x="285" y="144" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="bold">② ES5 AST</text>
+  <text x="285" y="164" text-anchor="middle" fill="#c9d1d9" font-size="11">@babel/parser</text>
+  <text x="285" y="184" text-anchor="middle" fill="#8b949e" font-size="10">hoisting / 常量折叠</text>
+  <text x="285" y="198" text-anchor="middle" fill="#8b949e" font-size="10">等 babel 插件预处理</text>
+
+  <!-- Stage 3: Emitter -->
+  <rect x="390" y="120" width="190" height="90" rx="6" fill="url(#stageEmitter)" filter="url(#glow)"/>
+  <text x="485" y="144" text-anchor="middle" fill="#d29922" font-size="13" font-weight="bold">③ Emitter.visit()</text>
+  <text x="485" y="164" text-anchor="middle" fill="#c9d1d9" font-size="11">compiler/emitter.ts</text>
+  <text x="485" y="184" text-anchor="middle" fill="#8b949e" font-size="10">按 AST 节点类型生成指令</text>
+  <text x="485" y="198" text-anchor="middle" fill="#8b949e" font-size="10">createINS(op, ...args)</text>
+
+  <!-- Stage 4: Script -->
+  <rect x="620" y="120" width="330" height="150" rx="6" fill="url(#stageScript)" filter="url(#glow)"/>
+  <text x="785" y="144" text-anchor="middle" fill="#a371f7" font-size="13" font-weight="bold">④ Script（emitter.end() 产出）</text>
+  <text x="785" y="164" text-anchor="middle" fill="#c9d1d9" font-size="11">vm/script.ts</text>
+  <line x1="640" y1="174" x2="960" y2="174" stroke="#46285c" stroke-width="1"/>
+  <text x="640" y="192" fill="#8b949e" font-size="11">instructions: Instruction[]</text>
+  <text x="640" y="209" fill="#8b949e" font-size="11">children: Script[]（嵌套函数）</text>
+  <text x="640" y="226" fill="#8b949e" font-size="11">localNames / globalNames</text>
+  <text x="640" y="243" fill="#8b949e" font-size="11">guards: Guard[]（try/catch 边界）</text>
+  <text x="640" y="260" fill="#8b949e" font-size="11">stackSize（求值栈上限）</text>
+
+  <!-- Arrows stage1->2->3->4 -->
+  <line x1="180" y1="165" x2="205" y2="165" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="360" y1="165" x2="385" y2="165" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="580" y1="165" x2="615" y2="165" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Divider between compile time and run time -->
+  <line x1="785" y1="270" x2="785" y2="300" stroke="#56d4dd" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="800" y="290" fill="#56d4dd" font-size="10">JSVM.exec(script)</text>
+
+  <!-- Stage 5: Fiber -->
+  <rect x="620" y="305" width="330" height="110" rx="6" fill="url(#stageFiber)" filter="url(#glow)"/>
+  <text x="785" y="329" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">⑤ Fiber（vm/fiber.ts）</text>
+  <line x1="640" y1="339" x2="960" y2="339" stroke="#28425c" stroke-width="1"/>
+  <text x="640" y="357" fill="#8b949e" font-size="11">pushFrame(script, globalObj) 建立调用栈</text>
+  <text x="640" y="374" fill="#8b949e" font-size="11">callStack / depth / timeout</text>
+  <text x="640" y="391" fill="#8b949e" font-size="11">run() 循环驱动 Frame，unwind() 处理异常</text>
+  <text x="640" y="407" fill="#8b949e" font-size="11">r1/r2/r3 临时寄存器、rexp 表达式寄存器</text>
+
+  <line x1="785" y1="415" x2="785" y2="445" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Stage 6: Frame -->
+  <rect x="620" y="450" width="330" height="150" rx="6" fill="url(#stageFrame)" filter="url(#glow)"/>
+  <text x="785" y="474" text-anchor="middle" fill="#f85149" font-size="13" font-weight="bold">⑥ Frame.run()（vm/frame.ts）</text>
+  <line x1="640" y1="484" x2="960" y2="484" stroke="#5c2828" stroke-width="1"/>
+  <text x="640" y="502" fill="#8b949e" font-size="11">while (ip !== exitIp) 取指令、执行、ip++</text>
+  <text x="640" y="519" fill="#8b949e" font-size="11">evalStack: EvaluationStack（求值栈）</text>
+  <text x="640" y="536" fill="#8b949e" font-size="11">_scope: Scope（局部变量存取）</text>
+  <text x="640" y="553" fill="#8b949e" font-size="11">ins.run(frame, evalStack, scope, realm, args)</text>
+  <text x="640" y="570" fill="#8b949e" font-size="11">不递归遍历 AST，只按 ip 顺序执行指令数组</text>
+  <text x="640" y="587" fill="#8b949e" font-size="11">遇 FUNCTION 指令时用 children[i] 创建新 Frame</text>
+
+  <!-- Feedback: Frame creates child frame from Script.children -->
+  <path d="M 615 490 C 560 490, 560 200, 585 165" fill="none" stroke="#a371f7" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="500" y="330" fill="#a371f7" font-size="10" transform="rotate(-90,500,330)" text-anchor="middle">script.children[i] 供函数调用取用</text>
+
+  <!-- Example strip -->
+  <rect x="30" y="230" width="550" height="290" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="45" y="253" fill="#e6edf3" font-size="12" font-weight="bold">示例：function add(x) { return x + 2; } 编译产物（真实反汇编，节选核心指令）</text>
+  <text x="45" y="272" fill="#8b949e" font-size="10">来自 demo/src/disassemble.ts 对 transform() 结果的反汇编，省略 LINE/COLUMN 行列号指令</text>
+
+  <g font-size="11" fill="#c9d1d9">
+    <text x="45" y="295">0000  FUNCTION        [0, 0]   ; add</text>
+    <text x="45" y="311">0001  SETG            [0]      ; add</text>
+    <text x="45" y="327">0002  POP</text>
+  </g>
+  <text x="45" y="349" fill="#d29922" font-size="10">─ add 子 Script（stackSize:6 locals:[x]） ─</text>
+  <g font-size="11" fill="#c9d1d9">
+    <text x="55" y="368">0000  FUNCTION_SETUP  [true]</text>
+    <text x="55" y="384">0003  LITERAL         [0]</text>
+    <text x="55" y="400">0005  GETL            [0, 1]   ; arguments</text>
+    <text x="55" y="416">0006  GET</text>
+    <text x="55" y="432">0007  SETL            [0, 3]   ; x</text>
+    <text x="55" y="448">0008  SREXP</text>
+    <text x="55" y="464">0011  GETL            [0, 3]   ; x</text>
+    <text x="55" y="480">0013  LITERAL         [2]</text>
+    <text x="55" y="496">0014  ADD</text>
+    <text x="55" y="512">0015  RETV</text>
+  </g>
+
+  <!-- Note about constant folding -->
+  <rect x="30" y="530" width="550" height="60" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="45" y="552" fill="#8b949e" font-size="11">对照：const a = 1 + 2; 会被编译期 minify-constant-folding</text>
+  <text x="45" y="569" fill="#8b949e" font-size="11">插件直接折叠为 LITERAL [3]，指令序列中不出现 ADD。</text>
+
+  <!-- Legend -->
+  <rect x="30" y="610" width="920" height="60" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="45" y="622" width="12" height="12" rx="2" fill="#d29922"/>
+  <text x="62" y="633" fill="#8b949e" font-size="11">编译期：理解语法结构，产出可序列化的 Script</text>
+  <rect x="45" y="642" width="12" height="12" rx="2" fill="#56d4dd"/>
+  <text x="62" y="653" fill="#8b949e" font-size="11">运行期：不再触碰 AST，只按指令数组和 ip 执行</text>
+  <rect x="490" y="622" width="12" height="12" rx="2" fill="#a371f7"/>
+  <text x="507" y="633" fill="#8b949e" font-size="11">Script.children 连接父子函数编译产物</text>
+  <rect x="490" y="642" width="12" height="12" rx="2" fill="#f85149"/>
+  <text x="507" y="653" fill="#8b949e" font-size="11">Frame 是单次函数调用的执行上下文</text>
+</svg>

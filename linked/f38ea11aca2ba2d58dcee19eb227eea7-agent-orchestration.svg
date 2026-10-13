@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 680" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <rect width="1600" height="680" fill="#faf9f7" rx="12"/>
+  <text x="800" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#1f1e1c">多 Agent 编排：从 PRD 到交付</text>
+  <text x="800" y="82" text-anchor="middle" font-size="15" fill="#6e6a63">协调者分派任务，产物逐级流转，每一步都有明确的验收标准</text>
+
+  <!-- orchestrator -->
+  <rect x="620" y="110" width="360" height="68" rx="10" fill="#fdf0ea" stroke="#d97757" stroke-width="1.5"/>
+  <text x="800" y="140" text-anchor="middle" font-size="17" font-weight="700" fill="#b5512f">协调者</text>
+  <text x="800" y="163" text-anchor="middle" font-size="13" fill="#8a857c">拆分任务 · 分派给各 Agent · 汇总状态</text>
+
+  <!-- dispatch lines -->
+  <line x1="800" y1="178" x2="230" y2="268" stroke="#d97757" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="800" y1="178" x2="610" y2="268" stroke="#d97757" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="800" y1="178" x2="990" y2="268" stroke="#d97757" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="800" y1="178" x2="1370" y2="268" stroke="#d97757" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+  <text x="816" y="226" font-size="12" fill="#b5512f">任务分派 / 状态汇总</text>
+
+  <!-- review gate around upstream agents -->
+  <rect x="46" y="238" width="748" height="176" rx="12" fill="none" stroke="#6b4fbb" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.55"/>
+  <text x="66" y="262" font-size="13" fill="#6b4fbb">上游产物经 Agent Review 通过后才流转</text>
+
+  <!-- PM agent -->
+  <rect x="70" y="272" width="320" height="120" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="230" y="306" text-anchor="middle" font-size="16" font-weight="700" fill="#1f1e1c">PM Agent</text>
+  <text x="230" y="334" text-anchor="middle" font-size="13" fill="#6e6a63">产出 PRD</text>
+  <text x="230" y="358" text-anchor="middle" font-size="13" fill="#8a857c">定义需求与范围</text>
+
+  <!-- architect agent -->
+  <rect x="450" y="272" width="320" height="120" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="610" y="306" text-anchor="middle" font-size="16" font-weight="700" fill="#1f1e1c">架构 Agent</text>
+  <text x="610" y="334" text-anchor="middle" font-size="13" fill="#6e6a63">产出技术方案</text>
+  <text x="610" y="358" text-anchor="middle" font-size="13" fill="#8a857c">一并给出测试用例与验收标准</text>
+
+  <!-- dev agent -->
+  <rect x="830" y="272" width="320" height="120" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="990" y="302" text-anchor="middle" font-size="16" font-weight="700" fill="#1f1e1c">开发 Agent</text>
+  <text x="990" y="328" text-anchor="middle" font-size="13" fill="#6e6a63">Ralph 循环：每轮新会话</text>
+  <text x="990" y="352" text-anchor="middle" font-size="13" fill="#8a857c">记忆落磁盘 prd.json / progress.txt</text>
+  <text x="990" y="376" text-anchor="middle" font-size="13" fill="#8a857c">完成状态外置，逐条交付</text>
+
+  <!-- test agent -->
+  <rect x="1210" y="272" width="320" height="120" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="1370" y="302" text-anchor="middle" font-size="16" font-weight="700" fill="#1f1e1c">测试 Agent</text>
+  <text x="1370" y="328" text-anchor="middle" font-size="13" fill="#6e6a63">e2e 验证</text>
+  <text x="1370" y="352" text-anchor="middle" font-size="13" fill="#8a857c">CSI 操作真实浏览器</text>
+  <text x="1370" y="376" text-anchor="middle" font-size="13" fill="#8a857c">RabJS 断言 Service 状态</text>
+
+  <!-- flow arrows -->
+  <line x1="392" y1="332" x2="446" y2="332" stroke="#6e6a63" stroke-width="2"/>
+  <polygon points="452,332 440,326 440,338" fill="#6e6a63"/>
+  <text x="420" y="318" text-anchor="middle" font-size="12" fill="#6e6a63">PRD</text>
+
+  <line x1="772" y1="332" x2="826" y2="332" stroke="#6e6a63" stroke-width="2"/>
+  <polygon points="832,332 820,326 820,338" fill="#6e6a63"/>
+  <text x="801" y="318" text-anchor="middle" font-size="12" fill="#6e6a63">方案+用例</text>
+
+  <line x1="1152" y1="332" x2="1206" y2="332" stroke="#6e6a63" stroke-width="2"/>
+  <polygon points="1212,332 1200,326 1200,338" fill="#6e6a63"/>
+  <text x="1181" y="318" text-anchor="middle" font-size="12" fill="#6e6a63">代码</text>
+
+  <!-- feedback loop: test -> dev -->
+  <path d="M 1330 392 V 470 H 990 V 398" fill="none" stroke="#c4553d" stroke-width="2" stroke-dasharray="6 4"/>
+  <polygon points="990,392 984,404 996,404" fill="#c4553d"/>
+  <text x="1160" y="494" text-anchor="middle" font-size="13" fill="#c4553d">验证不通过：问题连同状态快照回给开发 Agent 修复</text>
+
+  <!-- success path to delivery -->
+  <line x1="1420" y1="392" x2="1420" y2="516" stroke="#3d8f6f" stroke-width="2"/>
+  <polygon points="1420,522 1414,510 1426,510" fill="#3d8f6f"/>
+  <text x="1436" y="462" font-size="13" fill="#3d8f6f">全部通过</text>
+
+  <!-- delivery box -->
+  <rect x="1260" y="524" width="320" height="72" rx="10" fill="#edf5f1" stroke="#3d8f6f" stroke-width="1.5"/>
+  <text x="1420" y="556" text-anchor="middle" font-size="16" font-weight="700" fill="#2c6e55">交付 / 合并</text>
+  <text x="1420" y="580" text-anchor="middle" font-size="13" fill="#6e6a63">进入下一个功能</text>
+
+  <!-- footer -->
+  <text x="800" y="648" text-anchor="middle" font-size="14" fill="#8a857c">每一步的产物都有明确验收标准：标准是技术方案的一部分，Review 通过才进入下一步</text>
+</svg>

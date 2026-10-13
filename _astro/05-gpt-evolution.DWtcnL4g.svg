@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1000 690" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrGray" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+  </defs>
+
+  <rect width="1000" height="690" fill="url(#bg)" rx="8"/>
+
+  <text x="500" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">GPT-1 → GPT-2 → GPT-3：演进的三条线索</text>
+  <text x="500" y="54" text-anchor="middle" fill="#8b949e" font-size="12">同一骨架下，参数规模、训练范式与能力边界的变化（2018-2020）</text>
+
+  <!-- ============ GPT-1 卡片 ============ -->
+  <rect x="40" y="90" width="280" height="420" rx="8" fill="#0d1117" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="56" y="126" fill="#58a6ff" font-size="18" font-weight="bold">GPT-1</text>
+  <text x="304" y="126" text-anchor="end" fill="#8b949e" font-size="11">2018-06</text>
+  <text x="56" y="160" fill="#e6edf3" font-size="20" font-weight="bold">1.17 亿参数</text>
+
+  <text x="56" y="198" fill="#8b949e" font-size="10">结构</text>
+  <text x="56" y="216" fill="#c9d1d9" font-size="12">12 层 decoder-only · 768 维</text>
+
+  <text x="56" y="250" fill="#8b949e" font-size="10">训练</text>
+  <text x="56" y="268" fill="#c9d1d9" font-size="12">BooksCorpus 七千多本书</text>
+  <text x="56" y="284" fill="#c9d1d9" font-size="12">预训练 + 逐任务微调</text>
+
+  <text x="56" y="318" fill="#8b949e" font-size="10">使用</text>
+  <text x="56" y="336" fill="#c9d1d9" font-size="12">换任务要重新微调</text>
+  <text x="56" y="352" fill="#c9d1d9" font-size="12">靠输入格式变换适配任务</text>
+
+  <text x="56" y="386" fill="#8b949e" font-size="10">能力边界</text>
+  <text x="56" y="404" fill="#c9d1d9" font-size="12">12 项任务中 9 项刷新纪录</text>
+  <text x="56" y="420" fill="#c9d1d9" font-size="12">不微调则只会续写</text>
+
+  <!-- ============ GPT-2 卡片 ============ -->
+  <rect x="360" y="90" width="280" height="420" rx="8" fill="#0d1117" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="376" y="126" fill="#3fb950" font-size="18" font-weight="bold">GPT-2</text>
+  <text x="624" y="126" text-anchor="end" fill="#8b949e" font-size="11">2019-02</text>
+  <text x="376" y="160" fill="#e6edf3" font-size="20" font-weight="bold">15 亿参数</text>
+
+  <text x="376" y="198" fill="#8b949e" font-size="10">结构</text>
+  <text x="376" y="216" fill="#c9d1d9" font-size="12">48 层 · 1600 维</text>
+
+  <text x="376" y="250" fill="#8b949e" font-size="10">训练</text>
+  <text x="376" y="268" fill="#c9d1d9" font-size="12">WebText 约 800 万网页</text>
+  <text x="376" y="284" fill="#c9d1d9" font-size="12">只做预训练，去掉微调</text>
+
+  <text x="376" y="318" fill="#8b949e" font-size="10">使用</text>
+  <text x="376" y="336" fill="#c9d1d9" font-size="12">任务描述直接写进输入</text>
+  <text x="376" y="352" fill="#c9d1d9" font-size="12">零样本（zero-shot）提问</text>
+
+  <text x="376" y="386" fill="#8b949e" font-size="10">能力边界</text>
+  <text x="376" y="404" fill="#c9d1d9" font-size="12">阅读、摘要、翻译能做</text>
+  <text x="376" y="420" fill="#c9d1d9" font-size="12">分数不高但确实非零</text>
+
+  <text x="376" y="454" fill="#8b949e" font-size="10">时代注脚</text>
+  <text x="376" y="472" fill="#c9d1d9" font-size="12">以滥用风险为由</text>
+  <text x="376" y="488" fill="#c9d1d9" font-size="12">分阶段放出模型权重</text>
+
+  <!-- ============ GPT-3 卡片 ============ -->
+  <rect x="680" y="90" width="280" height="420" rx="8" fill="#0d1117" stroke="#d29922" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="696" y="126" fill="#d29922" font-size="18" font-weight="bold">GPT-3</text>
+  <text x="944" y="126" text-anchor="end" fill="#8b949e" font-size="11">2020-05</text>
+  <text x="696" y="160" fill="#e6edf3" font-size="20" font-weight="bold">1750 亿参数</text>
+
+  <text x="696" y="198" fill="#8b949e" font-size="10">结构</text>
+  <text x="696" y="216" fill="#c9d1d9" font-size="12">96 层 · 上下文 2048 token</text>
+
+  <text x="696" y="250" fill="#8b949e" font-size="10">训练</text>
+  <text x="696" y="268" fill="#c9d1d9" font-size="12">约 3000 亿 token</text>
+  <text x="696" y="284" fill="#c9d1d9" font-size="12">以过滤后 Common Crawl 为主</text>
+
+  <text x="696" y="318" fill="#8b949e" font-size="10">使用</text>
+  <text x="696" y="336" fill="#c9d1d9" font-size="12">prompt 内给 0~几十条例子</text>
+  <text x="696" y="352" fill="#c9d1d9" font-size="12">权重不更新（few-shot）</text>
+
+  <text x="696" y="386" fill="#8b949e" font-size="10">能力边界</text>
+  <text x="696" y="404" fill="#c9d1d9" font-size="12">部分任务逼近有监督系统</text>
+  <text x="696" y="420" fill="#c9d1d9" font-size="12">例子利用率随规模上升</text>
+
+  <text x="696" y="454" fill="#8b949e" font-size="10">新名词</text>
+  <text x="696" y="472" fill="#c9d1d9" font-size="12">in-context learning</text>
+  <text x="696" y="488" fill="#c9d1d9" font-size="12">（上下文学习）</text>
+
+  <!-- ============ 参数增长箭头 ============ -->
+  <line x1="322" y1="300" x2="356" y2="300" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="340" y="288" text-anchor="middle" fill="#8b949e" font-size="11">×13</text>
+  <line x1="642" y1="300" x2="676" y2="300" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="660" y="288" text-anchor="middle" fill="#8b949e" font-size="11">×117</text>
+
+  <!-- ============ 底部总结 ============ -->
+  <rect x="40" y="545" width="920" height="110" rx="6" fill="#0d1117" stroke="#30363d"/>
+  <text x="56" y="572" fill="#8b949e" font-size="10.5">共同骨架：decoder-only Transformer + 因果掩码；训练目标始终是「预测下一个词」，三代没有变过</text>
+  <text x="56" y="595" fill="#8b949e" font-size="10.5">三代的变量：参数量（1.17 亿 → 1750 亿，约 ×1500）、训练数据规模、使用界面（微调专用模型 → 直接写 prompt）</text>
+  <text x="56" y="618" fill="#8b949e" font-size="10.5">规模依据：Kaplan（2020-01）的幂律给了放大信心；Chinchilla（2022-03）指出数据一侧欠了账</text>
+  <text x="56" y="641" fill="#8b949e" font-size="10.5">GPT-2 的分阶段发布：2019-02 先放最小版本，全量 15 亿拖到 2019-11 才放出</text>
+</svg>

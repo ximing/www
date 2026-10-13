@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 860" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <rect width="1600" height="860" fill="#faf9f7" rx="12"/>
+  <text x="800" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#1f1e1c">Ralph 循环工作原理</text>
+  <text x="800" y="82" text-anchor="middle" font-size="15" fill="#6e6a63">每轮迭代启动全新 Agent 实例，磁盘文件承担跨迭代记忆</text>
+
+  <!-- dashed loop circle -->
+  <circle cx="600" cy="470" r="250" fill="none" stroke="#d97757" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- arrowheads on circle (clockwise) -->
+  <polygon points="735,260 716,257 723,244" fill="#d97757"/>
+  <polygon points="850,482 843,464 857,464" fill="#d97757"/>
+  <polygon points="715,693 727,677 734,690" fill="#d97757"/>
+  <polygon points="465,680 482,686 478,693" fill="#d97757"/>
+  <polygon points="350,458 346,476 354,476" fill="#d97757"/>
+  <polygon points="485,248 472,260 468,253" fill="#d97757"/>
+
+  <!-- center label -->
+  <text x="600" y="448" text-anchor="middle" font-size="19" font-weight="700" fill="#b5512f">while 循环</text>
+  <text x="600" y="478" text-anchor="middle" font-size="14" fill="#6e6a63">每轮迭代 = 全新上下文窗口</text>
+  <text x="600" y="502" text-anchor="middle" font-size="14" fill="#6e6a63">每轮只完成一个任务</text>
+
+  <!-- Node 1 (top) -->
+  <rect x="485" y="173" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="600" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">① </tspan>启动全新 Agent 实例</text>
+  <text x="600" y="231" text-anchor="middle" font-size="13" fill="#8a857c">上下文窗口清零</text>
+
+  <!-- Node 2 (upper right) -->
+  <rect x="698" y="298" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="813" y="330" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">② </tspan>读取指令、规格、计划</text>
+  <text x="813" y="356" text-anchor="middle" font-size="13" fill="#8a857c">每轮加载内容相同</text>
+
+  <!-- Node 3 (lower right) -->
+  <rect x="698" y="558" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="813" y="590" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">③ </tspan>实现优先级最高的任务</text>
+  <text x="813" y="616" text-anchor="middle" font-size="13" fill="#8a857c">重活交给并行子代理</text>
+
+  <!-- Node 4 (bottom) -->
+  <rect x="485" y="683" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="600" y="715" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">④ </tspan>运行质量门禁</text>
+  <text x="600" y="741" text-anchor="middle" font-size="13" fill="#8a857c">typecheck · lint · test</text>
+
+  <!-- Node 5 (lower left) -->
+  <rect x="272" y="558" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="387" y="590" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">⑤ </tspan>提交代码并写回文件</text>
+  <text x="387" y="616" text-anchor="middle" font-size="13" fill="#8a857c">commit + 更新计划与日志</text>
+
+  <!-- Node 6 (upper left) -->
+  <rect x="272" y="298" width="230" height="84" rx="10" fill="#ffffff" stroke="#e8e2d9"/>
+  <text x="387" y="330" text-anchor="middle" font-size="15" font-weight="700" fill="#1f1e1c"><tspan fill="#d97757">⑥ </tspan>Agent 退出</text>
+  <text x="387" y="356" text-anchor="middle" font-size="13" fill="#8a857c">循环立即进入下一轮</text>
+
+  <!-- memory panel -->
+  <rect x="1050" y="180" width="490" height="600" rx="12" fill="#f3eef9"/>
+  <text x="1295" y="222" text-anchor="middle" font-size="19" font-weight="700" fill="#6b4fbb">持久记忆：磁盘文件</text>
+  <text x="1295" y="248" text-anchor="middle" font-size="13" fill="#8a857c">Agent 每轮退出后上下文消失，状态全靠这些文件</text>
+
+  <rect x="1080" y="278" width="430" height="78" rx="8" fill="#ffffff"/>
+  <text x="1100" y="308" font-size="15" font-weight="700" fill="#1f1e1c">PROMPT.md / CLAUDE.md</text>
+  <text x="1100" y="334" font-size="13" fill="#6e6a63">每轮固定喂给 Agent 的操作指令</text>
+
+  <rect x="1080" y="372" width="430" height="78" rx="8" fill="#ffffff"/>
+  <text x="1100" y="402" font-size="15" font-weight="700" fill="#1f1e1c">specs/</text>
+  <text x="1100" y="428" font-size="13" fill="#6e6a63">需求规格，开工前先与 LLM 对话产出</text>
+
+  <rect x="1080" y="466" width="430" height="78" rx="8" fill="#ffffff"/>
+  <text x="1100" y="496" font-size="15" font-weight="700" fill="#1f1e1c">prd.json / IMPLEMENTATION_PLAN.md</text>
+  <text x="1100" y="522" font-size="13" fill="#6e6a63">任务清单与完成状态，决定下一轮做什么</text>
+
+  <rect x="1080" y="560" width="430" height="78" rx="8" fill="#ffffff"/>
+  <text x="1100" y="590" font-size="15" font-weight="700" fill="#1f1e1c">progress.txt / AGENTS.md</text>
+  <text x="1100" y="616" font-size="13" fill="#6e6a63">跨轮积累的经验教训与操作手册</text>
+
+  <rect x="1080" y="654" width="430" height="78" rx="8" fill="#ffffff"/>
+  <text x="1100" y="684" font-size="15" font-weight="700" fill="#1f1e1c">git 提交历史</text>
+  <text x="1100" y="710" font-size="13" fill="#6e6a63">每轮一个 commit，随时可回滚</text>
+
+  <!-- read/write arrows between loop and panel -->
+  <line x1="1040" y1="330" x2="948" y2="330" stroke="#6b4fbb" stroke-width="2"/>
+  <polygon points="942,330 954,324 954,336" fill="#6b4fbb"/>
+  <text x="994" y="316" text-anchor="middle" font-size="13" fill="#6b4fbb">读取</text>
+
+  <line x1="948" y1="610" x2="1040" y2="610" stroke="#6b4fbb" stroke-width="2"/>
+  <polygon points="1046,610 1034,604 1034,616" fill="#6b4fbb"/>
+  <text x="994" y="634" text-anchor="middle" font-size="13" fill="#6b4fbb">写回</text>
+
+  <!-- footer note -->
+  <text x="800" y="830" text-anchor="middle" font-size="14" fill="#8a857c">退出条件：Agent 输出约定的完成信号（如 &lt;promise&gt;COMPLETE&lt;/promise&gt;），外层脚本检测到后终止循环</text>
+</svg>

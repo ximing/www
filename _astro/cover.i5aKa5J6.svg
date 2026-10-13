@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1000" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="inwit-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#201B16"/>
+      <stop offset="52%" stop-color="#3A2A22"/>
+      <stop offset="100%" stop-color="#6B3328"/>
+    </linearGradient>
+    <radialGradient id="inwit-glow" cx="0.32" cy="0.38" r="0.75">
+      <stop offset="0%" stop-color="#E0654A" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#E0654A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="inwit-paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFEFA"/>
+      <stop offset="100%" stop-color="#F3EDE3"/>
+    </linearGradient>
+    <filter id="inwit-shadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#140E0A" flood-opacity="0.42"/>
+    </filter>
+  </defs>
+
+  <rect width="2000" height="1000" fill="url(#inwit-bg)"/>
+  <rect width="2000" height="1000" fill="url(#inwit-glow)"/>
+
+  <g fill="#EDE6D8" opacity="0.11">
+    <circle cx="140" cy="830" r="3"/><circle cx="200" cy="830" r="3"/><circle cx="260" cy="830" r="3"/><circle cx="320" cy="830" r="3"/><circle cx="380" cy="830" r="3"/><circle cx="440" cy="830" r="3"/><circle cx="500" cy="830" r="3"/><circle cx="560" cy="830" r="3"/><circle cx="620" cy="830" r="3"/><circle cx="680" cy="830" r="3"/>
+    <circle cx="140" cy="880" r="3"/><circle cx="200" cy="880" r="3"/><circle cx="260" cy="880" r="3"/><circle cx="320" cy="880" r="3"/><circle cx="380" cy="880" r="3"/><circle cx="440" cy="880" r="3"/><circle cx="500" cy="880" r="3"/><circle cx="560" cy="880" r="3"/><circle cx="620" cy="880" r="3"/><circle cx="680" cy="880" r="3"/>
+  </g>
+
+  <g transform="translate(136, 168)" fill="#E0654A" stroke="#E0654A">
+    <g transform="scale(3.2)">
+      <circle cx="9.4" cy="7.4" r="2.2" stroke="none"/>
+      <path d="M9.4 12.5 V 24" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M15.6 24 V 14.5 C 15.6 10.8 17.9 8.8 20.7 8.8 C 23.5 8.8 25.6 10.8 25.6 14.5 V 24" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="20.6" cy="20.2" r="2" stroke="none"/>
+    </g>
+  </g>
+
+  <text x="136" y="330" fill="#E8B4A8" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="20" letter-spacing="8">AI FIRST · 纸上学习</text>
+  <text x="128" y="520" fill="#FDFBF7" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="150" font-weight="700" letter-spacing="3">Inwit</text>
+  <text x="140" y="610" fill="#EDE6D8" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="34" letter-spacing="4">收集 → 消化 → 复习,一张纸上的学习闭环</text>
+  <path d="M 140 668 L 560 668" stroke="#E0654A" stroke-width="3" opacity="0.7"/>
+  <text x="140" y="728" fill="#E8B4A8" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="20" letter-spacing="3" opacity="0.9">React · Fastify · Drizzle · PostgreSQL</text>
+
+  <!-- knowledge-map connectors -->
+  <g fill="none" stroke="#E8B4A8" stroke-width="3" opacity="0.55">
+    <path d="M 1280 390 C 1380 390, 1420 470, 1470 520"/>
+    <path d="M 1720 390 C 1620 390, 1560 470, 1510 520"/>
+    <path d="M 1470 640 C 1380 700, 1320 730, 1280 760"/>
+    <path d="M 1510 640 C 1600 700, 1660 730, 1720 760"/>
+  </g>
+
+  <!-- paper: 资料 -->
+  <g filter="url(#inwit-shadow)" transform="rotate(-7 1280 360)">
+    <rect x="1140" y="250" width="280" height="220" rx="18" fill="url(#inwit-paper)"/>
+    <rect x="1170" y="286" width="88" height="22" rx="4" fill="#C2402A" opacity="0.9"/>
+    <text x="1214" y="303" fill="#FFFEFA" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="2">资料</text>
+    <g stroke="#C4B8A4" stroke-width="8" stroke-linecap="round" opacity="0.7">
+      <line x1="1170" y1="344" x2="1368" y2="344"/>
+      <line x1="1170" y1="376" x2="1338" y2="376"/>
+      <line x1="1170" y1="408" x2="1352" y2="408"/>
+    </g>
+  </g>
+
+  <!-- paper: 卡片 -->
+  <g filter="url(#inwit-shadow)" transform="rotate(6 1720 360)">
+    <rect x="1580" y="250" width="280" height="220" rx="18" fill="url(#inwit-paper)"/>
+    <rect x="1610" y="286" width="88" height="22" rx="4" fill="#C2402A" opacity="0.9"/>
+    <text x="1654" y="303" fill="#FFFEFA" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="2">卡片</text>
+    <rect x="1610" y="336" width="220" height="96" rx="10" fill="#F5E0DA"/>
+    <text x="1720" y="374" fill="#292524" font-family="'Songti SC', 'Noto Serif SC', Georgia, serif" font-size="18" font-weight="600" text-anchor="middle">概念 · 例子 · 易混点</text>
+    <text x="1720" y="408" fill="#6B6259" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="14" text-anchor="middle">挂在原文锚点上</text>
+  </g>
+
+  <!-- paper: 主题地图 -->
+  <g filter="url(#inwit-shadow)">
+    <rect x="1340" y="500" width="320" height="180" rx="18" fill="url(#inwit-paper)"/>
+    <rect x="1370" y="528" width="110" height="22" rx="4" fill="#C2402A" opacity="0.9"/>
+    <text x="1425" y="545" fill="#FFFEFA" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="2">知识地图</text>
+    <g>
+      <rect x="1370" y="572" width="84" height="36" rx="8" fill="#EFE9DF"/>
+      <rect x="1468" y="572" width="84" height="36" rx="8" fill="#EFE9DF"/>
+      <rect x="1566" y="572" width="64" height="36" rx="8" fill="#F5E0DA" stroke="#C2402A" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <circle cx="1384" cy="590" r="5" fill="#4A7A52"/>
+      <circle cx="1482" cy="590" r="5" fill="#C08A1E"/>
+      <circle cx="1580" cy="590" r="5" fill="#C2402A"/>
+      <text x="1408" y="595" fill="#292524" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13">已覆盖</text>
+      <text x="1506" y="595" fill="#292524" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13">学习中</text>
+      <text x="1598" y="595" fill="#C2402A" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13">AI 补</text>
+    </g>
+    <g stroke="#C4B8A4" stroke-width="7" stroke-linecap="round" opacity="0.55">
+      <line x1="1370" y1="632" x2="1608" y2="632"/>
+      <line x1="1370" y1="656" x2="1548" y2="656"/>
+    </g>
+  </g>
+
+  <!-- paper: 复习 -->
+  <g filter="url(#inwit-shadow)" transform="rotate(-4 1280 790)">
+    <rect x="1140" y="730" width="280" height="150" rx="18" fill="url(#inwit-paper)"/>
+    <rect x="1170" y="758" width="88" height="22" rx="4" fill="#C2402A" opacity="0.9"/>
+    <text x="1214" y="775" fill="#FFFEFA" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle" letter-spacing="2">复习</text>
+    <text x="1280" y="830" fill="#292524" font-family="'Songti SC', 'Noto Serif SC', Georgia, serif" font-size="28" font-weight="600" text-anchor="middle">忘了 / 模糊 / 想起</text>
+    <text x="1280" y="860" fill="#6B6259" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="16" text-anchor="middle">三档反馈写入 SM-2</text>
+  </g>
+
+  <!-- vermillion seal -->
+  <g transform="translate(1720, 760)">
+    <circle cx="70" cy="70" r="58" fill="none" stroke="#E0654A" stroke-width="4" opacity="0.9"/>
+    <circle cx="70" cy="70" r="48" fill="none" stroke="#E0654A" stroke-width="1.5" opacity="0.7"/>
+    <text x="70" y="82" fill="#E0654A" font-family="'Songti SC', 'Noto Serif SC', Georgia, serif" font-size="36" font-weight="700" text-anchor="middle">习</text>
+  </g>
+
+  <rect x="1640" y="900" width="260" height="52" rx="26" fill="none" stroke="#E8B4A8" stroke-width="2.5" opacity="0.85"/>
+  <text x="1770" y="934" fill="#E8B4A8" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" text-anchor="middle" letter-spacing="1">agent-ready API + skill</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="180" viewBox="0 0 640 180" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <!-- brackets -->
+  <polyline points="60,34 60,28 372,28 372,34" fill="none" stroke="#999" stroke-width="1"/>
+  <text x="216" y="20" text-anchor="middle" font-size="11" fill="#555">blockquote：位置 0 到 7</text>
+  <polyline points="372,34 372,28 564,28 564,34" fill="none" stroke="#999" stroke-width="1"/>
+  <text x="468" y="20" text-anchor="middle" font-size="11" fill="#555">paragraph：位置 7 到 12</text>
+
+  <!-- token boxes -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="60" y="40" width="60" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="90" y="64" fill="#2c4a73">bq 始</text>
+    <rect x="120" y="40" width="48" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="144" y="64" fill="#2c4a73">p 始</text>
+    <rect x="168" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="184" y="64" fill="#2e5a3c">o</text>
+    <rect x="200" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="216" y="64" fill="#2e5a3c">n</text>
+    <rect x="232" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="248" y="64" fill="#2e5a3c">e</text>
+    <rect x="264" y="40" width="48" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="288" y="64" fill="#2c4a73">p 终</text>
+    <rect x="312" y="40" width="60" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="342" y="64" fill="#2c4a73">bq 终</text>
+    <rect x="372" y="40" width="48" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="396" y="64" fill="#2c4a73">p 始</text>
+    <rect x="420" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="436" y="64" fill="#2e5a3c">t</text>
+    <rect x="452" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="468" y="64" fill="#2e5a3c">w</text>
+    <rect x="484" y="40" width="32" height="40" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="500" y="64" fill="#2e5a3c">o</text>
+    <rect x="516" y="40" width="48" height="40" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="540" y="64" fill="#2c4a73">p 终</text>
+  </g>
+
+  <!-- position ticks and labels -->
+  <g font-size="11" text-anchor="middle" fill="#333">
+    <line x1="60" y1="80" x2="60" y2="88" stroke="#888"/><text x="60" y="104">0</text>
+    <line x1="120" y1="80" x2="120" y2="88" stroke="#888"/><text x="120" y="104">1</text>
+    <line x1="168" y1="80" x2="168" y2="88" stroke="#888"/><text x="168" y="104">2</text>
+    <line x1="200" y1="80" x2="200" y2="88" stroke="#888"/><text x="200" y="104">3</text>
+    <line x1="232" y1="80" x2="232" y2="88" stroke="#888"/><text x="232" y="104">4</text>
+    <line x1="264" y1="80" x2="264" y2="88" stroke="#888"/><text x="264" y="104">5</text>
+    <line x1="312" y1="80" x2="312" y2="88" stroke="#888"/><text x="312" y="104">6</text>
+    <line x1="372" y1="80" x2="372" y2="88" stroke="#888"/><text x="372" y="104">7</text>
+    <line x1="420" y1="80" x2="420" y2="88" stroke="#888"/><text x="420" y="104">8</text>
+    <line x1="452" y1="80" x2="452" y2="88" stroke="#888"/><text x="452" y="104">9</text>
+    <line x1="484" y1="80" x2="484" y2="88" stroke="#888"/><text x="484" y="104">10</text>
+    <line x1="516" y1="80" x2="516" y2="88" stroke="#888"/><text x="516" y="104">11</text>
+    <line x1="564" y1="80" x2="564" y2="88" stroke="#888"/><text x="564" y="104">12</text>
+  </g>
+
+  <!-- legend -->
+  <rect x="60" y="126" width="14" height="14" fill="#e8eef7" stroke="#4a6fa5"/>
+  <text x="80" y="138" font-size="12" fill="#333">节点开始/结束 token，各占 1 个位置</text>
+  <rect x="300" y="126" width="14" height="14" fill="#e9f4ea" stroke="#4a7c59"/>
+  <text x="320" y="138" font-size="12" fill="#333">文本字符，每字符占 1 个位置</text>
+  <text x="60" y="164" font-size="12" fill="#333">位置编号落在 token 之间的缝隙上，这份文档共 12 个 token、13 个位置（0 到 12）</text>
+</svg>

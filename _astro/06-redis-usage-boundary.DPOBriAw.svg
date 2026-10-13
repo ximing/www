@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 760" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="940" height="760" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">Redis 超缓存用法：成立条件与失效条件对照</text>
+  <text x="30" y="56" font-size="12" fill="#64748b">判断依据复用第 5 篇两个问题：这个场景接受丢数据吗？会产生慢命令或大 key 吗？</text>
+
+  <!-- ============ 顶部：两个判断问题 ============ -->
+  <rect x="24" y="74" width="892" height="58" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.4"/>
+  <text x="40" y="98" font-size="12" font-weight="600" fill="#1f2937">两个判断问题（来自第 5 篇）</text>
+  <text x="40" y="118" font-size="11" fill="#475569">① 这个场景接受丢数据吗？</text>
+  <text x="320" y="118" font-size="11" fill="#475569">② 这个用法会产生慢命令或大 key 吗？</text>
+  <text x="600" y="118" font-size="11" fill="#3b82f6">两个都「否」才成立；任一「是」即需换方案或补约束</text>
+
+  <!-- ============ 五种用法：每行一个 ============ -->
+  <!-- 表头 -->
+  <rect x="24" y="146" width="892" height="28" rx="4" fill="#e2e8f0"/>
+  <text x="44" y="165" font-size="11" font-weight="600" fill="#1f2937">用法</text>
+  <text x="224" y="165" font-size="11" font-weight="600" fill="#16a34a">成立条件</text>
+  <text x="540" y="165" font-size="11" font-weight="600" fill="#dc2626">失效条件</text>
+
+  <!-- 行 1：单实例锁 -->
+  <rect x="24" y="178" width="892" height="76" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="30" y="184" width="186" height="64" rx="4" fill="#f8fafc"/>
+  <text x="40" y="204" font-size="11" font-weight="600" fill="#1f2937">分布式锁</text>
+  <text x="40" y="222" font-size="10" fill="#64748b">单实例</text>
+  <text x="40" y="238" font-size="10" fill="#64748b">SET NX PX</text>
+  <text x="40" y="254" font-size="10" fill="#64748b">+ Lua CAS 解锁</text>
+  <text x="228" y="200" font-size="10" fill="#16a34a">· 锁失效偶发重叠</text>
+  <text x="228" y="216" font-size="10" fill="#16a34a">  可被业务幂等兜住</text>
+  <text x="228" y="232" font-size="10" fill="#16a34a">· 失效后果可重算或</text>
+  <text x="228" y="248" font-size="10" fill="#16a34a">  可由数据约束纠正</text>
+  <text x="544" y="200" font-size="10" fill="#dc2626">· 锁失效造成不可逆的</text>
+  <text x="544" y="216" font-size="10" fill="#dc2626">  资金/库存错误</text>
+  <text x="544" y="232" font-size="10" fill="#dc2626">· 未配 fencing token</text>
+  <text x="544" y="248" font-size="10" fill="#dc2626">  且下游不校验序号</text>
+
+  <!-- 行 2：RedLock -->
+  <rect x="24" y="260" width="892" height="76" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="30" y="266" width="186" height="64" rx="4" fill="#f8fafc"/>
+  <text x="40" y="286" font-size="11" font-weight="600" fill="#1f2937">分布式锁</text>
+  <text x="40" y="304" font-size="10" fill="#64748b">RedLock</text>
+  <text x="40" y="320" font-size="10" fill="#64748b">N/2+1 多数派获取</text>
+  <text x="228" y="282" font-size="10" fill="#16a34a">· 接受「时钟大致正确」</text>
+  <text x="228" y="298" font-size="10" fill="#16a34a">· 持有者不会长停顿</text>
+  <text x="228" y="314" font-size="10" fill="#16a34a">· 多数派实例同时可用</text>
+  <text x="228" y="330" font-size="10" fill="#16a34a">· 配 fencing token 更稳</text>
+  <text x="544" y="282" font-size="10" fill="#dc2626">· 时钟跳变不可控</text>
+  <text x="544" y="298" font-size="10" fill="#dc2626">  （NTP/VM 迁移/改时间）</text>
+  <text x="544" y="314" font-size="10" fill="#dc2626">· 持有者长 GC 超过 TTL</text>
+  <text x="544" y="330" font-size="10" fill="#dc2626">· 要求锁失效概率为零</text>
+
+  <!-- 行 3：List 队列 -->
+  <rect x="24" y="342" width="892" height="76" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="30" y="348" width="186" height="64" rx="4" fill="#f8fafc"/>
+  <text x="40" y="368" font-size="11" font-weight="600" fill="#1f2937">List 当队列</text>
+  <text x="40" y="386" font-size="10" fill="#64748b">LPUSH / BRPOP</text>
+  <text x="40" y="402" font-size="10" fill="#64748b">无 ack / 无重试</text>
+  <text x="228" y="364" font-size="10" fill="#16a34a">· 消息丢了能重算或重发</text>
+  <text x="228" y="380" font-size="10" fill="#16a34a">· 不要求确认/重试/积压</text>
+  <text x="228" y="396" font-size="10" fill="#16a34a">  监控</text>
+  <text x="228" y="412" font-size="10" fill="#16a34a">· 缓存预热、可重跑统计</text>
+  <text x="544" y="364" font-size="10" fill="#dc2626">· 消息丢失造成业务状态</text>
+  <text x="544" y="380" font-size="10" fill="#dc2626">  不一致且无法恢复</text>
+  <text x="544" y="396" font-size="10" fill="#dc2626">· BRPOP 取走即删，崩溃</text>
+  <text x="544" y="412" font-size="10" fill="#dc2626">  期间消息无留存</text>
+
+  <!-- 行 4：zset 排行榜 -->
+  <rect x="24" y="424" width="892" height="76" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="30" y="430" width="186" height="64" rx="4" fill="#f8fafc"/>
+  <text x="40" y="450" font-size="11" font-weight="600" fill="#1f2937">zset 排行榜</text>
+  <text x="40" y="468" font-size="10" fill="#64748b">ZADD / ZREVRANGE</text>
+  <text x="40" y="484" font-size="10" fill="#64748b">内存 ∝ 成员数</text>
+  <text x="228" y="446" font-size="10" fill="#16a34a">· 成员数可控</text>
+  <text x="228" y="462" font-size="10" fill="#16a34a">· 内存占用在预算内</text>
+  <text x="228" y="478" font-size="10" fill="#16a34a">· 删除用 UNLINK（4.0）</text>
+  <text x="228" y="494" font-size="10" fill="#16a34a">· 只保留前 N 名 / 分片</text>
+  <text x="544" y="446" font-size="10" fill="#dc2626">· 全局排行榜</text>
+  <text x="544" y="462" font-size="10" fill="#dc2626">· 成员数随用户无限增长</text>
+  <text x="544" y="478" font-size="10" fill="#dc2626">· 大 zset 的 DEL 阻塞实例</text>
+  <text x="544" y="494" font-size="10" fill="#dc2626">  （lazyfree 只解删除阻塞）</text>
+
+  <!-- 行 5：zset 延迟任务 -->
+  <rect x="24" y="506" width="892" height="76" rx="4" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="30" y="512" width="186" height="64" rx="4" fill="#f8fafc"/>
+  <text x="40" y="532" font-size="11" font-weight="600" fill="#1f2937">zset 延迟任务</text>
+  <text x="40" y="550" font-size="10" fill="#64748b">score=到期时间戳</text>
+  <text x="40" y="566" font-size="10" fill="#64748b">ZRANGEBYSCORE 轮询</text>
+  <text x="228" y="528" font-size="10" fill="#16a34a">· 任务量可控</text>
+  <text x="228" y="544" font-size="10" fill="#16a34a">· 轮询频率与实例负载匹配</text>
+  <text x="228" y="560" font-size="10" fill="#16a34a">· 精度要求不高（秒级以上）</text>
+  <text x="228" y="576" font-size="10" fill="#16a34a">· 实例重启任务可重建</text>
+  <text x="544" y="528" font-size="10" fill="#dc2626">· 任务量大（内存线性增长）</text>
+  <text x="544" y="544" font-size="10" fill="#dc2626">· 需秒级精度（轮询密增负载）</text>
+  <text x="544" y="560" font-size="10" fill="#dc2626">· 要求持久化保证</text>
+  <text x="544" y="576" font-size="10" fill="#dc2626">  （Redis 重启丢全部任务）</text>
+
+  <!-- ============ 底部：判断流向 ============ -->
+  <rect x="24" y="594" width="892" height="142" rx="8" fill="#fffbeb" stroke="#ca8a04" stroke-width="1.4"/>
+  <text x="40" y="618" font-size="12" font-weight="600" fill="#92400e">当时的判断</text>
+
+  <rect x="44" y="632" width="240" height="88" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="56" y="652" font-size="11" font-weight="600" fill="#1f2937">不能丢的异步需求</text>
+  <line x1="164" y1="676" x2="268" y2="676" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrRed)"/>
+  <text x="56" y="700" font-size="10" fill="#475569">→ 一律用 MQ</text>
+  <text x="56" y="714" font-size="10" fill="#64748b">（第 8/9/11 篇展开）</text>
+
+  <rect x="300" y="632" width="240" height="88" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="312" y="652" font-size="11" font-weight="600" fill="#1f2937">可重算的任务</text>
+  <line x1="420" y1="676" x2="524" y2="676" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="312" y="700" font-size="10" fill="#475569">→ Redis 队列可用</text>
+  <text x="312" y="714" font-size="10" fill="#64748b">（丢消息重发即可）</text>
+
+  <rect x="556" y="632" width="340" height="88" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="568" y="652" font-size="11" font-weight="600" fill="#1f2937">锁的选型按失效后果分档</text>
+  <text x="568" y="672" font-size="10" fill="#475569">· 失效能被幂等兜住 → 单实例 Redis 锁</text>
+  <text x="568" y="690" font-size="10" fill="#475569">· 失效不可逆 → RedLock + fencing</text>
+  <text x="568" y="708" font-size="10" fill="#475569">  或转 ZK/etcd（第 17 篇）</text>
+</svg>

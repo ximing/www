@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- Left panel: before -->
+  <rect x="24" y="16" width="352" height="448" rx="10" fill="#f4f4f5"/>
+  <text x="44" y="48" font-size="15" font-weight="600" fill="#18181b">拆分前 · 一个前端独占一个子进程</text>
+
+  <!-- Row 1 -->
+  <rect x="44" y="76" width="92" height="44" rx="8" fill="#e4e4e7"/>
+  <text x="90" y="103" font-size="13" fill="#3f3f46" text-anchor="middle">TUI</text>
+  <text x="163" y="88" font-size="10" fill="#71717a" text-anchor="middle">spawn</text>
+  <line x1="140" y1="98" x2="184" y2="98" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="190" y="76" width="166" height="44" rx="8" fill="#dcdce0"/>
+  <text x="273" y="103" font-size="12" fill="#3f3f46" text-anchor="middle">pi 子进程 · 会话 A</text>
+
+  <!-- Row 2 -->
+  <rect x="44" y="172" width="92" height="44" rx="8" fill="#e4e4e7"/>
+  <text x="90" y="199" font-size="13" fill="#3f3f46" text-anchor="middle">Web</text>
+  <text x="163" y="184" font-size="10" fill="#71717a" text-anchor="middle">spawn</text>
+  <line x1="140" y1="194" x2="184" y2="194" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="190" y="172" width="166" height="44" rx="8" fill="#dcdce0"/>
+  <text x="273" y="199" font-size="12" fill="#3f3f46" text-anchor="middle">pi 子进程 · 会话 B</text>
+
+  <!-- Row 3 -->
+  <rect x="44" y="268" width="92" height="44" rx="8" fill="#e4e4e7"/>
+  <text x="90" y="295" font-size="13" fill="#3f3f46" text-anchor="middle">IDE</text>
+  <text x="163" y="280" font-size="10" fill="#71717a" text-anchor="middle">spawn</text>
+  <line x1="140" y1="290" x2="184" y2="290" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="190" y="268" width="166" height="44" rx="8" fill="#dcdce0"/>
+  <text x="273" y="295" font-size="12" fill="#3f3f46" text-anchor="middle">pi 子进程 · 会话 C</text>
+
+  <text x="44" y="352" font-size="12" fill="#52525b">每个子进程走 JSONL over stdin/stdout</text>
+  <text x="44" y="376" font-size="12" fill="#52525b">会话被进程独占：换前端要退出重开</text>
+  <text x="44" y="400" font-size="12" fill="#52525b">supervisor 也只是批量孵这类子进程</text>
+
+  <!-- Right panel: after -->
+  <rect x="424" y="16" width="352" height="448" rx="10" fill="#f4f4f5"/>
+  <text x="444" y="48" font-size="15" font-weight="600" fill="#18181b">拆分后 · 会话成为可共享的服务</text>
+
+  <!-- Frontends -->
+  <rect x="444" y="88" width="80" height="40" rx="8" fill="#e4e4e7"/>
+  <text x="484" y="113" font-size="13" fill="#3f3f46" text-anchor="middle">TUI</text>
+  <rect x="444" y="168" width="80" height="40" rx="8" fill="#e4e4e7"/>
+  <text x="484" y="193" font-size="13" fill="#3f3f46" text-anchor="middle">Web</text>
+  <rect x="444" y="248" width="80" height="40" rx="8" fill="#e4e4e7"/>
+  <text x="484" y="273" font-size="13" fill="#3f3f46" text-anchor="middle">SDK</text>
+
+  <!-- Arrows to server -->
+  <text x="550" y="100" font-size="10" fill="#71717a" text-anchor="middle">attach</text>
+  <line x1="528" y1="108" x2="570" y2="108" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="528" y1="188" x2="570" y2="188" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="528" y1="268" x2="570" y2="268" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Server -->
+  <rect x="576" y="64" width="176" height="264" rx="10" fill="#f5ede3"/>
+  <text x="664" y="90" font-size="13" font-weight="600" fill="#b45309" text-anchor="middle">pi-server 长驻进程</text>
+
+  <rect x="588" y="104" width="152" height="56" rx="6" fill="#ffffff"/>
+  <text x="600" y="126" font-size="12" font-weight="600" fill="#3f3f46">会话 A</text>
+  <text x="600" y="146" font-size="11" fill="#b45309">exclusive 租约 · TUI</text>
+
+  <rect x="588" y="168" width="152" height="56" rx="6" fill="#ffffff"/>
+  <text x="600" y="190" font-size="12" font-weight="600" fill="#3f3f46">会话 B</text>
+  <text x="600" y="210" font-size="11" fill="#b45309">shared 租约 × 2</text>
+
+  <rect x="588" y="232" width="152" height="56" rx="6" fill="#ffffff"/>
+  <text x="600" y="254" font-size="12" font-weight="600" fill="#3f3f46">会话 C</text>
+  <text x="600" y="274" font-size="11" fill="#52525b">无租约，存于存储层</text>
+
+  <text x="444" y="372" font-size="12" fill="#52525b">attach/detach 是一等协议命令</text>
+  <text x="444" y="396" font-size="12" fill="#52525b">快照权威，progress 事件只作 UI 提示</text>
+  <text x="444" y="420" font-size="12" fill="#52525b">租约管所有权：写冲突直接拒绝</text>
+</svg>

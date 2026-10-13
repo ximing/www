@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 468" width="880" height="468" role="img" aria-labelledby="title desc">
+  <title id="title">评测体系的两条 Loop</title>
+  <desc id="desc">在线信号进入 Case 挖掘与归因。向左补评测集或改 Rubric，再做离线回测。向右定位 Agent 问题，变更后用评测集回测，再上线做 AB。两条环在评测集上再次会合。</desc>
+  <rect width="880" height="468" rx="20" fill="#F3F5F2"/>
+  <rect x=".5" y=".5" width="879" height="467" rx="20" fill="none" stroke="#E2E6E0"/>
+
+  <text x="36" y="36" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif" font-size="13" font-weight="650" fill="#1B211D">两条 Loop 共用同一批线上样本</text>
+  <text x="844" y="36" text-anchor="end" font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif" font-size="12" fill="#6B736C">按《评测全览》1.2 节重画</text>
+
+  <g font-family="ui-sans-serif, system-ui, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif">
+    <rect x="250" y="56" width="380" height="52" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="440" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="#1B211D">在线评测与在线监控</text>
+    <text x="440" y="96" text-anchor="middle" font-size="12" fill="#555E56">异常信号、巡检分数、真实流量</text>
+
+    <line x1="440" y1="108" x2="440" y2="128" stroke="#1C7A4F" stroke-width="1.5"/>
+    <path d="M435 122 L440 130 L445 122" fill="none" stroke="#1C7A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="250" y="132" width="380" height="56" rx="10" fill="#1C7A4F"/>
+    <text x="440" y="155" text-anchor="middle" font-size="14" font-weight="650" fill="#FFFFFF">Case 挖掘与归因</text>
+    <text x="440" y="174" text-anchor="middle" font-size="12" fill="#E5F4EB">第一个咬合点：判断改评测，还是改 Agent</text>
+
+    <text x="48" y="214" font-size="11" font-weight="650" letter-spacing="1.2" fill="#1C7A4F">评测体系迭代</text>
+    <text x="612" y="214" font-size="11" font-weight="650" letter-spacing="1.2" fill="#8A5A12">AGENT 迭代</text>
+
+    <rect x="28" y="228" width="392" height="44" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="224" y="255" text-anchor="middle" font-size="13" fill="#1B211D">评测集没覆盖这类问题，或 Rubric 判错了</text>
+
+    <rect x="460" y="228" width="392" height="44" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="656" y="255" text-anchor="middle" font-size="13" fill="#1B211D">Prompt、Skill、上下文或模型能力</text>
+
+    <line x1="224" y1="272" x2="224" y2="288" stroke="#1C7A4F" stroke-width="1.5"/>
+    <path d="M219 282 L224 290 L229 282" fill="none" stroke="#1C7A4F" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="656" y1="272" x2="656" y2="288" stroke="#8A5A12" stroke-width="1.5"/>
+    <path d="M651 282 L656 290 L661 282" fill="none" stroke="#8A5A12" stroke-width="1.5" stroke-linecap="round"/>
+
+    <rect x="28" y="292" width="392" height="44" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="224" y="319" text-anchor="middle" font-size="13" fill="#1B211D">补进评测集，或改 Metrics 与 Rubric</text>
+
+    <rect x="460" y="292" width="392" height="44" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="656" y="319" text-anchor="middle" font-size="13" fill="#1B211D">改完用评测集回测，确认没有退化</text>
+
+    <line x1="224" y1="336" x2="224" y2="352" stroke="#1C7A4F" stroke-width="1.5"/>
+    <path d="M219 346 L224 354 L229 346" fill="none" stroke="#1C7A4F" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="656" y1="336" x2="656" y2="352" stroke="#8A5A12" stroke-width="1.5"/>
+    <path d="M651 346 L656 354 L661 346" fill="none" stroke="#8A5A12" stroke-width="1.5" stroke-linecap="round"/>
+
+    <rect x="28" y="356" width="392" height="44" rx="10" fill="#DFEDE4"/>
+    <text x="224" y="383" text-anchor="middle" font-size="13" font-weight="600" fill="#1C7A4F">离线回测：只让版本变，其余固定</text>
+
+    <rect x="460" y="356" width="392" height="44" rx="10" fill="#F8F1E4"/>
+    <text x="656" y="383" text-anchor="middle" font-size="13" font-weight="600" fill="#8A5A12">上线 AB，看业务指标</text>
+
+    <rect x="28" y="416" width="824" height="36" rx="10" fill="#FFFFFF" stroke="#E2E6E0"/>
+    <text x="440" y="439" text-anchor="middle" font-size="13" fill="#1B211D">第二个咬合点是评测集：左环把它补全，右环用它当门禁。门禁越严，线上新问题越少。</text>
+  </g>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- Lifelines -->
+  <text x="150" y="40" font-size="15" font-weight="600" fill="#18181b" text-anchor="middle">pi（编排）</text>
+  <text x="400" y="40" font-size="15" font-weight="600" fill="#18181b" text-anchor="middle">cc-driver</text>
+  <text x="650" y="40" font-size="15" font-weight="600" fill="#18181b" text-anchor="middle">CC 工人进程</text>
+  <line x1="150" y1="56" x2="150" y2="612" stroke="#d4d4d8" stroke-dasharray="5 5"/>
+  <line x1="400" y1="56" x2="400" y2="612" stroke="#d4d4d8" stroke-dasharray="5 5"/>
+  <line x1="650" y1="56" x2="650" y2="612" stroke="#d4d4d8" stroke-dasharray="5 5"/>
+
+  <!-- Step 1: dispatch -->
+  <line x1="158" y1="92" x2="392" y2="92" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="275" y="82" font-size="12.5" fill="#3f3f46" text-anchor="middle">1 派活：活动类型 + prompt，model-router 定模型</text>
+
+  <!-- Step 2: spawn -->
+  <line x1="408" y1="140" x2="642" y2="140" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="525" y="130" font-size="12.5" fill="#3f3f46" text-anchor="middle">2 spawn：claude -p --output-format stream-json --model M</text>
+
+  <!-- Step 3: session_id -->
+  <line x1="642" y1="188" x2="408" y2="188" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="525" y="178" font-size="12.5" fill="#3f3f46" text-anchor="middle">3 system/init 帧：抓到 session_id 立即落盘（原子写）</text>
+
+  <!-- Step 4: stdin user frame -->
+  <line x1="408" y1="236" x2="642" y2="236" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="525" y="226" font-size="12.5" fill="#3f3f46" text-anchor="middle">4 stdin 写入 user 帧（多轮热写，进程复用）</text>
+
+  <!-- Step 5: stream frames -->
+  <line x1="642" y1="284" x2="408" y2="284" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="525" y="274" font-size="12.5" fill="#3f3f46" text-anchor="middle">5 stream-json 帧流回传（control_request 自动应答）</text>
+
+  <!-- Step 6: result frame -->
+  <line x1="642" y1="332" x2="408" y2="332" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="525" y="322" font-size="12.5" fill="#3f3f46" text-anchor="middle">6 result 帧 = 轮终止 + 定稿文本，usage 进成本护栏</text>
+
+  <!-- Step 7: back to pi -->
+  <line x1="392" y1="380" x2="158" y2="380" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="275" y="370" font-size="12.5" fill="#3f3f46" text-anchor="middle">7 返回定稿 → pi 标准化（确定性代码优先）→ artifact 落盘</text>
+
+  <!-- Crash branch: X mark on the worker lifeline -->
+  <line x1="640" y1="400" x2="660" y2="416" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+  <line x1="660" y1="400" x2="640" y2="416" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+  <text x="400" y="444" font-size="13.5" font-weight="600" fill="#b45309" text-anchor="middle">工人进程崩溃 / 会话丢失</text>
+
+  <!-- resume branch -->
+  <line x1="408" y1="484" x2="642" y2="484" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="525" y="474" font-size="12.5" fill="#b45309" text-anchor="middle">8a 默认：--resume &lt;id&gt; --fork-session 接续，新 id 落盘</text>
+
+  <!-- rejected branch -->
+  <line x1="642" y1="532" x2="408" y2="532" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="525" y="522" font-size="12.5" fill="#b45309" text-anchor="middle">8b 被拒（会话找不到 / 不属于当前账号）→ 新会话 + 上下文重注入</text>
+
+  <rect x="70" y="556" width="660" height="52" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="400" y="578" font-size="12.5" fill="#3f3f46" text-anchor="middle">重注入的权威来源 = plan + 覆盖账本 + 目标仓 git status</text>
+  <text x="400" y="598" font-size="12.5" fill="#3f3f46" text-anchor="middle">会话快照仅作补充：自述不如确定性现况可靠</text>
+</svg>

@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 640" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect width="1080" height="640" rx="8" fill="#f8fafc"/>
+  <text x="24" y="32" font-size="16" font-weight="600" fill="#1f2937">熔断器三态状态机与滑动窗口统计的关系</text>
+  <text x="24" y="52" font-size="12" fill="#64748b">滑动窗口统计失败率驱动 CLOSED→OPEN；冷却窗口到期后进入 HALF_OPEN 试探；试探结果决定回到 CLOSED 或重新打开</text>
+
+  <!-- ============ 三态：CLOSED / OPEN / HALF_OPEN ============ -->
+  <!-- CLOSED -->
+  <rect x="60" y="90" width="240" height="120" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+  <text x="180" y="118" font-size="15" font-weight="700" fill="#16a34a" text-anchor="middle">CLOSED 闭合</text>
+  <text x="180" y="140" font-size="11" fill="#1f2937" text-anchor="middle">请求正常放行</text>
+  <text x="180" y="160" font-size="10.5" fill="#475569" text-anchor="middle">滑动窗口累计成功/失败</text>
+  <text x="180" y="180" font-size="10.5" fill="#475569" text-anchor="middle">失败率 &lt; 阈值 → 保持闭合</text>
+  <text x="180" y="200" font-size="10.5" fill="#7f1d1d" text-anchor="middle">失败率 ≥ 阈值 → 打开</text>
+
+  <!-- OPEN -->
+  <rect x="420" y="90" width="240" height="120" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="540" y="118" font-size="15" font-weight="700" fill="#dc2626" text-anchor="middle">OPEN 打开</text>
+  <text x="540" y="140" font-size="11" fill="#1f2937" text-anchor="middle">请求直接快速失败</text>
+  <text x="540" y="160" font-size="10.5" fill="#475569" text-anchor="middle">不发真实调用，走回退</text>
+  <text x="540" y="180" font-size="10.5" fill="#475569" text-anchor="middle">保住调用方线程与连接</text>
+  <text x="540" y="200" font-size="10.5" fill="#7f1d1d" text-anchor="middle">冷却窗口到期 → 半开</text>
+
+  <!-- HALF_OPEN -->
+  <rect x="780" y="90" width="240" height="120" rx="8" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+  <text x="900" y="118" font-size="15" font-weight="700" fill="#b45309" text-anchor="middle">HALF_OPEN 半开</text>
+  <text x="900" y="140" font-size="11" fill="#1f2937" text-anchor="middle">放行少量试探请求</text>
+  <text x="900" y="160" font-size="10.5" fill="#475569" text-anchor="middle">试探成功达阈值 → 闭合</text>
+  <text x="900" y="180" font-size="10.5" fill="#475569" text-anchor="middle">试探失败 → 重新打开</text>
+  <text x="900" y="200" font-size="10.5" fill="#7f1d1d" text-anchor="middle">试探期间其余请求仍快速失败</text>
+
+  <!-- 状态迁移箭头 -->
+  <!-- CLOSED -> OPEN -->
+  <path d="M 300 150 L 420 150" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrRed)"/>
+  <text x="360" y="142" font-size="10.5" fill="#dc2626" font-weight="600" text-anchor="middle">失败率超阈</text>
+
+  <!-- OPEN -> HALF_OPEN -->
+  <path d="M 660 150 L 780 150" fill="none" stroke="#b45309" stroke-width="1.8" marker-end="url(#arrAmb)"/>
+  <text x="720" y="142" font-size="10.5" fill="#b45309" font-weight="600" text-anchor="middle">冷却到期</text>
+
+  <!-- HALF_OPEN -> CLOSED -->
+  <path d="M 780 200 Q 500 270 300 200" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrGrn)"/>
+  <text x="540" y="280" font-size="10.5" fill="#16a34a" font-weight="600" text-anchor="middle">试探成功</text>
+
+  <!-- HALF_OPEN -> OPEN -->
+  <path d="M 780 110 Q 540 60 420 110" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arrRed)"/>
+  <text x="600" y="56" font-size="10.5" fill="#dc2626" font-weight="600" text-anchor="middle">试探失败 → 重新打开</text>
+
+  <!-- ============ 滑动窗口统计（环形数组 / 桶分割）============ -->
+  <rect x="60" y="320" width="960" height="220" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="0.8"/>
+  <text x="76" y="346" font-size="13" font-weight="600" fill="#1f2937">滑动窗口统计：环形数组 + 桶分割（驱动 CLOSED→OPEN 的依据）</text>
+  <text x="76" y="364" font-size="10.5" fill="#64748b">窗口按时间切成 N 个桶，每个桶统计该时段的成功/失败计数；过期桶滚动复用并清零，窗口总值 = 当前 N 个桶之和</text>
+
+  <!-- 桶序列 -->
+  <g font-size="10" fill="#1f2937">
+    <!-- 桶 1（旧，已计入） -->
+    <rect x="90" y="392" width="80" height="60" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+    <text x="130" y="410" text-anchor="middle" font-weight="600">桶 t-4</text>
+    <text x="130" y="428" text-anchor="middle" fill="#16a34a">成功 18</text>
+    <text x="130" y="444" text-anchor="middle" fill="#dc2626">失败 2</text>
+    <!-- 桶 2 -->
+    <rect x="186" y="392" width="80" height="60" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+    <text x="226" y="410" text-anchor="middle" font-weight="600">桶 t-3</text>
+    <text x="226" y="428" text-anchor="middle" fill="#16a34a">成功 15</text>
+    <text x="226" y="444" text-anchor="middle" fill="#dc2626">失败 5</text>
+    <!-- 桶 3 -->
+    <rect x="282" y="392" width="80" height="60" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+    <text x="322" y="410" text-anchor="middle" font-weight="600">桶 t-2</text>
+    <text x="322" y="428" text-anchor="middle" fill="#16a34a">成功 10</text>
+    <text x="322" y="444" text-anchor="middle" fill="#dc2626">失败 10</text>
+    <!-- 桶 4（当前，正在写）-->
+    <rect x="378" y="392" width="80" height="60" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+    <text x="418" y="410" text-anchor="middle" font-weight="600">桶 t-1</text>
+    <text x="418" y="428" text-anchor="middle" fill="#16a34a">成功 5</text>
+    <text x="418" y="444" text-anchor="middle" fill="#dc2626">失败 15</text>
+    <!-- 桶 5（当前写入中）-->
+    <rect x="474" y="392" width="80" height="60" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6" stroke-dasharray="4 2"/>
+    <text x="514" y="410" text-anchor="middle" font-weight="600">桶 t（写入中）</text>
+    <text x="514" y="428" text-anchor="middle" fill="#16a34a">成功 2</text>
+    <text x="514" y="444" text-anchor="middle" fill="#dc2626">失败 8</text>
+    <!-- 桶 6（待复用，已过期清零）-->
+    <rect x="570" y="392" width="80" height="60" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="610" y="410" text-anchor="middle" font-weight="600">桶 t+1</text>
+    <text x="610" y="430" text-anchor="middle" fill="#94a3b8">待滚动复用</text>
+    <text x="610" y="446" text-anchor="middle" fill="#94a3b8">（清零后写入）</text>
+  </g>
+
+  <!-- 滚动方向箭头 -->
+  <path d="M 660 422 L 700 422" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+  <text x="710" y="416" font-size="10" fill="#475569">时间推进</text>
+  <text x="710" y="430" font-size="10" fill="#475569">桶滚动复用</text>
+
+  <!-- 窗口汇总 -->
+  <rect x="820" y="384" width="180" height="92" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.2"/>
+  <text x="910" y="406" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">窗口汇总（近 N 秒）</text>
+  <text x="910" y="428" font-size="10.5" fill="#1f2937" text-anchor="middle">总成功 50 / 总失败 40</text>
+  <text x="910" y="446" font-size="11" fill="#dc2626" font-weight="600" text-anchor="middle">失败率 ≈ 44%</text>
+  <text x="910" y="464" font-size="10.5" fill="#7f1d1d" text-anchor="middle">≥ 阈值（如 50% 时打开）</text>
+
+  <!-- 汇总连接线 -->
+  <path d="M 554 422 Q 690 422 820 422" fill="none" stroke="#1d4ed8" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+  <!-- ============ 关键说明 ============ -->
+  <rect x="60" y="560" width="960" height="60" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="0.8"/>
+  <text x="76" y="582" font-size="11" fill="#7f1d1d" font-weight="600">统计与状态机的关系：</text>
+  <text x="180" y="582" font-size="10.5" fill="#7f1d1d">滑动窗口只在 CLOSED 态累计失败率（HALF_OPEN 用试探结果，不走窗口）；桶分割让旧数据随时间自然过期，避免全量扫描；</text>
+  <text x="180" y="600" font-size="10.5" fill="#7f1d1d">冷却窗口是时间触发（到期进半开），滑动窗口是事件触发（失败率超阈打开），两者独立计时，不互相重置。</text>
+</svg>

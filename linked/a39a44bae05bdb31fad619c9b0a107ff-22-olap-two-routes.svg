@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 780" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect width="1120" height="780" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">行存与列存的布局对照，以及明细查询与预聚合两条路线的取舍位置</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">OLAP 查询扫大量行聚合少量列：列存替换行存，排序键/rollup 替换 B+ 树索引；两条路线在"扫多少"上取舍位置不同</text>
+
+  <!-- ============ 上半：行存 vs 列存 ============ -->
+  <text x="60" y="98" font-size="13" font-weight="600" fill="#1f2937">行存（按行连续）</text>
+  <text x="620" y="98" font-size="13" font-weight="600" fill="#1f2937">列存（按列连续）</text>
+
+  <!-- 行存表：每行同色，行连续 -->
+  <!-- 表头 -->
+  <rect x="60" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="150" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="240" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="330" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="105" y="131" font-size="11" fill="#475569" text-anchor="middle">id</text>
+  <text x="195" y="131" font-size="11" fill="#475569" text-anchor="middle">name</text>
+  <text x="285" y="131" font-size="11" fill="#475569" text-anchor="middle">amount</text>
+  <text x="375" y="131" font-size="11" fill="#475569" text-anchor="middle">channel</text>
+  <!-- 行1 蓝 -->
+  <rect x="60" y="142" width="360" height="30" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="150" y1="142" x2="150" y2="172" stroke="#cbd5e1"/>
+  <line x1="240" y1="142" x2="240" y2="172" stroke="#cbd5e1"/>
+  <line x1="330" y1="142" x2="330" y2="172" stroke="#cbd5e1"/>
+  <text x="105" y="161" font-size="10" fill="#1e3a8a" text-anchor="middle">1</text>
+  <text x="195" y="161" font-size="10" fill="#1e3a8a" text-anchor="middle">phone</text>
+  <text x="285" y="161" font-size="10" fill="#1e3a8a" text-anchor="middle">99</text>
+  <text x="375" y="161" font-size="10" fill="#1e3a8a" text-anchor="middle">app</text>
+  <!-- 行2 绿 -->
+  <rect x="60" y="172" width="360" height="30" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <line x1="150" y1="172" x2="150" y2="202" stroke="#cbd5e1"/>
+  <line x1="240" y1="172" x2="240" y2="202" stroke="#cbd5e1"/>
+  <line x1="330" y1="172" x2="330" y2="202" stroke="#cbd5e1"/>
+  <text x="105" y="191" font-size="10" fill="#14532d" text-anchor="middle">2</text>
+  <text x="195" y="191" font-size="10" fill="#14532d" text-anchor="middle">case</text>
+  <text x="285" y="191" font-size="10" fill="#14532d" text-anchor="middle">29</text>
+  <text x="375" y="191" font-size="10" fill="#14532d" text-anchor="middle">web</text>
+  <!-- 行3 琥珀 -->
+  <rect x="60" y="202" width="360" height="30" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <line x1="150" y1="202" x2="150" y2="232" stroke="#cbd5e1"/>
+  <line x1="240" y1="202" x2="240" y2="232" stroke="#cbd5e1"/>
+  <line x1="330" y1="202" x2="330" y2="232" stroke="#cbd5e1"/>
+  <text x="105" y="221" font-size="10" fill="#78350f" text-anchor="middle">3</text>
+  <text x="195" y="221" font-size="10" fill="#78350f" text-anchor="middle">film</text>
+  <text x="285" y="221" font-size="10" fill="#78350f" text-anchor="middle">59</text>
+  <text x="375" y="221" font-size="10" fill="#78350f" text-anchor="middle">app</text>
+  <!-- 行4 红 -->
+  <rect x="60" y="232" width="360" height="30" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <line x1="150" y1="232" x2="150" y2="262" stroke="#cbd5e1"/>
+  <line x1="240" y1="232" x2="240" y2="262" stroke="#cbd5e1"/>
+  <line x1="330" y1="232" x2="330" y2="262" stroke="#cbd5e1"/>
+  <text x="105" y="251" font-size="10" fill="#7f1d1d" text-anchor="middle">4</text>
+  <text x="195" y="251" font-size="10" fill="#7f1d1d" text-anchor="middle">usb</text>
+  <text x="285" y="251" font-size="10" fill="#7f1d1d" text-anchor="middle">19</text>
+  <text x="375" y="251" font-size="10" fill="#7f1d1d" text-anchor="middle">web</text>
+
+  <!-- 行存右侧大括号标注：行连续 -->
+  <path d="M430 142 q8 0 8 8 v52 q0 8 8 8 q-8 0 -8 8 v52 q0 8 -8 8" fill="none" stroke="#475569" stroke-width="1.2"/>
+  <text x="460" y="190" font-size="10" fill="#475569">一行连续</text>
+  <text x="460" y="206" font-size="10" fill="#475569">读一行一次 IO</text>
+  <text x="460" y="222" font-size="10" fill="#94a3b8">扫全行含无用列</text>
+
+  <!-- 列存表：每列同色，列连续 -->
+  <rect x="620" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="710" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="800" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <rect x="890" y="112" width="90" height="30" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="665" y="131" font-size="11" fill="#475569" text-anchor="middle">id</text>
+  <text x="755" y="131" font-size="11" fill="#475569" text-anchor="middle">name</text>
+  <text x="845" y="131" font-size="11" fill="#475569" text-anchor="middle">amount</text>
+  <text x="935" y="131" font-size="11" fill="#475569" text-anchor="middle">channel</text>
+  <!-- 列1 蓝 -->
+  <rect x="620" y="142" width="90" height="120" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="620" y1="172" x2="710" y2="172" stroke="#cbd5e1"/>
+  <line x1="620" y1="202" x2="710" y2="202" stroke="#cbd5e1"/>
+  <line x1="620" y1="232" x2="710" y2="232" stroke="#cbd5e1"/>
+  <text x="665" y="161" font-size="10" fill="#1e3a8a" text-anchor="middle">1</text>
+  <text x="665" y="191" font-size="10" fill="#1e3a8a" text-anchor="middle">2</text>
+  <text x="665" y="221" font-size="10" fill="#1e3a8a" text-anchor="middle">3</text>
+  <text x="665" y="251" font-size="10" fill="#1e3a8a" text-anchor="middle">4</text>
+  <!-- 列2 绿 -->
+  <rect x="710" y="142" width="90" height="120" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <line x1="710" y1="172" x2="800" y2="172" stroke="#cbd5e1"/>
+  <line x1="710" y1="202" x2="800" y2="202" stroke="#cbd5e1"/>
+  <line x1="710" y1="232" x2="800" y2="232" stroke="#cbd5e1"/>
+  <text x="755" y="161" font-size="10" fill="#14532d" text-anchor="middle">phone</text>
+  <text x="755" y="191" font-size="10" fill="#14532d" text-anchor="middle">case</text>
+  <text x="755" y="221" font-size="10" fill="#14532d" text-anchor="middle">film</text>
+  <text x="755" y="251" font-size="10" fill="#14532d" text-anchor="middle">usb</text>
+  <!-- 列3 琥珀（高亮：查询需要） -->
+  <rect x="800" y="142" width="90" height="120" fill="#fef3c7" stroke="#ca8a04" stroke-width="1.6"/>
+  <line x1="800" y1="172" x2="890" y2="172" stroke="#fde68a"/>
+  <line x1="800" y1="202" x2="890" y2="202" stroke="#fde68a"/>
+  <line x1="800" y1="232" x2="890" y2="232" stroke="#fde68a"/>
+  <text x="845" y="161" font-size="10" fill="#78350f" text-anchor="middle" font-weight="600">99</text>
+  <text x="845" y="191" font-size="10" fill="#78350f" text-anchor="middle" font-weight="600">29</text>
+  <text x="845" y="221" font-size="10" fill="#78350f" text-anchor="middle" font-weight="600">59</text>
+  <text x="845" y="251" font-size="10" fill="#78350f" text-anchor="middle" font-weight="600">19</text>
+  <!-- 列4 红（高亮：查询需要） -->
+  <rect x="890" y="142" width="90" height="120" fill="#fecaca" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="890" y1="172" x2="980" y2="172" stroke="#fca5a5"/>
+  <line x1="890" y1="202" x2="980" y2="202" stroke="#fca5a5"/>
+  <line x1="890" y1="232" x2="980" y2="232" stroke="#fca5a5"/>
+  <text x="935" y="161" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">app</text>
+  <text x="935" y="191" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">web</text>
+  <text x="935" y="221" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">app</text>
+  <text x="935" y="251" font-size="10" fill="#7f1d1d" text-anchor="middle" font-weight="600">web</text>
+
+  <!-- 列存右侧标注 -->
+  <text x="990" y="190" font-size="10" fill="#475569">一列连续</text>
+  <text x="990" y="206" font-size="10" fill="#475569">读一列一次 IO</text>
+  <text x="990" y="222" font-size="10" fill="#15803d">只读用到列</text>
+
+  <!-- 查询对照 -->
+  <rect x="60" y="288" width="1000" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="76" y="310" font-size="11" font-weight="600" fill="#1f2937">查询：SELECT channel, sum(amount) GROUP BY channel</text>
+  <text x="76" y="330" font-size="10" fill="#b91c1c">行存：扫全行（4 列都读，id/name 是无用列）— 列越多浪费越大</text>
+  <text x="540" y="330" font-size="10" fill="#15803d">列存：只读 amount + channel 两列 — 压缩/字典编码/向量化执行/SIMD/延迟物化都建立在此</text>
+
+  <!-- ============ 下半：两条路线 ============ -->
+  <text x="28" y="380" font-size="13" font-weight="600" fill="#1f2937">两条路线：列存解决"扫得快"，没解决"扫多少"</text>
+
+  <!-- ClickHouse 路线 -->
+  <rect x="24" y="398" width="1072" height="148" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="40" y="420" font-size="12" font-weight="600" fill="#1d4ed8">ClickHouse（明细查询路线）</text>
+
+  <rect x="40" y="436" width="180" height="46" rx="5" fill="#eff6ff" stroke="#1d4ed8"/>
+  <text x="130" y="456" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">原始明细</text>
+  <text x="130" y="472" font-size="9" fill="#475569" text-anchor="middle">1 亿行，全量保留</text>
+
+  <line x1="220" y1="459" x2="278" y2="459" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arrBlu)"/>
+
+  <rect x="280" y="436" width="300" height="46" rx="5" fill="#dbeafe" stroke="#1d4ed8"/>
+  <text x="430" y="454" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">排序键 ORDER BY + 稀疏索引</text>
+  <text x="430" y="472" font-size="9" fill="#475569" text-anchor="middle">granularity=8192 跳颗粒，前缀匹配裁剪</text>
+
+  <line x1="580" y1="459" x2="638" y2="459" stroke="#1d4ed8" stroke-width="1.4" marker-end="url(#arrBlu)"/>
+
+  <rect x="640" y="436" width="220" height="46" rx="5" fill="#eff6ff" stroke="#1d4ed8"/>
+  <text x="750" y="456" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">查询扫原始行数</text>
+  <text x="750" y="472" font-size="9" fill="#475569" text-anchor="middle">扫描量随数据量线性增长</text>
+
+  <!-- 取舍标注 -->
+  <rect x="880" y="436" width="200" height="46" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="4 3"/>
+  <text x="980" y="454" font-size="10" font-weight="600" fill="#c2410c" text-anchor="middle">取舍在查询时</text>
+  <text x="980" y="470" font-size="9" fill="#ea580c" text-anchor="middle">灵活性高 / 扫描量大</text>
+
+  <text x="40" y="504" font-size="10" fill="#475569">任意维度组合、任意时间粒度都能查；需要下钻单条记录时走这条路</text>
+  <text x="40" y="528" font-size="10" fill="#475569">排序键前缀不匹配 → 稀疏索引失效 → 近全表扫；排序键设计是建表核心决策</text>
+
+  <!-- Druid 路线 -->
+  <rect x="24" y="560" width="1072" height="148" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="40" y="582" font-size="12" font-weight="600" fill="#15803d">Druid（预聚合路线）</text>
+
+  <rect x="40" y="598" width="180" height="46" rx="5" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="130" y="618" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">原始明细</text>
+  <text x="130" y="634" font-size="9" fill="#475569" text-anchor="middle">1 亿行进入摄入</text>
+
+  <line x1="220" y1="621" x2="278" y2="621" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrGrn)"/>
+
+  <rect x="280" y="598" width="300" height="46" rx="5" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="430" y="616" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">摄入时 rollup 预聚合</text>
+  <text x="430" y="634" font-size="9" fill="#475569" text-anchor="middle">同维度+同时间粒度合并，存 count/sum</text>
+
+  <line x1="580" y1="621" x2="638" y2="621" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrGrn)"/>
+
+  <rect x="640" y="598" width="220" height="46" rx="5" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="750" y="618" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">查询扫聚合后行数</text>
+  <text x="750" y="634" font-size="9" fill="#475569" text-anchor="middle">少 1-2 个数量级，快且稳定</text>
+
+  <!-- 取舍标注 -->
+  <rect x="880" y="598" width="200" height="46" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="4 3"/>
+  <text x="980" y="616" font-size="10" font-weight="600" fill="#c2410c" text-anchor="middle">取舍在摄入时</text>
+  <text x="980" y="632" font-size="9" fill="#ea580c" text-anchor="middle">丢明细 / 维度变动要重灌</text>
+
+  <text x="40" y="666" font-size="10" fill="#475569">开了 rollup 原始明细查不回，queryGranularity 以下的差异被抹掉；维度组合固定时走这条路</text>
+  <text x="40" y="690" font-size="10" fill="#475569">segment 不可变，更新要重灌对应时间段；维度组合变动老数据作废</text>
+
+  <!-- 底部边界 -->
+  <text x="28" y="734" font-size="10" fill="#94a3b8">共同弱项：更新/删除代价高（ClickHouse mutation 重写列存，Druid segment 不可变）；实时摄入重复乱序语义需在摄入层确认；列存对单行点查与高频随机写入不友好</text>
+  <text x="28" y="754" font-size="9" fill="#94a3b8">版本口径：ClickHouse 22.x（MergeTree/ReplacingMergeTree/granularity 8192）/ Druid 0.22（rollup/segment/queryGranularity）</text>
+</svg>

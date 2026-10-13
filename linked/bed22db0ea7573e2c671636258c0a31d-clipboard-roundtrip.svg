@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- copy lane -->
+  <text x="30" y="28" font-size="13" fill="#2c4a73" font-weight="bold">复制：文档 → 剪贴板</text>
+
+  <rect x="30" y="40" width="210" height="76" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="135" y="62" text-anchor="middle" font-size="12" fill="#2c4a73">① 选区取 Slice</text>
+  <text x="135" y="82" text-anchor="middle" font-size="10" fill="#555">sel.content()</text>
+  <text x="135" y="98" text-anchor="middle" font-size="10" fill="#555">openStart / openEnd 记录打开深度</text>
+
+  <line x1="240" y1="78" x2="266" y2="78" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="270" y="40" width="220" height="76" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="380" y="62" text-anchor="middle" font-size="12" fill="#2c4a73">② serializeForClipboard</text>
+  <text x="380" y="82" text-anchor="middle" font-size="10" fill="#555">沿独子链下降，context 记节点名与 attrs</text>
+  <text x="380" y="98" text-anchor="middle" font-size="10" fill="#555">表格碎片按 wrapMap 补 table/tbody/tr</text>
+
+  <line x1="490" y1="78" x2="516" y2="78" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="520" y="40" width="210" height="76" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="625" y="62" text-anchor="middle" font-size="12" fill="#2c4a73">③ 写入剪贴板</text>
+  <text x="625" y="82" text-anchor="middle" font-size="10" fill="#555">text/html 首元素带 data-pm-slice</text>
+  <text x="625" y="98" text-anchor="middle" font-size="10" fill="#555">text/plain 用 textBetween "\n\n"</text>
+
+  <!-- clipboard box -->
+  <line x1="625" y1="116" x2="625" y2="168" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="230" y="172" width="300" height="52" fill="#f5f0e4" stroke="#8a7a4a" stroke-width="2"/>
+  <text x="380" y="194" text-anchor="middle" font-size="12" fill="#6b5d33">系统剪贴板</text>
+  <text x="380" y="212" text-anchor="middle" font-size="10" fill="#555">另一台机器、另一个应用，都可能从这一步接入</text>
+
+  <line x1="380" y1="224" x2="380" y2="276" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- paste lane -->
+  <text x="30" y="266" font-size="13" fill="#2c4a73" font-weight="bold">粘贴：剪贴板 → 文档</text>
+
+  <rect x="30" y="280" width="210" height="88" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="135" y="302" text-anchor="middle" font-size="12" fill="#2c4a73">④ parseFromClipboard</text>
+  <text x="135" y="322" text-anchor="middle" font-size="10" fill="#555">readHTML 剥 meta、按首标签补包装</text>
+  <text x="135" y="338" text-anchor="middle" font-size="10" fill="#555">纯文本分支按行拆 p 或直接进 code</text>
+  <text x="135" y="354" text-anchor="middle" font-size="10" fill="#555">DOMParser.parseSlice 解析</text>
+
+  <line x1="240" y1="324" x2="266" y2="324" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="270" y="280" width="220" height="88" fill="#e8eef7" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="380" y="302" text-anchor="middle" font-size="12" fill="#2c4a73">⑤ 恢复打开结构</text>
+  <text x="380" y="322" text-anchor="middle" font-size="10" fill="#555">带 data-pm-slice：closeSlice + addContext</text>
+  <text x="380" y="338" text-anchor="middle" font-size="10" fill="#555">外来 HTML：normalizeSiblings</text>
+  <text x="380" y="354" text-anchor="middle" font-size="10" fill="#555">+ Slice.maxOpen 再按 isolating 收敛</text>
+
+  <line x1="490" y1="324" x2="516" y2="324" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="520" y="280" width="210" height="88" fill="#e8f7ee" stroke="#4a8a5f" stroke-width="2"/>
+  <text x="625" y="302" text-anchor="middle" font-size="12" fill="#2f6b45">⑥ doPaste</text>
+  <text x="625" y="322" text-anchor="middle" font-size="10" fill="#555">handlePaste 可拦截</text>
+  <text x="625" y="338" text-anchor="middle" font-size="10" fill="#555">replaceSelection / replaceSelectionWith</text>
+  <text x="625" y="354" text-anchor="middle" font-size="10" fill="#555">meta：paste = true，uiEvent = "paste"</text>
+
+  <text x="380" y="412" text-anchor="middle" font-size="11" fill="#777">同一对函数同时服务 copy/paste 与 dragstart/drop，拖拽落下时换成 dropPoint 定位</text>
+</svg>

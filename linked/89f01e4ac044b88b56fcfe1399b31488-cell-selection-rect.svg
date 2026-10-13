@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="260" viewBox="0 0 640 260" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <text x="60" y="22" font-size="12" fill="#555">示例表格：3 行 4 列，B 格 colspan=2；用户从 E 拖到 J</text>
+
+  <!-- cells -->
+  <g font-size="12" text-anchor="middle">
+    <!-- row 0 -->
+    <rect x="60" y="36" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="104" y="63" fill="#555">A</text>
+    <rect x="148" y="36" width="176" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="236" y="63" fill="#555">B（colspan=2）</text>
+    <rect x="324" y="36" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="368" y="63" fill="#555">C</text>
+    <!-- row 1 -->
+    <rect x="60" y="82" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="104" y="109" fill="#555">D</text>
+    <rect x="148" y="82" width="88" height="46" fill="#dce8f7" stroke="#999"/>
+    <text x="192" y="109" fill="#2c4a73">E</text>
+    <rect x="236" y="82" width="88" height="46" fill="#dce8f7" stroke="#999"/>
+    <text x="280" y="109" fill="#2c4a73">F</text>
+    <rect x="324" y="82" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="368" y="109" fill="#555">G</text>
+    <!-- row 2 -->
+    <rect x="60" y="128" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="104" y="155" fill="#555">H</text>
+    <rect x="148" y="128" width="88" height="46" fill="#dce8f7" stroke="#999"/>
+    <text x="192" y="155" fill="#2c4a73">I</text>
+    <rect x="236" y="128" width="88" height="46" fill="#dce8f7" stroke="#999"/>
+    <text x="280" y="155" fill="#2c4a73">J</text>
+    <rect x="324" y="128" width="88" height="46" fill="#f5f5f5" stroke="#999"/>
+    <text x="368" y="155" fill="#555">K</text>
+  </g>
+
+  <!-- rectBetween dashed rect -->
+  <rect x="145" y="79" width="182" height="98" fill="none" stroke="#7a4fa5" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- anchor/head outlines -->
+  <rect x="148" y="82" width="88" height="46" fill="none" stroke="#4a6fa5" stroke-width="2.5"/>
+  <rect x="236" y="128" width="88" height="46" fill="none" stroke="#c0392b" stroke-width="2.5"/>
+
+  <!-- legend -->
+  <g font-size="11" fill="#333">
+    <rect x="442" y="60" width="14" height="14" fill="none" stroke="#4a6fa5" stroke-width="2.5"/>
+    <text x="462" y="72">锚点格（$anchorCell，不动的一端）</text>
+    <rect x="442" y="86" width="14" height="14" fill="none" stroke="#c0392b" stroke-width="2.5"/>
+    <text x="462" y="98">头格（$headCell，拖动时移动）</text>
+    <rect x="442" y="112" width="14" height="14" fill="none" stroke="#7a4fa5" stroke-dasharray="4,3"/>
+    <text x="462" y="124">rectBetween 求出的覆盖矩形</text>
+    <rect x="442" y="138" width="14" height="14" fill="#dce8f7" stroke="#999"/>
+    <text x="462" y="150">选中的格，各生成一个 SelectionRange</text>
+    <text x="462" y="172" fill="#777">头格的 range 排在 ranges[0]</text>
+  </g>
+
+  <text x="60" y="200" font-size="11" fill="#777">TableMap 把 B 摊成占两个格网位置，rectBetween 与 cellsInRect 都在格网坐标上运算。</text>
+  <text x="60" y="220" font-size="11" fill="#777">$anchorCell 与 $headCell 是 ResolvedPos，约定指在单元格前面（parent 是 table_row，nodeAfter 是这个格）。</text>
+  <text x="60" y="240" font-size="11" fill="#777">每个 range 覆盖对应格的全部内容：从格起始位置 +1 到 +1 + cell.content.size。</text>
+</svg>
