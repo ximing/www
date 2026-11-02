@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="55%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/><circle cx="380" cy="60" r="2"/><circle cx="460" cy="60" r="2"/><circle cx="540" cy="60" r="2"/><circle cx="620" cy="60" r="2"/><circle cx="700" cy="60" r="2"/>
+    <circle cx="60" cy="390" r="2"/><circle cx="140" cy="390" r="2"/><circle cx="220" cy="390" r="2"/><circle cx="300" cy="390" r="2"/><circle cx="380" cy="390" r="2"/><circle cx="460" cy="390" r="2"/><circle cx="540" cy="390" r="2"/><circle cx="620" cy="390" r="2"/><circle cx="700" cy="390" r="2"/>
+  </g>
+
+  <!-- pipeline arrows -->
+  <g stroke="#fef3c7" stroke-width="5" fill="none" opacity="0.9">
+    <path d="M 245 210 L 300 210"/>
+    <path d="M 285 200 L 305 210 L 285 220"/>
+    <path d="M 455 210 L 510 210"/>
+    <path d="M 495 200 L 515 210 L 495 220"/>
+  </g>
+
+  <!-- pipeline stages -->
+  <g>
+    <rect x="105" y="170" width="140" height="80" rx="14" fill="#fffbeb"/>
+    <rect x="315" y="170" width="140" height="80" rx="14" fill="#ffffff"/>
+    <rect x="525" y="170" width="140" height="80" rx="14" fill="#fffbeb"/>
+  </g>
+  <g fill="#b45309" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="18" font-weight="600" text-anchor="middle">
+    <text x="175" y="206">源码</text>
+    <text x="385" y="206">构建</text>
+    <text x="595" y="206">产物</text>
+  </g>
+  <g fill="#d97706" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="13" text-anchor="middle">
+    <text x="175" y="232">TS · SCSS</text>
+    <text x="385" y="232">HMR · minify</text>
+    <text x="595" y="232">dist/</text>
+  </g>
+
+  <!-- gear hint -->
+  <g stroke="#fde68a" stroke-width="6" fill="none" opacity="0.85">
+    <circle cx="660" cy="110" r="22"/>
+    <path d="M 660 78 L 660 90 M 660 130 L 660 142 M 628 110 L 640 110 M 680 110 L 692 110 M 638 88 L 646 96 M 674 124 L 682 132 M 682 88 L 674 96 M 646 124 L 638 132"/>
+  </g>
+
+  <!-- title -->
+  <text x="400" y="380" fill="#ffffff" font-family="Georgia, 'Noto Serif SC', serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="1">MPBuild</text>
+  <text x="400" y="410" fill="#fde68a" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">小程序构建工具</text>
+</svg>

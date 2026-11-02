@@ -1,0 +1,134 @@
+<svg viewBox="0 0 980 800" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="stageFiber" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="stageScope" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="stageStack" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3fb950"/></marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#a371f7"/></marker>
+  </defs>
+
+  <rect width="980" height="800" fill="url(#bg)" rx="8"/>
+
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">JSVM3 闭包调用：Frame 链与 Scope 父链</text>
+  <text x="490" y="54" text-anchor="middle" fill="#8b949e" font-size="12">c.increment() 执行瞬间的运行时快照——调用链与词法链各自独立生长</text>
+
+  <!-- 顶部：示例源码与真实反汇编 -->
+  <rect x="30" y="80" width="920" height="118" rx="6" fill="url(#stageStack)" filter="url(#glow)"/>
+  <text x="50" y="102" fill="#a371f7" font-size="12" font-weight="bold">示例：counter 闭包（反汇编来自 demo/src/disassemble.ts 的真实输出）</text>
+  <line x1="490" y1="112" x2="490" y2="190" stroke="#46285c" stroke-width="1"/>
+  <text x="50" y="124" fill="#c9d1d9" font-size="10.5">function createCounter(init) {</text>
+  <text x="50" y="139" fill="#c9d1d9" font-size="10.5">  var count = init || 0;</text>
+  <text x="50" y="154" fill="#c9d1d9" font-size="10.5">  return { increment: function () { count++; } };</text>
+  <text x="50" y="169" fill="#c9d1d9" font-size="10.5">}</text>
+  <text x="50" y="184" fill="#c9d1d9" font-size="10.5">var c = createCounter(41);  c.increment(); // ← 快照时刻</text>
+  <text x="510" y="124" fill="#8b949e" font-size="10.5">=== increment ===（createCounter 的 children[0]）</text>
+  <text x="510" y="140" fill="#3fb950" font-size="10.5">GETL  [1, 4]  ; count   沿 parentScope 走 1 层取 data[4]</text>
+  <text x="510" y="155" fill="#c9d1d9" font-size="10.5">SR3 · LR3               旧值经 r3 寄存器暂存</text>
+  <text x="510" y="170" fill="#c9d1d9" font-size="10.5">INC                     41 → 42</text>
+  <text x="510" y="185" fill="#3fb950" font-size="10.5">SETL  [1, 4]  ; count   写回外层 Scope 的 data[4]</text>
+
+  <!-- 左：Fiber 调用栈 -->
+  <rect x="30" y="218" width="290" height="340" rx="6" fill="url(#stageFiber)" filter="url(#glow)"/>
+  <text x="175" y="240" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">Fiber.callStack（调用链）</text>
+  <text x="175" y="257" text-anchor="middle" fill="#8b949e" font-size="10">按「谁调用了谁」生长</text>
+
+  <rect x="50" y="268" width="250" height="100" rx="5" fill="#0d1117" stroke="#f85149" stroke-width="1"/>
+  <text x="175" y="288" text-anchor="middle" fill="#f85149" font-size="11" font-weight="bold">Frame increment（栈顶 depth=1）</text>
+  <text x="62" y="308" fill="#c9d1d9" font-size="10">script    increment 子 Script</text>
+  <text x="62" y="324" fill="#3fb950" font-size="10">_scope    ────────────→</text>
+  <text x="62" y="340" fill="#c9d1d9" font-size="10">ip        正执行 SETL [1, 4]</text>
+  <text x="62" y="356" fill="#c9d1d9" font-size="10">evalStack 求值栈（见第 2 篇）</text>
+
+  <path d="M120,384 L120,374" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="132" y="381" fill="#8b949e" font-size="9">pushFrame</text>
+
+  <rect x="50" y="388" width="250" height="84" rx="5" fill="#0d1117" stroke="#8b949e" stroke-width="1"/>
+  <text x="175" y="408" text-anchor="middle" fill="#8b949e" font-size="11" font-weight="bold">Frame 模块顶层（depth=0）</text>
+  <text x="62" y="428" fill="#c9d1d9" font-size="10">suspended = true（被 CALLM 挂起）</text>
+  <text x="62" y="444" fill="#3fb950" font-size="10">_scope    ─→ 模块顶层 Scope</text>
+  <text x="62" y="460" fill="#c9d1d9" font-size="10">ip        停在 CALLM 之后</text>
+
+  <text x="50" y="496" fill="#8b949e" font-size="10">createCounter 的 Frame 返回后已 popFrame，</text>
+  <text x="50" y="512" fill="#8b949e" font-size="10">不在调用栈上</text>
+  <text x="50" y="538" fill="#8b949e" font-size="10">pushFrame 时 new Scope(parent = 捕获的 scope)，</text>
+  <text x="50" y="553" fill="#8b949e" font-size="10">词法链由此与调用链分离</text>
+
+  <!-- 右：Scope 父链 -->
+  <rect x="350" y="218" width="600" height="340" rx="6" fill="url(#stageScope)" filter="url(#glow)"/>
+  <text x="650" y="240" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="bold">Scope 父链（词法链）</text>
+  <text x="650" y="257" text-anchor="middle" fill="#8b949e" font-size="10">按「函数在哪里定义」生长</text>
+
+  <!-- Scope A -->
+  <rect x="370" y="268" width="270" height="84" rx="5" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="505" y="288" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">Scope · increment 的帧</text>
+  <text x="382" y="307" fill="#c9d1d9" font-size="10">data[0]  this → c（CALLM 传入）</text>
+  <text x="382" y="322" fill="#c9d1d9" font-size="10">data[1]  arguments</text>
+  <text x="382" y="337" fill="#c9d1d9" font-size="10">data[2]  increment 自身（槽位 2）</text>
+
+  <!-- A -> B 寻址路径（高亮） -->
+  <path d="M505,352 L505,364" fill="none" stroke="#3fb950" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="517" y="362" fill="#3fb950" font-size="9">parentScope（GETL [1, 4] 沿此走 1 层）</text>
+
+  <!-- Scope B -->
+  <rect x="370" y="368" width="270" height="116" rx="5" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="505" y="387" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">Scope · createCounter(41) 调用时创建</text>
+  <text x="382" y="405" fill="#c9d1d9" font-size="10">data[0]  this → globalObj</text>
+  <text x="382" y="420" fill="#c9d1d9" font-size="10">data[1]  arguments → [41]</text>
+  <text x="382" y="435" fill="#c9d1d9" font-size="10">data[2]  createCounter 自身</text>
+  <text x="382" y="450" fill="#c9d1d9" font-size="10">data[3]  init = 41</text>
+  <rect x="376" y="456" width="258" height="17" rx="3" fill="none" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="382" y="468" fill="#e6edf3" font-size="10" font-weight="bold">data[4]  count = 42  ← SETL [1, 4] 刚写回</text>
+
+  <path d="M505,484 L505,496" fill="none" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <text x="517" y="494" fill="#3fb950" font-size="9">parentScope</text>
+
+  <!-- 模块顶层 Scope -->
+  <rect x="370" y="500" width="270" height="44" rx="5" fill="#0d1117" stroke="#8b949e" stroke-width="1"/>
+  <text x="505" y="518" text-anchor="middle" fill="#8b949e" font-size="11" font-weight="bold">Scope · 模块顶层</text>
+  <text x="382" y="535" fill="#c9d1d9" font-size="10">data[0]  globalObj · parentScope = null</text>
+
+  <!-- 函数对象（createFunction 产物） -->
+  <rect x="670" y="268" width="270" height="100" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1"/>
+  <text x="805" y="288" text-anchor="middle" fill="#a371f7" font-size="11" font-weight="bold">函数对象 increment</text>
+  <text x="682" y="307" fill="#c9d1d9" font-size="10">FUNCTION 指令调用 createFunction(</text>
+  <text x="682" y="322" fill="#c9d1d9" font-size="10">  childScript, 当前 scope, realm) 创建，</text>
+  <text x="682" y="337" fill="#c9d1d9" font-size="10">打上 __JSVMFun__ 标记</text>
+  <text x="682" y="355" fill="#a371f7" font-size="10">创建时捕获定义处的 Scope ──→</text>
+
+  <path d="M800,368 C780,392 720,414 644,424" fill="none" stroke="#a371f7" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
+
+  <!-- GETL 寻址说明 -->
+  <rect x="670" y="392" width="270" height="118" rx="5" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="805" y="412" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">GETL [1, 4] 的运行时寻址</text>
+  <text x="682" y="431" fill="#c9d1d9" font-size="10">scopeIndex = 1，varIndex = 4</text>
+  <text x="682" y="447" fill="#c9d1d9" font-size="10">while (scopeIndex--)</text>
+  <text x="682" y="462" fill="#c9d1d9" font-size="10">  scope = scope.parentScope</text>
+  <text x="682" y="478" fill="#e6edf3" font-size="10" font-weight="bold">→ 落到 Scope B，取 data[4] = 42</text>
+  <text x="682" y="496" fill="#8b949e" font-size="9">（src/opcodes/ins.ts 中 GETL 的实现）</text>
+
+  <!-- Frame#2._scope -> Scope A 的跨面板引用 -->
+  <path d="M300,318 C325,318 335,305 366,305" fill="none" stroke="#3fb950" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+
+  <!-- 底部：两条链的分工 -->
+  <rect x="30" y="578" width="920" height="132" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="50" y="602" fill="#e6edf3" font-size="12" font-weight="bold">两条链的分工</text>
+  <text x="50" y="624" fill="#c9d1d9" font-size="10.5">· Frame 链按调用关系生长：模块顶层 → increment（createCounter 的 Frame 返回后已 popFrame，不在栈上）——它回答「控制流从哪来」。</text>
+  <text x="50" y="644" fill="#c9d1d9" font-size="10.5">· Scope 链按词法嵌套生长：increment 定义在 createCounter 内，其作用域的 parentScope 指向那一次调用创建的 Scope——它回答「变量到哪找」。</text>
+  <text x="50" y="664" fill="#c9d1d9" font-size="10.5">· Frame 已销毁而 Scope 仍被函数对象引用着，这份「捕获」就是闭包在 jsvm3 里的具体形态：没有专门的闭包对象，只有普通的 Scope 引用。</text>
+  <text x="50" y="684" fill="#c9d1d9" font-size="10.5">· GETL [d, i] 的 d 是编译期 Emitter.scope() 数出的函数边界层数，i 是 declareVar() 分配的槽位索引；词法嵌套深度与运行时 parentScope</text>
+  <text x="66" y="700" fill="#c9d1d9" font-size="10.5">链长度严格相等，寻址因此在编译期一次算定，运行期只需沿链走固定步数。</text>
+
+  <!-- Legend -->
+  <rect x="30" y="724" width="920" height="56" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="45" y="736" width="12" height="12" rx="2" fill="#58a6ff"/>
+  <text x="62" y="747" fill="#8b949e" font-size="11">Frame：一次函数调用的执行上下文（调用链）</text>
+  <rect x="45" y="756" width="12" height="12" rx="2" fill="#3fb950"/>
+  <text x="62" y="767" fill="#8b949e" font-size="11">Scope：按索引存取变量（词法链）</text>
+  <rect x="500" y="736" width="12" height="12" rx="2" fill="#a371f7"/>
+  <text x="517" y="747" fill="#8b949e" font-size="11">函数对象：createFunction 产物，捕获定义处的 Scope</text>
+  <line x1="500" y1="762" x2="524" y2="762" stroke="#8b949e" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <text x="531" y="767" fill="#8b949e" font-size="11">虚线：引用 / 捕获关系</text>
+</svg>

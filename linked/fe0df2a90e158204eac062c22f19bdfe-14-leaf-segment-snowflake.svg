@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 700" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <rect width="1080" height="700" rx="8" fill="#f8fafc"/>
+  <text x="24" y="32" font-size="16" font-weight="600" fill="#1f2937">Leaf 号段模式双 buffer 预取 与 雪花模式 64 位分配</text>
+  <text x="24" y="52" font-size="12" fill="#64748b">上半：当前段已下发约 10% 即异步预取下一段，DB 抖动期间仍有备用段；下半：雪花把 64 位拆成时间戳、workerId、序列号三段</text>
+
+  <!-- ============ 上半：号段模式双 buffer ============ -->
+  <rect x="40" y="72" width="1000" height="300" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="0.8"/>
+  <text x="56" y="98" font-size="13" font-weight="600" fill="#1f2937">号段模式双 buffer 预取时序</text>
+  <text x="56" y="116" font-size="10.5" fill="#64748b">DB 表维护 (biz_tag, max_id, step)；实例原子更新 max_id += step 取一段，缓存在内存本地递增</text>
+
+  <!-- 时间轴 -->
+  <text x="56" y="150" font-size="11" font-weight="600" fill="#475569">t1 当前段消耗中</text>
+  <!-- Buffer A（active） -->
+  <rect x="56" y="162" width="440" height="44" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.4"/>
+  <text x="64" y="180" font-size="11" font-weight="600" fill="#1d4ed8">Buffer A（当前段，active）</text>
+  <text x="64" y="198" font-size="10" fill="#1f2937">段 [1000, 2000)，已发到 1100，剩余 900</text>
+  <!-- 已消耗部分填色（约 10%） -->
+  <rect x="56" y="166" width="44" height="36" rx="2" fill="#bfdbfe" opacity="0.7"/>
+  <text x="78" y="189" font-size="9.5" fill="#1e3a8a" text-anchor="middle">已发 100</text>
+
+  <!-- 阈值线（已下发约 10% 处） -->
+  <line x1="100" y1="156" x2="100" y2="220" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="100" y="150" font-size="10" fill="#b45309" text-anchor="middle" font-weight="600">阈值</text>
+
+  <!-- Buffer B（empty/standby） -->
+  <rect x="540" y="162" width="440" height="44" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <text x="548" y="180" font-size="11" font-weight="600" fill="#64748b">Buffer B（待加载，next）</text>
+  <text x="548" y="198" font-size="10" fill="#94a3b8">空，等待预取</text>
+
+  <!-- DB -->
+  <rect x="940" y="240" width="80" height="46" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2"/>
+  <text x="980" y="260" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle">DB</text>
+  <text x="980" y="276" font-size="9.5" fill="#7f1d1d" text-anchor="middle">leaf_alloc 表</text>
+
+  <!-- t2 触发预取 -->
+  <text x="56" y="248" font-size="11" font-weight="600" fill="#b45309">t2 已下发约 10% → 异步预取下一段</text>
+  <path d="M 100 210 Q 500 240 936 252" fill="none" stroke="#b45309" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#arrAmb)"/>
+  <text x="640" y="226" font-size="10" fill="#b45309" font-weight="600">UPDATE max_id = max_id + step（异步，不阻塞发号）</text>
+
+  <!-- 预取结果回填 B -->
+  <path d="M 936 270 Q 760 300 540 206" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="640" y="300" font-size="10" fill="#16a34a" font-weight="600">取回新段 [2000, 3000) 填入 Buffer B</text>
+
+  <!-- t3 切换 -->
+  <text x="56" y="332" font-size="11" font-weight="600" fill="#16a34a">t3 A 耗尽 → 切到 B；B 成为新 active，原 A 位置空出待下一次预取</text>
+  <path d="M 496 184 L 540 184" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrGrn)"/>
+
+  <!-- DB 抖动说明 -->
+  <rect x="56" y="346" width="960" height="20" rx="3" fill="#fffbeb" stroke="#b45309" stroke-width="0.6"/>
+  <text x="64" y="360" font-size="10" fill="#7f1d1d">预取期间 DB 短暂故障：A 仍可发号直到耗尽；若 A 耗尽时 B 未就绪则发号阻塞。代价：实例重启丢号，段内未用部分成空洞。</text>
+
+  <!-- ============ 下半：雪花模式 64 位分配 ============ -->
+  <rect x="40" y="392" width="1000" height="280" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="0.8"/>
+  <text x="56" y="418" font-size="13" font-weight="600" fill="#1f2937">雪花模式 64 位分配（本地生成，无 DB 往返）</text>
+  <text x="56" y="436" font-size="10.5" fill="#64748b">高位在前：1 位符号 + 41 位时间戳 + 10 位 workerId + 12 位序列号</text>
+
+  <!-- 64 位条 -->
+  <!-- 1 bit sign -->
+  <rect x="56" y="460" width="30" height="56" fill="#e2e8f0" stroke="#475569" stroke-width="1"/>
+  <text x="71" y="494" font-size="10" fill="#475569" text-anchor="middle" font-weight="600">1</text>
+  <text x="71" y="534" font-size="10" fill="#475569" text-anchor="middle">符号位</text>
+
+  <!-- 41 bit timestamp -->
+  <rect x="86" y="460" width="430" height="56" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.4"/>
+  <text x="301" y="486" font-size="13" font-weight="700" fill="#1d4ed8" text-anchor="middle">41 位</text>
+  <text x="301" y="504" font-size="11" fill="#1f2937" text-anchor="middle">时间戳（ms 级）</text>
+  <text x="301" y="534" font-size="10" fill="#475569" text-anchor="middle">≈ 2^41 ms ≈ 69 年</text>
+
+  <!-- 10 bit workerId -->
+  <rect x="516" y="460" width="200" height="56" fill="#fffbeb" stroke="#b45309" stroke-width="1.4"/>
+  <text x="616" y="486" font-size="13" font-weight="700" fill="#b45309" text-anchor="middle">10 位</text>
+  <text x="616" y="504" font-size="11" fill="#1f2937" text-anchor="middle">workerId</text>
+  <text x="616" y="534" font-size="10" fill="#475569" text-anchor="middle">1024 个实例</text>
+
+  <!-- 12 bit sequence -->
+  <rect x="716" y="460" width="240" height="56" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="836" y="486" font-size="13" font-weight="700" fill="#16a34a" text-anchor="middle">12 位</text>
+  <text x="836" y="504" font-size="11" fill="#1f2937" text-anchor="middle">序列号</text>
+  <text x="836" y="534" font-size="10" fill="#475569" text-anchor="middle">每 ms 4096 个</text>
+
+  <!-- 位宽刻度 -->
+  <line x1="56" y1="548" x2="956" y2="548" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="56" y="562" font-size="9.5" fill="#94a3b8">bit 63</text>
+  <text x="86" y="562" font-size="9.5" fill="#94a3b8">62</text>
+  <text x="516" y="562" font-size="9.5" fill="#94a3b8">21</text>
+  <text x="716" y="562" font-size="9.5" fill="#94a3b8">11</text>
+  <text x="940" y="562" font-size="9.5" fill="#94a3b8" text-anchor="end">bit 0</text>
+
+  <!-- 两个工程问题 -->
+  <rect x="56" y="586" width="460" height="76" rx="6" fill="#fffbeb" stroke="#b45309" stroke-width="1"/>
+  <text x="68" y="608" font-size="11.5" font-weight="700" fill="#b45309">工程问题 1：workerId 从哪来</text>
+  <text x="68" y="628" font-size="10.5" fill="#1f2937">Leaf 用 ZK 持久顺序节点分配 workerId：实例启动时</text>
+  <text x="68" y="644" font-size="10.5" fill="#1f2937">建顺序节点，序号即 workerId；定期上报时间戳做</text>
+  <text x="68" y="658" font-size="10.5" fill="#1f2937">时钟校验（呼应第 17 篇）</text>
+
+  <rect x="536" y="586" width="460" height="76" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="548" y="608" font-size="11.5" font-weight="700" fill="#dc2626">工程问题 2：时钟回拨怎么办</text>
+  <text x="548" y="628" font-size="10.5" fill="#1f2937">启动时校验当前时间 ≥ ZK 上报的历史时间；</text>
+  <text x="548" y="644" font-size="10.5" fill="#1f2937">短暂回拨（如 ms 级）等待追平；长时间回拨</text>
+  <text x="548" y="658" font-size="10.5" fill="#1f2937">拒绝服务，避免生成重复 ID 或时间倒序</text>
+</svg>

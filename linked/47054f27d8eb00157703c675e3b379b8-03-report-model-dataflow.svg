@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- left: artifacts -->
+  <rect x="24" y="30" width="196" height="252" rx="8" fill="#f4f4f5"/>
+  <text x="122" y="52" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">artifacts/ 现场</text>
+  <text x="40" y="78" font-size="11" fill="#3f3f46">meta.json（run 状态）</text>
+  <text x="40" y="102" font-size="11" fill="#3f3f46">nodes/*.json（节点执行）</text>
+  <text x="40" y="126" font-size="11" fill="#3f3f46">ledger（文件级账本）</text>
+  <text x="40" y="150" font-size="11" fill="#3f3f46">line-maps（行级处置）</text>
+  <text x="40" y="174" font-size="11" fill="#3f3f46">inbox + done（工单）</text>
+  <text x="40" y="198" font-size="11" fill="#3f3f46">usage.json（token 用量）</text>
+  <text x="40" y="222" font-size="11" fill="#3f3f46">delivery.json（交付快照）</text>
+  <text x="40" y="246" font-size="11" fill="#3f3f46">manual-interventions</text>
+  <text x="122" y="270" font-size="10.5" fill="#71717a" text-anchor="middle">十几种 JSON，只读</text>
+
+  <!-- arrow artifacts → loaders -->
+  <line x1="220" y1="156" x2="258" y2="156" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- middle: loaders -->
+  <rect x="262" y="62" width="220" height="92" rx="8" fill="#ededf0"/>
+  <text x="372" y="86" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">report-model loaders</text>
+  <text x="372" y="106" font-size="11" fill="#3f3f46" text-anchor="middle">一种数据源一个 loader × 7</text>
+  <text x="372" y="124" font-size="11" fill="#71717a" text-anchor="middle">逐字段 optional</text>
+  <text x="372" y="142" font-size="11" fill="#71717a" text-anchor="middle">旧 run 缺文件记 warning 上浮</text>
+
+  <!-- middle: aggregate -->
+  <rect x="262" y="172" width="220" height="110" rx="8" fill="#e4e4e7"/>
+  <text x="372" y="196" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">聚合 → StudioModel</text>
+  <text x="372" y="216" font-size="11" fill="#3f3f46" text-anchor="middle">run → 项目归因</text>
+  <text x="372" y="234" font-size="11" fill="#3f3f46" text-anchor="middle">页面全集推导（含未启动）</text>
+  <text x="372" y="252" font-size="11" fill="#3f3f46" text-anchor="middle">信任阶梯推导</text>
+  <text x="372" y="272" font-size="10.5" fill="#71717a" text-anchor="middle">watch 节流约 2 秒重建</text>
+
+  <!-- arrow loaders → aggregate -->
+  <line x1="372" y1="154" x2="372" y2="168" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- arrow aggregate → views (split) -->
+  <path d="M 482 227 L 512 227 L 512 156 L 548 156" fill="none" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- right: five views -->
+  <rect x="552" y="30" width="224" height="44" rx="8" fill="#dcdce0"/>
+  <text x="664" y="48" font-size="12" font-weight="600" fill="#18181b" text-anchor="middle">总览</text>
+  <text x="664" y="65" font-size="10.5" fill="#3f3f46" text-anchor="middle">页面 × 状态矩阵 · token 仪表</text>
+
+  <rect x="552" y="82" width="224" height="44" rx="8" fill="#dcdce0"/>
+  <text x="664" y="100" font-size="12" font-weight="600" fill="#18181b" text-anchor="middle">Run 详情</text>
+  <text x="664" y="117" font-size="10.5" fill="#3f3f46" text-anchor="middle">节点时间线 · 门禁下钻 · 账本表</text>
+
+  <rect x="552" y="134" width="224" height="44" rx="8" fill="#dcdce0"/>
+  <text x="664" y="152" font-size="12" font-weight="600" fill="#18181b" text-anchor="middle">风险与信任阶梯</text>
+  <text x="664" y="169" font-size="10.5" fill="#3f3f46" text-anchor="middle">risk-high 行 · blocked 文件 · 灰色缺口</text>
+
+  <rect x="552" y="186" width="224" height="44" rx="8" fill="#dcdce0"/>
+  <text x="664" y="204" font-size="12" font-weight="600" fill="#18181b" text-anchor="middle">工单</text>
+  <text x="664" y="221" font-size="10.5" fill="#3f3f46" text-anchor="middle">inbox 置顶 · done 可检索</text>
+
+  <rect x="552" y="238" width="224" height="44" rx="8" fill="#dcdce0"/>
+  <text x="664" y="256" font-size="12" font-weight="600" fill="#18181b" text-anchor="middle">成本</text>
+  <text x="664" y="273" font-size="10.5" fill="#3f3f46" text-anchor="middle">多 run token 消耗对比</text>
+
+  <!-- bottom tip -->
+  <rect x="24" y="318" width="752" height="56" rx="8" fill="#fdf6ec"/>
+  <text x="400" y="340" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">纯只读 · 无数据库 · 工具写盘为零（本地 server :5175）</text>
+  <text x="400" y="360" font-size="11" fill="#7c5a2e" text-anchor="middle">人工验收无数据源：信任阶梯上显示灰色「未覆盖」缺口，不隐藏，缺口本身是信息</text>
+</svg>

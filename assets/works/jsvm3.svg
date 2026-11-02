@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c2d12"/>
+      <stop offset="55%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/><circle cx="380" cy="60" r="2"/><circle cx="460" cy="60" r="2"/><circle cx="540" cy="60" r="2"/><circle cx="620" cy="60" r="2"/><circle cx="700" cy="60" r="2"/>
+    <circle cx="60" cy="390" r="2"/><circle cx="140" cy="390" r="2"/><circle cx="220" cy="390" r="2"/><circle cx="300" cy="390" r="2"/><circle cx="380" cy="390" r="2"/><circle cx="460" cy="390" r="2"/><circle cx="540" cy="390" r="2"/><circle cx="620" cy="390" r="2"/><circle cx="700" cy="390" r="2"/>
+  </g>
+
+  <!-- bytecode flow line -->
+  <path d="M 110 210 L 690 210" stroke="#ffedd5" stroke-width="4" opacity="0.6"/>
+  <path d="M 676 200 L 694 210 L 676 220" stroke="#ffedd5" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- instruction chips -->
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="17" font-weight="700" text-anchor="middle">
+    <rect x="125" y="180" width="96" height="60" rx="12" fill="#fff7ed"/>
+    <text x="173" y="217" fill="#c2410c">PUSH</text>
+    <rect x="245" y="180" width="96" height="60" rx="12" fill="#ffedd5"/>
+    <text x="293" y="217" fill="#c2410c">LOAD</text>
+    <rect x="365" y="180" width="96" height="60" rx="12" fill="#ffffff"/>
+    <text x="413" y="217" fill="#9a3412">ADD</text>
+    <rect x="485" y="180" width="96" height="60" rx="12" fill="#ffedd5"/>
+    <text x="533" y="217" fill="#c2410c">CALL</text>
+    <rect x="605" y="180" width="70" height="60" rx="12" fill="#fff7ed"/>
+    <text x="640" y="217" fill="#c2410c">RET</text>
+  </g>
+
+  <!-- hex bytes under chips -->
+  <g fill="#fed7aa" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="13" text-anchor="middle" opacity="0.85">
+    <text x="173" y="272">0x01</text>
+    <text x="293" y="272">0x1A</text>
+    <text x="413" y="272">0x2F</text>
+    <text x="533" y="272">0x40</text>
+    <text x="640" y="272">0xFF</text>
+  </g>
+
+  <!-- compile arrow from JS -->
+  <text x="400" y="118" fill="#ffedd5" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" text-anchor="middle" opacity="0.9">a + b</text>
+  <path d="M 400 130 L 400 162" stroke="#ffedd5" stroke-width="3" opacity="0.8"/>
+  <path d="M 393 152 L 400 164 L 407 152" stroke="#ffedd5" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- title -->
+  <text x="400" y="390" fill="#ffffff" font-family="Georgia, 'Noto Serif SC', serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="1">JSVM3</text>
+  <text x="400" y="420" fill="#fed7aa" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">自定义字节码 VM</text>
+</svg>

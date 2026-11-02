@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <!-- Left: permission matrix -->
+  <text x="40" y="36" font-size="15" font-weight="600" fill="#18181b">六个仓库的读写权限</text>
+
+  <g font-size="12.5">
+    <rect x="40" y="52" width="330" height="58" rx="8" fill="#f4f4f5"/>
+    <text x="58" y="76" font-weight="600" fill="#18181b">shop-w</text>
+    <text x="58" y="96" fill="#52525b">Vue 2.7 源仓</text>
+    <text x="346" y="88" fill="#52525b" text-anchor="end">只读</text>
+
+    <rect x="40" y="118" width="330" height="58" rx="8" fill="#f4f4f5"/>
+    <text x="58" y="142" font-weight="600" fill="#18181b">老组件库 A</text>
+    <text x="58" y="162" fill="#52525b">mc-* 组件</text>
+    <text x="346" y="154" fill="#52525b" text-anchor="end">只读</text>
+
+    <rect x="40" y="184" width="330" height="58" rx="8" fill="#f4f4f5"/>
+    <text x="58" y="208" font-weight="600" fill="#18181b">老组件库 B</text>
+    <text x="58" y="228" fill="#52525b">组件源码</text>
+    <text x="346" y="220" fill="#52525b" text-anchor="end">只读</text>
+
+    <rect x="40" y="250" width="330" height="58" rx="8" fill="#f4f4f5"/>
+    <text x="58" y="274" font-weight="600" fill="#18181b">nova-design</text>
+    <text x="58" y="294" fill="#52525b">新设计体系组件库</text>
+    <text x="346" y="286" fill="#52525b" text-anchor="end">只读</text>
+
+    <rect x="40" y="316" width="330" height="58" rx="8" fill="#f4f4f5"/>
+    <text x="58" y="340" font-weight="600" fill="#18181b">foundation-web</text>
+    <text x="58" y="360" fill="#52525b">基建仓</text>
+    <text x="346" y="352" fill="#52525b" text-anchor="end">只读</text>
+
+    <rect x="40" y="382" width="330" height="58" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.5"/>
+    <text x="58" y="406" font-weight="600" fill="#b45309">shop-web</text>
+    <text x="58" y="426" fill="#b45309">React 18 目标仓 · 唯一落码处</text>
+    <text x="346" y="418" fill="#b45309" font-weight="600" text-anchor="end">可写</text>
+  </g>
+
+  <!-- Arrows from matrix to enforcement -->
+  <line x1="378" y1="200" x2="416" y2="200" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="378" y1="330" x2="416" y2="330" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Right: three enforcement means -->
+  <text x="424" y="36" font-size="15" font-weight="600" fill="#18181b">三道机器强制（不靠 prompt 愿望）</text>
+
+  <rect x="424" y="52" width="336" height="118" rx="10" fill="#ededf0"/>
+  <text x="444" y="80" font-size="13.5" font-weight="600" fill="#18181b">a · 按角色禁工具</text>
+  <text x="444" y="104" font-size="12.5" fill="#3f3f46">调查 / 普查工人 spawn 时禁掉</text>
+  <text x="444" y="124" font-size="12.5" fill="#3f3f46">--disallowedTools Write,Edit,NotebookEdit</text>
+  <text x="444" y="146" font-size="12.5" fill="#3f3f46">所有工人统一禁 AskUserQuestion</text>
+
+  <rect x="424" y="186" width="336" height="104" rx="10" fill="#ededf0"/>
+  <text x="444" y="214" font-size="13.5" font-weight="600" fill="#18181b">b · cwd 隔离</text>
+  <text x="444" y="238" font-size="12.5" fill="#3f3f46">转码工人 cwd = 目标仓 shop-web</text>
+  <text x="444" y="258" font-size="12.5" fill="#3f3f46">源仓内容只经读取进入 prompt</text>
+  <text x="444" y="278" font-size="12.5" fill="#3f3f46">写操作的默认落点在可写仓</text>
+
+  <rect x="424" y="306" width="336" height="134" rx="10" fill="#ededf0"/>
+  <text x="444" y="334" font-size="13.5" font-weight="600" fill="#18181b">c · run 结束 git 审计</text>
+  <text x="444" y="358" font-size="12.5" fill="#3f3f46">对 5 个事实源逐个执行</text>
+  <text x="444" y="378" font-size="12.5" fill="#3f3f46">git -C &lt;仓&gt; status --porcelain</text>
+  <text x="444" y="398" font-size="12.5" fill="#3f3f46">输出必须全空，是 G2 门禁前置项</text>
+  <text x="444" y="418" font-size="12.5" fill="#3f3f46">失败携每仓首行明细，只发读命令</text>
+
+  <!-- caption -->
+  <text x="400" y="490" font-size="13" fill="#71717a" text-anchor="middle">prompt 里写「请勿修改源仓」是愿望；</text>
+  <text x="400" y="512" font-size="13" fill="#71717a" text-anchor="middle">权限表、cwd 隔离和 git 审计是机器强制，管得住一次手滑的 Edit。</text>
+</svg>

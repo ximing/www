@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 560" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="560" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">多实例通过 tair 仲裁互斥：抢锁、持锁、放锁的时序</text>
+
+  <!-- 生命线头部 -->
+  <rect x="100" y="58" width="140" height="28" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="170" y="77" font-size="12.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">实例 A</text>
+
+  <rect x="320" y="58" width="140" height="28" rx="6" fill="#f1f5f9" stroke="#475569" stroke-width="1.3"/>
+  <text x="390" y="77" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">tair（锁仲裁）</text>
+
+  <rect x="540" y="58" width="140" height="28" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+  <text x="610" y="77" font-size="12.5" font-weight="600" fill="#b45309" text-anchor="middle">实例 B</text>
+
+  <!-- 生命线 -->
+  <g stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="5 4">
+    <line x1="170" y1="90" x2="170" y2="468"/>
+    <line x1="390" y1="90" x2="390" y2="468"/>
+    <line x1="610" y1="90" x2="610" y2="468"/>
+  </g>
+
+  <!-- ① A 抢锁成功 -->
+  <text x="280" y="116" font-size="11.5" fill="#1d4ed8" text-anchor="middle">① putIfAbsent(lock, tokenA, TTL=30s)</text>
+  <line x1="182" y1="128" x2="378" y2="128" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <line x1="378" y1="154" x2="182" y2="154" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrB)"/>
+  <text x="280" y="170" font-size="11" fill="#1d4ed8" text-anchor="middle">写入成功 → A 持锁</text>
+
+  <!-- A 临界区 -->
+  <rect x="176" y="158" width="10" height="146" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="96" y="216" font-size="11" fill="#1d4ed8" text-anchor="middle">临界区</text>
+  <text x="96" y="232" font-size="10.5" fill="#1d4ed8" text-anchor="middle">持锁执行</text>
+  <text x="96" y="247" font-size="10.5" fill="#64748b" text-anchor="middle">定时任务 / 改目录</text>
+
+  <!-- ② B 抢锁失败 -->
+  <text x="500" y="200" font-size="11.5" fill="#b45309" text-anchor="middle">② putIfAbsent(lock, tokenB, 30s)</text>
+  <line x1="598" y1="212" x2="402" y2="212" stroke="#d97706" stroke-width="1.6" marker-end="url(#arrA)"/>
+  <line x1="402" y1="238" x2="598" y2="238" stroke="#d97706" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrA)"/>
+  <text x="500" y="254" font-size="11" fill="#b45309" text-anchor="middle">失败：锁被 A 持有，B 本轮放弃 / 稍后重试</text>
+
+  <!-- ③④ A 校验后释放 -->
+  <text x="280" y="306" font-size="11.5" fill="#1d4ed8" text-anchor="middle">③ get(lock) 读出 value，比对是否仍是 tokenA</text>
+  <line x1="182" y1="318" x2="378" y2="318" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <text x="280" y="344" font-size="11.5" fill="#1d4ed8" text-anchor="middle">④ 一致才 delete(lock)；不一致说明锁已易主，不能删</text>
+  <line x1="182" y1="356" x2="378" y2="356" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrB)"/>
+  <line x1="378" y1="380" x2="182" y2="380" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrB)"/>
+  <text x="280" y="396" font-size="11" fill="#1d4ed8" text-anchor="middle">释放成功</text>
+
+  <!-- ⑤ B 重试成功 -->
+  <text x="500" y="418" font-size="11.5" fill="#b45309" text-anchor="middle">⑤ B 重试 putIfAbsent</text>
+  <line x1="598" y1="430" x2="402" y2="430" stroke="#d97706" stroke-width="1.6" marker-end="url(#arrA)"/>
+  <line x1="402" y1="452" x2="598" y2="452" stroke="#d97706" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrA)"/>
+  <rect x="616" y="438" width="10" height="26" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>
+  <text x="686" y="454" font-size="10.5" fill="#b45309" text-anchor="middle">成功，B 持锁执行</text>
+
+  <!-- 底部要点 -->
+  <rect x="30" y="478" width="720" height="68" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="46" cy="499" r="3.5" fill="#d97706"/>
+  <text x="58" y="503" font-size="11.5" fill="#475569">锁带 TTL 兜底：持锁方宕机，tair 到期自动放锁；但若只是「卡顿超时」，双方会同时进临界区——互斥失效，靠幂等与 DB 约束兜底。</text>
+  <circle cx="46" cy="528" r="3.5" fill="#dc2626"/>
+  <text x="58" y="532" font-size="11.5" fill="#475569">误删陷阱：finally 里不校验 token 直接 delete，会删掉超时后被别人抢走的锁——value 必须带持锁者标识，先比对、再删除。</text>
+</svg>

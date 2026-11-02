@@ -1,0 +1,65 @@
+<svg viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="meta" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a365d"/><stop offset="100%" stop-color="#2a4a7f"/></linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="ext" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#5c4228"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="980" height="560" fill="url(#bg)" rx="8"/>
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">日志上报包结构设计</text>
+
+  <!-- meta block -->
+  <rect x="40" y="60" width="900" height="120" rx="6" fill="url(#meta)" filter="url(#glow)"/>
+  <text x="58" y="84" fill="#58a6ff" font-size="13" font-weight="bold">公共 Meta 段（所有日志共用）</text>
+  <text x="700" y="84" text-anchor="end" fill="#8b949e" font-size="11">用于检索、聚合、串联链路</text>
+
+  <rect x="58" y="96" width="130" height="26" rx="4" fill="#0d1117"/><text x="123" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">appId</text>
+  <rect x="196" y="96" width="130" height="26" rx="4" fill="#0d1117"/><text x="261" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">version</text>
+  <rect x="334" y="96" width="150" height="26" rx="4" fill="#0d1117"/><text x="409" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">deviceId / openId</text>
+  <rect x="492" y="96" width="130" height="26" rx="4" fill="#0d1117"/><text x="557" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">sessionId</text>
+  <rect x="630" y="96" width="130" height="26" rx="4" fill="#0d1117"/><text x="695" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">traceId</text>
+  <rect x="768" y="96" width="150" height="26" rx="4" fill="#0d1117"/><text x="843" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">platform / os</text>
+
+  <rect x="58" y="130" width="130" height="26" rx="4" fill="#0d1117"/><text x="123" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">timestamp</text>
+  <rect x="196" y="130" width="130" height="26" rx="4" fill="#0d1117"/><text x="261" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">level</text>
+  <rect x="334" y="130" width="150" height="26" rx="4" fill="#0d1117"/><text x="409" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">page / route</text>
+  <rect x="492" y="130" width="130" height="26" rx="4" fill="#0d1117"/><text x="557" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">seq</text>
+  <rect x="630" y="130" width="130" height="26" rx="4" fill="#0d1117"/><text x="695" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">source</text>
+  <rect x="768" y="130" width="150" height="26" rx="4" fill="#0d1117"/><text x="843" y="147" text-anchor="middle" fill="#c9d1d9" font-size="10.5">networkType</text>
+
+  <text x="58" y="172" fill="#8b949e" font-size="10.5">source：区分日志来自 view 层还是 service 层，解决美团小程序 service 日志无法打印的问题</text>
+
+  <!-- body variants -->
+  <text x="58" y="212" fill="#e6edf3" font-size="13" font-weight="bold">按 source 分化的日志体（type 字段决定后续解析方式）</text>
+
+  <rect x="40" y="226" width="290" height="130" rx="6" fill="url(#body)" filter="url(#glow)"/>
+  <text x="185" y="250" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="bold">type: console</text>
+  <rect x="56" y="260" width="258" height="24" rx="4" fill="#0d1117"/><text x="185" y="276" text-anchor="middle" fill="#c9d1d9" font-size="10.5">level: log/warn/error</text>
+  <rect x="56" y="288" width="258" height="24" rx="4" fill="#0d1117"/><text x="185" y="304" text-anchor="middle" fill="#c9d1d9" font-size="10.5">args: 序列化参数数组</text>
+  <rect x="56" y="316" width="258" height="24" rx="4" fill="#0d1117"/><text x="185" y="332" text-anchor="middle" fill="#c9d1d9" font-size="10.5">stack: 错误堆栈（如有）</text>
+
+  <rect x="345" y="226" width="290" height="130" rx="6" fill="url(#body)" filter="url(#glow)"/>
+  <text x="490" y="250" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="bold">type: network</text>
+  <rect x="361" y="260" width="258" height="24" rx="4" fill="#0d1117"/><text x="490" y="276" text-anchor="middle" fill="#c9d1d9" font-size="10.5">request: url/method/header/body</text>
+  <rect x="361" y="288" width="258" height="24" rx="4" fill="#0d1117"/><text x="490" y="304" text-anchor="middle" fill="#c9d1d9" font-size="10.5">response: status/header/body</text>
+  <rect x="361" y="316" width="258" height="24" rx="4" fill="#0d1117"/><text x="490" y="332" text-anchor="middle" fill="#c9d1d9" font-size="10.5">timing: dns/connect/ttfb/total</text>
+
+  <rect x="650" y="226" width="290" height="130" rx="6" fill="url(#body)" filter="url(#glow)"/>
+  <text x="795" y="250" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="bold">type: lifecycle / custom</text>
+  <rect x="666" y="260" width="258" height="24" rx="4" fill="#0d1117"/><text x="795" y="276" text-anchor="middle" fill="#c9d1d9" font-size="10.5">event: onLaunch/onShow/onError</text>
+  <rect x="666" y="288" width="258" height="24" rx="4" fill="#0d1117"/><text x="795" y="304" text-anchor="middle" fill="#c9d1d9" font-size="10.5">extra: 业务自定义埋点字段</text>
+  <rect x="666" y="316" width="258" height="24" rx="4" fill="#0d1117"/><text x="795" y="332" text-anchor="middle" fill="#c9d1d9" font-size="10.5">bizTag: 业务线标识</text>
+
+  <!-- HAR export note -->
+  <rect x="40" y="380" width="900" height="60" rx="6" fill="url(#ext)" filter="url(#glow)"/>
+  <text x="58" y="404" fill="#d29922" font-size="12" font-weight="bold">network 类型日志可直接映射为 HAR (HTTP Archive) 条目</text>
+  <text x="58" y="424" fill="#8b949e" font-size="10.5">面板一键导出 .har 文件，或转换成 curl 命令，方便前后端联调时复现同一次请求</text>
+
+  <!-- bottom notes -->
+  <rect x="40" y="460" width="900" height="80" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="58" y="484" fill="#e6edf3" font-size="12" font-weight="bold">设计要点</text>
+  <text x="58" y="504" fill="#8b949e" font-size="11">seq 用于端上环形缓冲区丢弃日志时，服务端感知丢失区间；body 内容超过阈值时做截断并标记 truncated。</text>
+  <text x="58" y="524" fill="#8b949e" font-size="11">敏感字段（Authorization、身份证号等）在端上采集时按规则脱敏，不落库明文。</text>
+</svg>

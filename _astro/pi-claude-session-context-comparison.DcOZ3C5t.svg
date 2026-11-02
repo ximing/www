@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1120" viewBox="0 0 1400 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Pi 与 Claude Code 的 Session 和上下文架构</title>
+  <desc id="desc">上半部分比较两套 Session 的持久化事实模型和恢复路径，下半部分比较 Pi 的路径投影与 Claude Code 的多级上下文管理管道。</desc>
+  <defs>
+    <style>
+      .title{font:700 28px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.section{font:700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.head{font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}.body{font:500 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#34415a}.note{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#667085}.tiny{font:600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#475467}.pi{fill:#eaf2ff;stroke:#6b9df5;stroke-width:2}.cc{fill:#fff2e7;stroke:#e99a58;stroke-width:2}.neutral{fill:#f7f8fa;stroke:#d0d5dd;stroke-width:1.5}.line{stroke:#98a2b3;stroke-width:2;fill:none}.dash{stroke:#98a2b3;stroke-width:2;stroke-dasharray:6 5;fill:none}.arrow{marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#98a2b3"/></marker>
+  </defs>
+  <rect width="1400" height="1120" rx="24" fill="#fff"/>
+  <text x="58" y="56" class="title">Pi 与 Claude Code：Session 保存事实的方式，决定了 Context 如何被构造</text>
+  <text x="58" y="84" class="note">上半：持久化与恢复；下半：一次模型请求前的 Context 构建。箭头表示数据派生或恢复流程。</text>
+  <line x1="700" y1="116" x2="700" y2="1060" stroke="#e4e7ec" stroke-width="2"/>
+
+  <text x="58" y="130" class="section">Pi：entry 树是单一事实源</text>
+  <rect x="58" y="156" width="584" height="120" rx="14" class="pi"/>
+  <text x="82" y="186" class="head">1. 追加日志：可回放的 entry 树</text>
+  <text x="82" y="214" class="body">message / model_change / active_tools_change / compaction / leaf …</text>
+  <text x="82" y="241" class="note">每条 entry 带 id、parentId、timestamp；文件顺序与树路径顺序分离</text>
+  <path d="M350 276 V316" class="line arrow"/>
+  <rect x="58" y="316" width="584" height="135" rx="14" class="neutral"/>
+  <text x="82" y="346" class="head">2. 恢复：索引追加日志，确定当前 leaf</text>
+  <text x="82" y="374" class="body">ArraySessionIndex：entries + byId + leafId</text>
+  <text x="82" y="401" class="note">普通 entry 使 leaf 前进；leaf entry 将 leaf 移至 targetId</text>
+  <text x="82" y="426" class="note">重启后从 leaf 沿 parentId 回溯，不必从根猜测分支</text>
+  <path d="M350 451 V491" class="line arrow"/>
+  <rect x="58" y="491" width="584" height="154" rx="14" class="pi"/>
+  <text x="82" y="521" class="head">3. Context：当前路径的派生快照</text>
+  <text x="82" y="550" class="body">回溯路径 → 重放 model / thinking / tools → 投影消息</text>
+  <text x="82" y="577" class="body">compaction / branch_summary 替代早期消息，原始 entry 不删除</text>
+  <text x="82" y="605" class="note">历史跳转后，新 entry 从目标节点生长为新分支</text>
+
+  <text x="758" y="130" class="section">Claude Code：transcript 链 + 子系统记录 + 请求管道</text>
+  <rect x="758" y="156" width="584" height="120" rx="14" class="cc"/>
+  <text x="782" y="186" class="head">1. 追加日志：JSONL transcript 与关联记录</text>
+  <text x="782" y="214" class="body">user / assistant 等消息以 parentUuid 串链；另有快照、标题、标签、collapse commit</text>
+  <text x="782" y="241" class="note">compact boundary 的 parentUuid = null，划定可 continue 的链边界</text>
+  <path d="M1050 276 V316" class="line arrow"/>
+  <rect x="758" y="316" width="584" height="135" rx="14" class="neutral"/>
+  <text x="782" y="346" class="head">2. 恢复：链式消息 + 子系统装配</text>
+  <text x="782" y="374" class="body">从 boundary 后重建消息链；恢复 file history、todo、collapse、worktree 等</text>
+  <text x="782" y="401" class="note">Content replacement 重放工具结果外置决策，以维持 resume 后的 Context 视图</text>
+  <text x="782" y="426" class="note">subagent sidechain 使用独立 transcript 文件</text>
+  <path d="M1050 451 V491" class="line arrow"/>
+  <rect x="758" y="491" width="584" height="154" rx="14" class="cc"/>
+  <text x="782" y="521" class="head">3. Context：每轮请求前的资源管理结果</text>
+  <text x="782" y="550" class="body">messages + 工具输出引用 + collapse 视图 + compact 后恢复项</text>
+  <text x="782" y="577" class="body">还会补入最近文件、plan、Skill、工具定义和 MCP 指令</text>
+  <text x="782" y="605" class="note">目标是连续任务中的 token 预算、缓存命中与可继续执行</text>
+
+  <line x1="58" y1="690" x2="1342" y2="690" stroke="#e4e7ec" stroke-width="2"/>
+  <text x="58" y="730" class="section">模型调用前：两条不同的 Context 构建路径</text>
+
+  <text x="58" y="775" class="head">Pi：日志 → 当前分支 → Context → Provider</text>
+  <rect x="58" y="802" width="205" height="76" rx="12" class="pi"/><text x="82" y="833" class="tiny">完整 entry 日志</text><text x="82" y="857" class="note">全历史保留</text>
+  <path d="M263 840 H304" class="line arrow"/>
+  <rect x="304" y="802" width="205" height="76" rx="12" class="neutral"/><text x="328" y="833" class="tiny">当前 leaf 路径</text><text x="328" y="857" class="note">parentId 回溯</text>
+  <path d="M509 840 H550" class="line arrow"/>
+  <rect x="550" y="802" width="205" height="76" rx="12" class="pi"/><text x="574" y="833" class="tiny">状态重放 + 投影</text><text x="574" y="857" class="note">摘要替换早期路径</text>
+  <path d="M755 840 H796" class="line arrow"/>
+  <rect x="796" y="802" width="160" height="76" rx="12" class="neutral"/><text x="825" y="846" class="tiny">模型请求</text>
+  <text x="58" y="914" class="note">压缩是 entry；分支摘要也是 entry。改变的是本次投影，原始日志和其他分支仍可访问。</text>
+
+  <text x="58" y="963" class="head">Claude Code：transcript → 逐级缩减 → compact 后环境恢复 → Provider</text>
+  <rect x="58" y="990" width="165" height="70" rx="12" class="cc"/><text x="79" y="1020" class="tiny">消息链</text><text x="79" y="1044" class="note">boundary 后开始</text>
+  <path d="M223 1025 H250" class="line arrow"/>
+  <rect x="250" y="990" width="172" height="70" rx="12" class="neutral"/><text x="268" y="1020" class="tiny">工具结果预算</text><text x="268" y="1044" class="note">大输出变引用</text>
+  <path d="M422 1025 H449" class="line arrow"/>
+  <rect x="449" y="990" width="180" height="70" rx="12" class="neutral"/><text x="468" y="1020" class="tiny">snip / microcompact</text><text x="468" y="1044" class="note">并尽量保缓存</text>
+  <path d="M629 1025 H656" class="line arrow"/>
+  <rect x="656" y="990" width="173" height="70" rx="12" class="neutral"/><text x="675" y="1020" class="tiny">context collapse</text><text x="675" y="1044" class="note">细粒度摘要视图</text>
+  <path d="M829 1025 H856" class="line arrow"/>
+  <rect x="856" y="990" width="165" height="70" rx="12" class="cc"/><text x="876" y="1020" class="tiny">autocompact</text><text x="876" y="1044" class="note">collapse 启用时受抑制</text>
+  <path d="M1021 1025 H1048" class="line arrow"/>
+  <rect x="1048" y="990" width="150" height="70" rx="12" class="neutral"/><text x="1074" y="1034" class="tiny">模型请求</text>
+  <text x="1220" y="1018" class="note">413 后：</text><text x="1220" y="1042" class="note">reactive compact</text>
+  <path d="M1198 1025 H1215" class="dash arrow"/>
+</svg>

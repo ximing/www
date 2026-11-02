@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 700" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <rect width="780" height="700" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">traceId 串联：一条请求跨服务的日志链</text>
+  <text x="30" y="53" font-size="11" fill="#64748b">入口生成一次，随调用逐跳透传；排查时按同一个 ID 把各环节的日志串成一条线</text>
+
+  <!-- 一、请求链路 -->
+  <text x="30" y="80" font-size="12" font-weight="600" fill="#475569">一、请求链路</text>
+
+  <rect x="30" y="90" width="120" height="54" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="90" y="112" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">客户端</text>
+  <text x="90" y="129" font-size="10" fill="#64748b" text-anchor="middle">转存 report.zip</text>
+
+  <line x1="152" y1="117" x2="186" y2="117" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="190" y="90" width="200" height="54" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="290" y="112" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">云盘 API 服务（入口）</text>
+  <text x="290" y="129" font-size="10.5" font-weight="600" fill="#b45309" text-anchor="middle">生成 traceId = 8f3a2c1d</text>
+
+  <line x1="392" y1="117" x2="426" y2="117" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="430" y="90" width="140" height="54" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="500" y="112" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">元数据服务</text>
+  <text x="500" y="129" font-size="10" fill="#1d4ed8" text-anchor="middle">检查目录 · 写元数据</text>
+
+  <line x1="572" y1="117" x2="606" y2="117" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="610" y="90" width="140" height="54" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="680" y="112" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">存储服务</text>
+  <text x="680" y="129" font-size="10" fill="#1d4ed8" text-anchor="middle">拷贝数据块</text>
+
+  <text x="30" y="164" font-size="10.5" fill="#64748b">traceId 放入请求头 X-Trace-Id 逐跳透传；Kafka 异步链路（见第 6 篇）把 tid 放进消息体，消费端取出续上</text>
+
+  <!-- 二、各环节日志 -->
+  <text x="30" y="192" font-size="12" font-weight="600" fill="#475569">二、各环节日志（统一格式，tid 着色标注）</text>
+
+  <!-- API 服务 -->
+  <rect x="30" y="207" width="88" height="20" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="74" y="221" font-size="10.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">API 服务</text>
+  <text x="130" y="221" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.112 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> user=u10329 api=transfer.begin file=report.zip</tspan></text>
+  <text x="130" y="241" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.318 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> api=transfer.done cost=206ms</tspan></text>
+
+  <!-- 元数据服务 -->
+  <rect x="30" y="273" width="88" height="20" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="74" y="287" font-size="10.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">元数据服务</text>
+  <text x="130" y="287" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.156 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> meta.checkAndWrite dir=/work cost=18ms</tspan></text>
+  <text x="130" y="307" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.174 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> meta.commit ok</tspan></text>
+
+  <!-- 存储服务 -->
+  <rect x="30" y="339" width="88" height="20" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="74" y="353" font-size="10.5" font-weight="600" fill="#1d4ed8" text-anchor="middle">存储服务</text>
+  <text x="130" y="353" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.240 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> chunk.put part=1/4 cost=61ms</tspan></text>
+  <text x="130" y="373" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.312 </tspan><tspan fill="#b91c1c" font-weight="600">WARN</tspan><tspan fill="#b45309" font-weight="600">  tid=8f3a2c1d</tspan><tspan fill="#334155"> chunk.put part=4/4 retry=1 slow-io cost=88ms</tspan></text>
+
+  <!-- 通知消费者（异步） -->
+  <rect x="30" y="405" width="88" height="20" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="74" y="419" font-size="10.5" font-weight="600" fill="#b45309" text-anchor="middle">通知消费者</text>
+  <text x="130" y="419" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.401 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> notify.multicast targets=web,pc,mac ok</tspan></text>
+  <text x="130" y="439" font-size="10" font-family="Menlo, Consolas, monospace"><tspan fill="#64748b">2016-08-20 14:32:01.407 INFO  </tspan><tspan fill="#b45309" font-weight="600">tid=8f3a2c1d</tspan><tspan fill="#334155"> notify.done cost=6ms</tspan></text>
+
+  <!-- tid 贯穿虚线 -->
+  <line x1="346" y1="203" x2="346" y2="445" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="346" y="464" font-size="10.5" font-weight="600" fill="#b45309" text-anchor="middle">同一个 traceId：8f3a2c1d</text>
+
+  <!-- 三、定位动作对比 -->
+  <text x="30" y="496" font-size="12" font-weight="600" fill="#475569">三、定位动作对比</text>
+
+  <rect x="30" y="507" width="350" height="135" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.3"/>
+  <text x="50" y="532" font-size="12" font-weight="600" fill="#b45309">改造前：时间窗 + 关键字，人肉对</text>
+  <text x="365" y="532" font-size="10" fill="#b45309" text-anchor="end">约 1 小时</text>
+  <text x="50" y="556" font-size="10.5" fill="#b45309">逐机 grep，三个服务的格式各不相同</text>
+  <text x="50" y="578" font-size="10.5" fill="#b45309">服务间只能靠时间戳（精确到秒）硬对</text>
+  <text x="50" y="600" font-size="10.5" fill="#b45309">结论只有一句：「大概是存储那边慢」</text>
+
+  <line x1="382" y1="575" x2="396" y2="575" stroke="#d97706" stroke-width="1.3" marker-end="url(#arrAmber)"/>
+
+  <rect x="400" y="507" width="350" height="135" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="420" y="532" font-size="12" font-weight="600" fill="#1d4ed8">改造后：拿 tid 一次检索，串成一条线</text>
+  <text x="735" y="532" font-size="10" fill="#1d4ed8" text-anchor="end">约 10 分钟</text>
+  <text x="420" y="556" font-size="10.5" fill="#1d4ed8">入口错误日志里拿到 tid=8f3a2c1d</text>
+  <text x="420" y="578" font-size="10.5" fill="#1d4ed8">四个环节的日志按时间排开，慢点一眼可见</text>
+  <text x="420" y="600" font-size="10.5" fill="#1d4ed8">定位：存储 part=4/4 慢 IO，重试兜住</text>
+
+  <text x="390" y="672" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">日志的价值不在「多」，而在「能串起来」</text>
+</svg>

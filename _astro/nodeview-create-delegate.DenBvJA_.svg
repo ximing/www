@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- zone headers -->
+  <text x="195" y="28" text-anchor="middle" font-size="13" fill="#2c4a73">创建路径：NodeViewDesc.create</text>
+  <text x="600" y="28" text-anchor="middle" font-size="13" fill="#2c4a73">运行期：CustomNodeViewDesc 的委托</text>
+
+  <!-- left flow -->
+  <rect x="60" y="45" width="270" height="34" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="195" y="66" text-anchor="middle" font-size="11.5" fill="#2c4a73">查 view.nodeViews[node.type.name]</text>
+
+  <line x1="195" y1="79" x2="195" y2="97" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="60" y="100" width="270" height="34" fill="#ffffff" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="195" y="121" text-anchor="middle" font-size="11.5" fill="#2c4a73">有自定义构造器？</text>
+
+  <line x1="120" y1="134" x2="110" y2="166" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="102" y="156" text-anchor="middle" font-size="10.5" fill="#777">无</text>
+  <line x1="270" y1="134" x2="320" y2="166" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="308" y="156" text-anchor="middle" font-size="10.5" fill="#777">有</text>
+
+  <rect x="25" y="170" width="185" height="64" fill="#ffffff" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="117" y="192" text-anchor="middle" font-size="11" fill="#2c4a73">按默认渲染</text>
+  <text x="117" y="209" text-anchor="middle" font-size="10" fill="#555">文本 → TextViewDesc</text>
+  <text x="117" y="224" text-anchor="middle" font-size="10" fill="#555">否则 toDOM → NodeViewDesc</text>
+
+  <rect x="240" y="170" width="185" height="64" fill="#ffffff" stroke="#b3543e" stroke-width="1.5"/>
+  <text x="332" y="192" text-anchor="middle" font-size="11" fill="#8c3f2e">调构造器，拿到 NodeView spec</text>
+  <text x="332" y="209" text-anchor="middle" font-size="9.5" fill="#555">(node, view, getPos,</text>
+  <text x="332" y="223" text-anchor="middle" font-size="9.5" fill="#555">outerDeco, innerDeco)</text>
+
+  <line x1="332" y1="234" x2="332" y2="262" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="240" y="265" width="185" height="64" fill="#ffffff" stroke="#b3543e" stroke-width="1.5"/>
+  <text x="332" y="287" text-anchor="middle" font-size="10.5" fill="#8c3f2e">spec.dom 为空则回退 toDOM</text>
+  <text x="332" y="303" text-anchor="middle" font-size="10" fill="#555">文本节点的自定义 dom</text>
+  <text x="332" y="318" text-anchor="middle" font-size="10" fill="#555">必须是 DOM 文本节点</text>
+
+  <line x1="332" y1="329" x2="332" y2="357" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <rect x="240" y="360" width="185" height="34" fill="#fdf1ee" stroke="#b3543e" stroke-width="1.5"/>
+  <text x="332" y="381" text-anchor="middle" font-size="11" fill="#8c3f2e">new CustomNodeViewDesc</text>
+
+  <text x="195" y="445" text-anchor="middle" font-size="10.5" fill="#777">无 contentDOM 的非文本节点：contentEditable=false，</text>
+  <text x="195" y="461" text-anchor="middle" font-size="10.5" fill="#777">schema 标了 draggable 的再加 draggable=true</text>
+
+  <!-- divider -->
+  <line x1="435" y1="45" x2="435" y2="470" stroke="#ddd" stroke-width="1"/>
+
+  <!-- right delegation rows -->
+  <!-- row 1 -->
+  <rect x="450" y="45" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="75" text-anchor="middle" font-size="11.5" fill="#2c4a73">update</text>
+  <text x="575" y="63" font-size="10" fill="#333">spec.update 返回 true 才复用，</text>
+  <text x="575" y="78" font-size="10" fill="#333">并走 updateInner 续更子内容；</text>
+  <text x="575" y="93" font-size="10" fill="#333">返回 false 则销毁重建</text>
+
+  <!-- row 2 -->
+  <rect x="450" y="115" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="137" text-anchor="middle" font-size="11" fill="#2c4a73">selectNode /</text>
+  <text x="505" y="152" text-anchor="middle" font-size="11" fill="#2c4a73">deselectNode</text>
+  <text x="575" y="137" font-size="10" fill="#333">缺省：给 nodeDOM 加减</text>
+  <text x="575" y="152" font-size="10" fill="#333">ProseMirror-selectednode</text>
+
+  <!-- row 3 -->
+  <rect x="450" y="185" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="215" text-anchor="middle" font-size="11.5" fill="#2c4a73">setSelection</text>
+  <text x="575" y="207" font-size="10" fill="#333">缺省：domFromPos 换算后</text>
+  <text x="575" y="222" font-size="10" fill="#333">设置 DOM 选区</text>
+
+  <!-- row 4 -->
+  <rect x="450" y="255" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="285" text-anchor="middle" font-size="11.5" fill="#2c4a73">stopEvent</text>
+  <text x="575" y="277" font-size="10" fill="#333">缺省返回 false，</text>
+  <text x="575" y="292" font-size="10" fill="#333">事件照常交给编辑器处理</text>
+
+  <!-- row 5 -->
+  <rect x="450" y="325" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="355" text-anchor="middle" font-size="11" fill="#2c4a73">ignoreMutation</text>
+  <text x="575" y="345" font-size="10" fill="#333">缺省：无 contentDOM 时忽略</text>
+  <text x="575" y="360" font-size="10" fill="#333">selection 以外的全部 mutation</text>
+
+  <!-- row 6 -->
+  <rect x="450" y="395" width="110" height="52" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="505" y="425" text-anchor="middle" font-size="11.5" fill="#2c4a73">destroy</text>
+  <text x="575" y="417" font-size="10" fill="#333">先调 spec.destroy()，</text>
+  <text x="575" y="432" font-size="10" fill="#333">再走基类的子树递归清理</text>
+
+  <text x="600" y="478" text-anchor="middle" font-size="10.5" fill="#777">spec 提供了对应方法就委托，没提供就落回基类默认行为</text>
+</svg>

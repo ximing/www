@@ -1,0 +1,83 @@
+<svg viewBox="0 0 980 660" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="mq" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#5c4228"/></linearGradient>
+    <linearGradient id="consumer" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="es" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#8b949e"/></marker>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="980" height="660" fill="url(#bg)" rx="8"/>
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">Kafka 写入链路与日志管理面板</text>
+
+  <!-- Kafka topics -->
+  <rect x="40" y="60" width="260" height="170" rx="6" fill="url(#mq)" filter="url(#glow)"/>
+  <text x="170" y="84" text-anchor="middle" fill="#d29922" font-size="13" font-weight="bold">Kafka Topic: mp-realtime-log</text>
+  <rect x="56" y="96" width="228" height="26" rx="4" fill="#0d1117"/><text x="170" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">Partition 0 ~ N（按 appId hash）</text>
+  <rect x="56" y="126" width="228" height="26" rx="4" fill="#0d1117"/><text x="170" y="143" text-anchor="middle" fill="#c9d1d9" font-size="10.5">副本因子 3，保证不丢消息</text>
+  <rect x="56" y="156" width="228" height="26" rx="4" fill="#0d1117"/><text x="170" y="173" text-anchor="middle" fill="#c9d1d9" font-size="10.5">保留 3 天，供重放与补偿消费</text>
+  <rect x="56" y="186" width="228" height="26" rx="4" fill="#0d1117"/><text x="170" y="203" text-anchor="middle" fill="#c9d1d9" font-size="10.5">峰值约 1.2TB/日的写入吞吐</text>
+
+  <!-- Consumers -->
+  <rect x="340" y="60" width="260" height="170" rx="6" fill="url(#consumer)" filter="url(#glow)"/>
+  <text x="470" y="84" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="bold">消费组</text>
+  <rect x="356" y="96" width="228" height="26" rx="4" fill="#0d1117"/><text x="470" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">写入组：批量 Bulk 写 ES</text>
+  <rect x="356" y="126" width="228" height="26" rx="4" fill="#0d1117"/><text x="470" y="143" text-anchor="middle" fill="#c9d1d9" font-size="10.5">告警组：错误日志规则匹配</text>
+  <rect x="356" y="156" width="228" height="26" rx="4" fill="#0d1117"/><text x="470" y="173" text-anchor="middle" fill="#c9d1d9" font-size="10.5">采样组：抽样落宽表做统计</text>
+  <rect x="356" y="186" width="228" height="26" rx="4" fill="#0d1117"/><text x="470" y="203" text-anchor="middle" fill="#c9d1d9" font-size="10.5">多消费组互不影响，独立扩缩容</text>
+
+  <!-- ES cluster -->
+  <rect x="640" y="60" width="300" height="170" rx="6" fill="url(#es)" filter="url(#glow)"/>
+  <text x="790" y="84" text-anchor="middle" fill="#a371f7" font-size="13" font-weight="bold">Elasticsearch 集群</text>
+  <rect x="656" y="96" width="268" height="26" rx="4" fill="#0d1117"/><text x="790" y="113" text-anchor="middle" fill="#c9d1d9" font-size="10.5">索引模板：mp-log-{appId}-{yyyy.MM.dd}</text>
+  <rect x="656" y="126" width="268" height="26" rx="4" fill="#0d1117"/><text x="790" y="143" text-anchor="middle" fill="#c9d1d9" font-size="10.5">Hot 节点承接当日写入与查询</text>
+  <rect x="656" y="156" width="268" height="26" rx="4" fill="#0d1117"/><text x="790" y="173" text-anchor="middle" fill="#c9d1d9" font-size="10.5">Warm 节点存放 7 日内历史数据</text>
+  <rect x="656" y="186" width="268" height="26" rx="4" fill="#0d1117"/><text x="790" y="203" text-anchor="middle" fill="#c9d1d9" font-size="10.5">ILM 策略自动滚动与过期删除</text>
+
+  <line x1="300" y1="145" x2="338" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="600" y1="145" x2="638" y2="145" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Console -->
+  <rect x="40" y="270" width="900" height="220" rx="6" fill="url(#panel)" filter="url(#glow)"/>
+  <text x="490" y="296" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="bold">日志管理面板（研发使用）</text>
+
+  <rect x="60" y="310" width="270" height="80" rx="6" fill="#0d1117"/>
+  <text x="195" y="332" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">实时监控</text>
+  <text x="195" y="352" text-anchor="middle" fill="#8b949e" font-size="10.5">按 appId / 版本订阅</text>
+  <text x="195" y="370" text-anchor="middle" fill="#8b949e" font-size="10.5">类似 tail -f 的滚动日志流</text>
+
+  <rect x="355" y="310" width="270" height="80" rx="6" fill="#0d1117"/>
+  <text x="490" y="332" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">检索与聚合</text>
+  <text x="490" y="352" text-anchor="middle" fill="#8b949e" font-size="10.5">traceId / deviceId / 关键字</text>
+  <text x="490" y="370" text-anchor="middle" fill="#8b949e" font-size="10.5">错误 Top N、接口耗时分布</text>
+
+  <rect x="650" y="310" width="270" height="80" rx="6" fill="#0d1117"/>
+  <text x="785" y="332" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">请求回放</text>
+  <text x="785" y="352" text-anchor="middle" fill="#8b949e" font-size="10.5">network 日志一键转 curl</text>
+  <text x="785" y="370" text-anchor="middle" fill="#8b949e" font-size="10.5">导出 HAR 与后端联调</text>
+
+  <rect x="60" y="404" width="270" height="66" rx="6" fill="#0d1117"/>
+  <text x="195" y="426" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">会话串联</text>
+  <text x="195" y="446" text-anchor="middle" fill="#8b949e" font-size="10.5">按 sessionId 还原操作时间线</text>
+
+  <rect x="355" y="404" width="270" height="66" rx="6" fill="#0d1117"/>
+  <text x="490" y="426" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">异常告警</text>
+  <text x="490" y="446" text-anchor="middle" fill="#8b949e" font-size="10.5">规则命中后推送到群消息</text>
+
+  <rect x="650" y="404" width="270" height="66" rx="6" fill="#0d1117"/>
+  <text x="785" y="426" text-anchor="middle" fill="#e6edf3" font-size="11.5" font-weight="bold">权限隔离</text>
+  <text x="785" y="446" text-anchor="middle" fill="#8b949e" font-size="10.5">按小程序归属团队分配可见范围</text>
+
+  <line x1="790" y1="230" x2="790" y2="255" stroke="#8b949e" stroke-width="2"/>
+  <line x1="790" y1="255" x2="490" y2="255" stroke="#8b949e" stroke-width="2"/>
+  <line x1="490" y1="255" x2="490" y2="268" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Scale numbers -->
+  <rect x="40" y="520" width="900" height="110" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="58" y="546" fill="#e6edf3" font-size="12" font-weight="bold">巅峰期规模</text>
+  <text x="58" y="570" fill="#8b949e" font-size="11">同时维持的长连接机器数：约 300 台</text>
+  <text x="58" y="592" fill="#8b949e" font-size="11">日均日志写入量：约 1.2TB</text>
+  <text x="58" y="614" fill="#8b949e" font-size="11">存储侧通过冷热分层与 ILM 生命周期管理控制成本，热数据保障查询延迟，历史数据定期归档清理</text>
+</svg>

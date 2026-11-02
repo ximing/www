@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="528" viewBox="0 0 800 528" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#52525b"/>
+    </marker>
+  </defs>
+
+  <!-- mock server -->
+  <rect x="180" y="24" width="440" height="54" rx="8" fill="#f4f4f5"/>
+  <text x="400" y="46" font-size="12.5" font-weight="600" fill="#18181b" text-anchor="middle">mock server：同一 MockSet 按 method + path 路由回放</text>
+  <text x="400" y="66" font-size="11.5" fill="#71717a" text-anchor="middle">tracked 前缀内未命中返回 500，不静默兜底</text>
+
+  <!-- mock -> lanes -->
+  <line x1="300" y1="78" x2="230" y2="122" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <line x1="500" y1="78" x2="570" y2="122" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="400" y="96" font-size="11.5" fill="#71717a" text-anchor="middle">双端 dev server 代理同指 mock</text>
+
+  <!-- lane headers -->
+  <text x="210" y="112" font-size="13.5" font-weight="600" fill="#18181b" text-anchor="middle">Vue 基线录制（dev server :8416）</text>
+  <text x="590" y="112" font-size="13.5" font-weight="600" fill="#18181b" text-anchor="middle">React 同 mock 复跑（dev server :8417）</text>
+
+  <!-- left lane -->
+  <rect x="60" y="126" width="300" height="56" rx="8" fill="#f4f4f5"/>
+  <text x="210" y="148" font-size="12.5" fill="#18181b" text-anchor="middle">CSI 经 daemon 驱动真实 Chrome</text>
+  <text x="210" y="167" font-size="12" fill="#3f3f46" text-anchor="middle">操作序列用语义 selector（文本 / role，禁 class）</text>
+
+  <line x1="210" y1="184" x2="210" y2="198" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <rect x="60" y="202" width="300" height="56" rx="8" fill="#e4e4e7"/>
+  <text x="210" y="224" font-size="12.5" font-weight="600" fill="#18181b" text-anchor="middle">基线产物 baseline.json</text>
+  <text x="210" y="243" font-size="12" fill="#3f3f46" text-anchor="middle">断言 = a11y 子集 + 网络调用序列 + 可见文本</text>
+
+  <!-- right lane -->
+  <rect x="440" y="126" width="300" height="56" rx="8" fill="#f4f4f5"/>
+  <text x="590" y="148" font-size="12.5" fill="#18181b" text-anchor="middle">同一操作序列在 React 页面 replay</text>
+  <text x="590" y="167" font-size="12" fill="#3f3f46" text-anchor="middle">selector 语义化，双端才放同一条用例</text>
+
+  <line x1="590" y1="184" x2="590" y2="198" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <rect x="440" y="202" width="300" height="56" rx="8" fill="#e4e4e7"/>
+  <text x="590" y="224" font-size="12.5" font-weight="600" fill="#18181b" text-anchor="middle">采集同形断言</text>
+  <text x="590" y="243" font-size="12" fill="#3f3f46" text-anchor="middle">mock_id 与基线相同才可比（mock-mismatch 可判）</text>
+
+  <!-- converge to differ -->
+  <line x1="250" y1="258" x2="350" y2="296" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <line x1="550" y1="258" x2="450" y2="296" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <rect x="220" y="300" width="360" height="64" rx="8" fill="#dcdce0"/>
+  <text x="400" y="326" font-size="13.5" font-weight="600" fill="#18181b" text-anchor="middle">确定性 differ（纯函数，零 LLM）</text>
+  <text x="400" y="348" font-size="12" fill="#3f3f46" text-anchor="middle">a11y 有序子序列 · 网络序列比对 · 可见文本归一比对</text>
+
+  <!-- outcomes -->
+  <line x1="330" y1="364" x2="260" y2="394" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="470" y1="364" x2="555" y2="394" stroke="#52525b" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <rect x="140" y="398" width="220" height="46" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="250" y="426" font-size="12.5" font-weight="600" fill="#18181b" text-anchor="middle">一致 → 页面交付（G5 绿）</text>
+
+  <rect x="440" y="398" width="240" height="46" rx="8" fill="#f4f4f5" stroke="#a1a1aa" stroke-width="1.2"/>
+  <text x="560" y="426" font-size="12.5" fill="#18181b" text-anchor="middle">差异 → 结构化后进修复循环</text>
+
+  <!-- bottom note -->
+  <rect x="100" y="464" width="600" height="52" rx="8" fill="#fdf6ec" stroke="#b45309" stroke-width="1.2"/>
+  <text x="400" y="486" font-size="12.5" fill="#3f3f46" text-anchor="middle">环境前提：双 dev server 同跑 + 真实 SSO 登录态 + CSI 扩展在线</text>
+  <text x="400" y="506" font-size="12.5" fill="#3f3f46" text-anchor="middle">G5 只能在用户本机有登录态时执行，永远不可能无人值守</text>
+</svg>

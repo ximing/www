@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#164e63"/>
+      <stop offset="55%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="90" cy="72" r="2.5"/><circle cx="192" cy="72" r="2.5"/><circle cx="294" cy="72" r="2.5"/><circle cx="396" cy="72" r="2.5"/><circle cx="498" cy="72" r="2.5"/><circle cx="600" cy="72" r="2.5"/><circle cx="702" cy="72" r="2.5"/><circle cx="804" cy="72" r="2.5"/><circle cx="906" cy="72" r="2.5"/><circle cx="1008" cy="72" r="2.5"/><circle cx="1110" cy="72" r="2.5"/>
+    <circle cx="90" cy="828" r="2.5"/><circle cx="192" cy="828" r="2.5"/><circle cx="294" cy="828" r="2.5"/><circle cx="396" cy="828" r="2.5"/><circle cx="498" cy="828" r="2.5"/><circle cx="600" cy="828" r="2.5"/><circle cx="702" cy="828" r="2.5"/><circle cx="804" cy="828" r="2.5"/><circle cx="906" cy="828" r="2.5"/><circle cx="1008" cy="828" r="2.5"/><circle cx="1110" cy="828" r="2.5"/>
+  </g>
+
+  <!-- panel labels -->
+  <g fill="#a5f3fc" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" text-anchor="middle" opacity="0.85" letter-spacing="3">
+    <text x="360" y="168">PREV</text>
+    <text x="840" y="168">NEXT</text>
+  </g>
+
+  <!-- old panel -->
+  <rect x="190" y="190" width="340" height="320" rx="14" fill="#ecfeff" opacity="0.92"/>
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" fill="#155e75">
+    <text x="225" y="248">list: [1, 2, 3]</text>
+    <text x="225" y="300">count: 10</text>
+    <text x="225" y="352">user: "A"</text>
+    <text x="225" y="404">show: true</text>
+  </g>
+
+  <!-- new panel -->
+  <rect x="670" y="190" width="340" height="320" rx="14" fill="#ffffff"/>
+  <!-- changed row highlight -->
+  <rect x="686" y="272" width="308" height="38" rx="6" fill="#fde047" opacity="0.55"/>
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" fill="#155e75">
+    <text x="705" y="248">list: [1, 2, 3]</text>
+    <text x="705" y="300">count: 11</text>
+    <text x="705" y="352">user: "A"</text>
+    <text x="705" y="404">show: true</text>
+  </g>
+
+  <!-- diff arrow -->
+  <text x="600" y="330" fill="#fde047" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" font-weight="700" text-anchor="middle">diff</text>
+  <path d="M 545 352 L 655 352" stroke="#fde047" stroke-width="6"/>
+  <path d="M 636 338 L 658 352 L 636 366" stroke="#fde047" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- setData hint -->
+  <text x="600" y="566" fill="#a5f3fc" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="18" text-anchor="middle" opacity="0.9">setData({ "count": 11 })</text>
+
+  <!-- title -->
+  <text x="600" y="752" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="60" font-weight="700" text-anchor="middle" letter-spacing="2">Fast Data Diff</text>
+  <text x="600" y="808" fill="#a5f3fc" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="21" text-anchor="middle" letter-spacing="6">小程序 setData 高性能 diff</text>
+</svg>

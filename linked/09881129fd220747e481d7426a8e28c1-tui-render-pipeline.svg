@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="440" viewBox="0 0 800 440" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#a1a1aa"/>
+    </marker>
+  </defs>
+
+  <!-- Stage A: component tree -->
+  <rect x="25" y="30" width="175" height="150" rx="10" fill="#f4f4f5"/>
+  <text x="43" y="62" font-size="16" font-weight="600" fill="#18181b">组件树</text>
+  <text x="43" y="88" font-size="13" fill="#3f3f46">接口只有一个方法：</text>
+  <text x="43" y="110" font-size="11" fill="#3f3f46">render(width): string[]</text>
+  <text x="43" y="132" font-size="13" fill="#3f3f46">容器顺序拼接各行</text>
+  <text x="43" y="154" font-size="13" fill="#3f3f46">超宽行直接抛错</text>
+
+  <!-- arrows A->B->C->D -->
+  <line x1="202" y1="105" x2="223" y2="105" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="402" y1="105" x2="423" y2="105" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="602" y1="105" x2="623" y2="105" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage B: line array -->
+  <rect x="225" y="30" width="175" height="150" rx="10" fill="#f4f4f5"/>
+  <text x="243" y="62" font-size="16" font-weight="600" fill="#18181b">行数组 newLines</text>
+  <text x="243" y="88" font-size="13" fill="#3f3f46">每帧全量渲染所有组件</text>
+  <text x="243" y="110" font-size="13" fill="#3f3f46">overlay 先合成进数组</text>
+  <text x="243" y="132" font-size="13" fill="#3f3f46">提取 CURSOR_MARKER</text>
+  <text x="243" y="154" font-size="13" fill="#3f3f46">定位硬件光标（IME）</text>
+
+  <!-- Stage C: diff -->
+  <rect x="425" y="30" width="175" height="150" rx="10" fill="#f4f4f5"/>
+  <text x="443" y="62" font-size="16" font-weight="600" fill="#18181b">行级 diff</text>
+  <text x="443" y="88" font-size="13" fill="#3f3f46">与上一帧行数组比较</text>
+  <text x="443" y="110" font-size="13" fill="#3f3f46">找首尾两个变化行：</text>
+  <text x="443" y="132" font-size="11" fill="#3f3f46">firstChanged/lastChanged</text>
+  <text x="443" y="154" font-size="13" fill="#3f3f46">无变化则只挪光标</text>
+
+  <!-- Stage D: range rewrite -->
+  <rect x="625" y="30" width="175" height="150" rx="10" fill="#f4f4f5"/>
+  <text x="643" y="62" font-size="16" font-weight="600" fill="#18181b">区间重绘</text>
+  <text x="643" y="88" font-size="13" fill="#3f3f46">只清写变化区间</text>
+  <text x="643" y="110" font-size="13" fill="#3f3f46"><tspan fill="#b45309">CSI ?2026h/l</tspan> 包裹</text>
+  <text x="643" y="132" font-size="13" fill="#3f3f46">同步输出防撕裂</text>
+  <text x="643" y="154" font-size="13" fill="#3f3f46">整段拼成一次 write</text>
+
+  <!-- D -> E -->
+  <line x1="712" y1="182" x2="712" y2="236" stroke="#b45309" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- C -> F dashed escape route -->
+  <path d="M 512 182 L 512 212 L 197 212 L 197 236" fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow-gray)"/>
+  <text x="300" y="205" font-size="12" fill="#71717a">命中任一条件走全量重绘</text>
+
+  <!-- F: full redraw escape conditions -->
+  <rect x="25" y="240" width="345" height="150" rx="10" fill="#ededf0"/>
+  <text x="45" y="272" font-size="16" font-weight="600" fill="#18181b">全量重绘的逃生条件</text>
+  <text x="45" y="298" font-size="13" fill="#3f3f46">首帧；宽度变化（折行全部失效）</text>
+  <text x="45" y="322" font-size="13" fill="#3f3f46">高度变化（Termux 软键盘除外）</text>
+  <text x="45" y="346" font-size="13" fill="#3f3f46">clearOnShrink；变化行滚出视口</text>
+  <text x="45" y="370" font-size="13" fill="#3f3f46">删除行数超过一屏</text>
+
+  <!-- E: main screen + scrollback -->
+  <rect x="430" y="240" width="345" height="150" rx="10" fill="#f4f4f5"/>
+  <text x="450" y="272" font-size="16" font-weight="600" fill="#18181b">终端主屏幕（main screen）</text>
+  <text x="450" y="298" font-size="13" fill="#3f3f46">可见区原位重写，无撕裂</text>
+  <text x="450" y="322" font-size="13" fill="#3f3f46">旧行被顶入 <tspan fill="#b45309">scrollback</tspan></text>
+  <text x="450" y="346" font-size="13" fill="#3f3f46">聊天历史进滚动区，滚屏、搜索、</text>
+  <text x="450" y="370" font-size="13" fill="#3f3f46">选择复制都是终端原生能力</text>
+
+  <!-- caption -->
+  <text x="25" y="422" font-size="12.5" fill="#71717a">previousLines 保存本帧行数组供下一帧 diff；requestRender 以 16ms 下限节流，合并高频更新。</text>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="230" viewBox="0 0 640 230" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <text x="60" y="20" font-size="12" fill="#555">示例文档：doc(paragraph("abc"), image, paragraph("de"))</text>
+
+  <!-- position numbers -->
+  <g font-size="10" fill="#999" text-anchor="middle">
+    <text x="60" y="36">0</text>
+    <text x="100" y="36">1</text>
+    <text x="132" y="36">2</text>
+    <text x="164" y="36">3</text>
+    <text x="196" y="36">4</text>
+    <text x="236" y="36">5</text>
+    <text x="284" y="36">6</text>
+    <text x="324" y="36">7</text>
+    <text x="356" y="36">8</text>
+    <text x="388" y="36">9</text>
+    <text x="428" y="36">10</text>
+  </g>
+
+  <!-- token boxes -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="60" y="44" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="80" y="67" fill="#2c4a73">p 始</text>
+    <rect x="100" y="44" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="116" y="67" fill="#2e5a3c">a</text>
+    <rect x="132" y="44" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="148" y="67" fill="#2e5a3c">b</text>
+    <rect x="164" y="44" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="180" y="67" fill="#2e5a3c">c</text>
+    <rect x="196" y="44" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="216" y="67" fill="#2c4a73">p 终</text>
+    <rect x="236" y="44" width="48" height="36" fill="#f7efe4" stroke="#a5762f"/>
+    <text x="260" y="67" fill="#7a5416">img</text>
+    <rect x="284" y="44" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="304" y="67" fill="#2c4a73">p 始</text>
+    <rect x="324" y="44" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="340" y="67" fill="#2e5a3c">d</text>
+    <rect x="356" y="44" width="32" height="36" fill="#e9f4ea" stroke="#4a7c59"/>
+    <text x="372" y="67" fill="#2e5a3c">e</text>
+    <rect x="388" y="44" width="40" height="36" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="408" y="67" fill="#2c4a73">p 终</text>
+  </g>
+
+  <!-- TextSelection: anchor=2, head=4 -->
+  <polyline points="132,88 132,96 196,96 196,88" fill="none" stroke="#4a6fa5" stroke-width="1.5"/>
+  <circle cx="132" cy="96" r="3" fill="#4a6fa5"/>
+  <circle cx="196" cy="96" r="3" fill="#c0392b"/>
+  <text x="460" y="100" font-size="12" fill="#333">TextSelection：anchor=2，head=4</text>
+
+  <!-- NodeSelection: from=5, to=6 -->
+  <polyline points="236,110 236,118 284,118 284,110" fill="none" stroke="#a5762f" stroke-width="1.5"/>
+  <text x="460" y="122" font-size="12" fill="#333">NodeSelection：from=5，to=6</text>
+
+  <!-- GapCursor: pos 5 -->
+  <line x1="236" y1="132" x2="236" y2="144" stroke="#7a4fa5" stroke-width="2.5"/>
+  <text x="460" y="144" font-size="12" fill="#333">GapCursor：pos=5（自定义选区）</text>
+
+  <!-- AllSelection: 0..10 -->
+  <polyline points="60,154 60,162 428,162 428,154" fill="none" stroke="#555" stroke-width="1.5"/>
+  <text x="460" y="166" font-size="12" fill="#333">AllSelection：0 到 10</text>
+
+  <text x="60" y="196" font-size="11" fill="#777">蓝点 anchor（不动的一端），红点 head（移动的一端）；NodeSelection 与 AllSelection 的 anchor/head 含义退化，见正文。</text>
+  <text x="60" y="214" font-size="11" fill="#777">GapCursor 由 prosemirror-gapcursor 通过 Selection.jsonID 注册，不在 state 包内。</text>
+</svg>

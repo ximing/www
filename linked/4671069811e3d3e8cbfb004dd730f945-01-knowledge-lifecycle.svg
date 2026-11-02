@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="350" viewBox="0 0 800 350" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#71717a"/>
+    </marker>
+  </defs>
+
+  <!-- top annotation: cross-cutting rule promotion -->
+  <rect x="440" y="18" width="330" height="58" rx="8" fill="#fdf6ec"/>
+  <text x="605" y="40" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">知识形态提升：组件条目 → pattern 级横切规则</text>
+  <text x="605" y="60" font-size="11" fill="#7c5a2e" text-anchor="middle">页面级密度 · 样式覆写纪律（人的裁决触发，机器守门槛）</text>
+  <line x1="605" y1="76" x2="565" y2="106" stroke="#b45309" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#arrow-amber)"/>
+
+  <!-- stage 1: 人工裁决 -->
+  <rect x="24" y="110" width="136" height="96" rx="8" fill="#f4f4f5"/>
+  <text x="92" y="132" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">人工裁决</text>
+  <text x="92" y="152" font-size="11" fill="#3f3f46" text-anchor="middle">工单处置 · 修复先例</text>
+  <text x="92" y="170" font-size="11" fill="#3f3f46" text-anchor="middle">视觉修正 · 打回复核</text>
+  <text x="92" y="190" font-size="11" fill="#71717a" text-anchor="middle">同病归一</text>
+
+  <!-- arrow 1→2 -->
+  <line x1="160" y1="158" x2="184" y2="158" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- stage 2: calibrate -->
+  <rect x="188" y="110" width="136" height="96" rx="8" fill="#ededf0"/>
+  <text x="256" y="132" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">calibrate 脚本</text>
+  <text x="256" y="152" font-size="11" fill="#3f3f46" text-anchor="middle">一次裁决一次沉淀</text>
+  <text x="256" y="170" font-size="11" fill="#3f3f46" text-anchor="middle">basis 记录裁决依据</text>
+  <text x="256" y="190" font-size="11" fill="#71717a" text-anchor="middle">经收割器通道入库</text>
+
+  <!-- arrow 2→3 -->
+  <line x1="324" y1="158" x2="348" y2="158" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- stage 3: 入库门槛 -->
+  <rect x="352" y="110" width="136" height="96" rx="8" fill="#e4e4e7"/>
+  <text x="420" y="132" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">入库硬门槛</text>
+  <text x="420" y="152" font-size="11" fill="#3f3f46" text-anchor="middle">evidence ≥ 1（七类）</text>
+  <text x="420" y="170" font-size="11" fill="#3f3f46" text-anchor="middle">validated 需 strong 证据</text>
+  <text x="420" y="190" font-size="11" fill="#71717a" text-anchor="middle">KL-05 lint 机器拦截</text>
+
+  <!-- arrow 3→4 -->
+  <line x1="488" y1="158" x2="512" y2="158" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- stage 4: validated 条目 -->
+  <rect x="516" y="110" width="136" height="96" rx="8" fill="#dcdce0"/>
+  <text x="584" y="132" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">validated 条目</text>
+  <text x="584" y="152" font-size="11" fill="#3f3f46" text-anchor="middle">按栈索引，跨项目复用</text>
+  <text x="584" y="170" font-size="11" fill="#3f3f46" text-anchor="middle">uses/verified/failed</text>
+  <text x="584" y="190" font-size="11" fill="#71717a" text-anchor="middle">计数器禁手写</text>
+
+  <!-- arrow 4→5 -->
+  <line x1="652" y1="158" x2="676" y2="158" stroke="#b45309" stroke-width="1.6" marker-end="url(#arrow-amber)"/>
+
+  <!-- stage 5: 自动命中 -->
+  <rect x="680" y="110" width="104" height="96" rx="8" fill="#dcdce0"/>
+  <text x="732" y="132" font-size="13" font-weight="600" fill="#18181b" text-anchor="middle">自动命中</text>
+  <text x="732" y="152" font-size="11" fill="#3f3f46" text-anchor="middle">转码直接套用</text>
+  <text x="732" y="170" font-size="11" fill="#3f3f46" text-anchor="middle">例外记</text>
+  <text x="732" y="188" font-size="11" fill="#71717a" text-anchor="middle">counter_examples</text>
+
+  <!-- feedback dashed path: 5 → 3 -->
+  <path d="M 732 206 L 732 266 L 420 266 L 420 210" fill="none" stroke="#71717a" stroke-width="1.3" stroke-dasharray="6 4" marker-end="url(#arrow-gray)"/>
+  <text x="580" y="258" font-size="11.5" fill="#71717a" text-anchor="middle">反例细化规则 · failed 计数高触发 lint 复核 · 统计回流</text>
+
+  <!-- tip box: 收割器唯一写者 -->
+  <rect x="24" y="238" width="330" height="64" rx="8" fill="#fdf6ec"/>
+  <text x="189" y="260" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">收割器是知识库唯一写者</text>
+  <text x="189" y="280" font-size="11" fill="#7c5a2e" text-anchor="middle">REPL 写请求经消息通道投递 · 写前 git pull --rebase</text>
+</svg>

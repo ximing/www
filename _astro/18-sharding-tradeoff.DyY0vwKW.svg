@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 740" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1080" height="740" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">单库、垂直拆分、水平拆分三种形态下 JOIN / 事务 / 路由的对照</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">水平方向看：从左到右容量上限提升；垂直方向看：从上到下应用层要补的能力增多。交换基本不可逆。</text>
+
+  <!-- ============ 三列标题 ============ -->
+  <rect x="24" y="80" width="336" height="32" rx="4" fill="#eef2ff" stroke="#475569" stroke-width="0.8"/>
+  <text x="192" y="101" font-size="13" font-weight="600" fill="#1f2937" text-anchor="middle">单库（垂直拆分前）</text>
+
+  <rect x="372" y="80" width="336" height="32" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="0.8"/>
+  <text x="540" y="101" font-size="13" font-weight="600" fill="#15803d" text-anchor="middle">垂直拆分（按业务拆库）</text>
+
+  <rect x="720" y="80" width="336" height="32" rx="4" fill="#fff7ed" stroke="#ea580c" stroke-width="0.8"/>
+  <text x="888" y="101" font-size="13" font-weight="600" fill="#c2410c" text-anchor="middle">水平拆分（按拆分键拆行）</text>
+
+  <!-- ============ 行 1：数据分布 ============ -->
+  <text x="28" y="138" font-size="11" font-weight="600" fill="#475569">数据分布</text>
+
+  <rect x="40" y="148" width="304" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="168" font-size="10" fill="#475569">所有业务表集中在一个库</text>
+  <text x="52" y="184" font-size="10" fill="#475569">容量受单机磁盘与内存上限</text>
+  <text x="52" y="198" font-size="9" fill="#94a3b8">瓶颈最先出现在大表 DDL 与备份</text>
+
+  <rect x="388" y="148" width="304" height="58" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="400" y="168" font-size="10" fill="#475569">用户库 / 订单库 / 内容库 各自独立</text>
+  <text x="400" y="184" font-size="10" fill="#475569">按业务隔离，单库仍可放单机</text>
+  <text x="400" y="198" font-size="9" fill="#94a3b8">解决业务耦合，不解决单表海量</text>
+
+  <rect x="736" y="148" width="304" height="58" rx="5" fill="#ffffff" stroke="#ea580c" stroke-width="1"/>
+  <text x="748" y="168" font-size="10" fill="#475569">同一张表按拆分键（如 uid）</text>
+  <text x="748" y="184" font-size="10" fill="#475569">散到 N 个库的 N 张同名表</text>
+  <text x="748" y="198" font-size="9" fill="#94a3b8">解决单表海量，引入路由复杂度</text>
+
+  <!-- ============ 行 2：JOIN ============ -->
+  <text x="28" y="232" font-size="11" font-weight="600" fill="#475569">跨行 JOIN</text>
+
+  <rect x="40" y="242" width="304" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="262" font-size="10" fill="#16a34a">透明支持</text>
+  <text x="52" y="278" font-size="10" fill="#475569">优化器选执行计划，任意两表可连</text>
+  <text x="52" y="292" font-size="9" fill="#94a3b8">复杂 JOIN 由数据库自己算</text>
+
+  <rect x="388" y="242" width="304" height="58" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="400" y="262" font-size="10" fill="#ca8a04">跨库不可 JOIN</text>
+  <text x="400" y="278" font-size="10" fill="#475569">用户库与订单库的表无法直接连</text>
+  <text x="400" y="292" font-size="9" fill="#94a3b8">改应用层拼装：分别查再内存关联</text>
+
+  <rect x="736" y="242" width="304" height="58" rx="5" fill="#ffffff" stroke="#ea580c" stroke-width="1"/>
+  <text x="748" y="262" font-size="10" fill="#c2410c">跨库 + 跨分片都不可 JOIN</text>
+  <text x="748" y="278" font-size="10" fill="#475569">同表不同分片行也无法一条 SQL 连</text>
+  <text x="748" y="292" font-size="9" fill="#94a3b8">应用层拼装 + 广播表 + 冗余字段</text>
+
+  <!-- ============ 行 3：事务 ============ -->
+  <text x="28" y="326" font-size="11" font-weight="600" fill="#475569">事务</text>
+
+  <rect x="40" y="336" width="304" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="356" font-size="10" fill="#16a34a">单库事务全透明</text>
+  <text x="52" y="372" font-size="10" fill="#475569">ACID 由 InnoDB 保证</text>
+  <text x="52" y="386" font-size="9" fill="#94a3b8">写多张表要么全成要么全败</text>
+
+  <rect x="388" y="336" width="304" height="58" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="400" y="356" font-size="10" fill="#ca8a04">跨库事务代价高</text>
+  <text x="400" y="372" font-size="10" fill="#475569">XA 协调者阻塞、持锁等待</text>
+  <text x="400" y="386" font-size="9" fill="#94a3b8">多数改最终一致（见第 11、19 篇）</text>
+
+  <rect x="736" y="336" width="304" height="58" rx="5" fill="#ffffff" stroke="#ea580c" stroke-width="1"/>
+  <text x="748" y="356" font-size="10" fill="#c2410c">同分片内可事务，跨分片不可</text>
+  <text x="748" y="372" font-size="10" fill="#475569">需保证同事务操作落在同一分片</text>
+  <text x="748" y="386" font-size="9" fill="#94a3b8">拆分键决定事务边界</text>
+
+  <!-- ============ 行 4：唯一约束与排序分页 ============ -->
+  <text x="28" y="420" font-size="11" font-weight="600" fill="#475569">唯一约束 / 全局排序分页</text>
+
+  <rect x="40" y="430" width="304" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="450" font-size="10" fill="#16a34a">透明支持</text>
+  <text x="52" y="466" font-size="10" fill="#475569">主键 / 唯一索引 / ORDER BY LIMIT</text>
+  <text x="52" y="480" font-size="9" fill="#94a3b8">数据库自己保证</text>
+
+  <rect x="388" y="430" width="304" height="58" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="400" y="450" font-size="10" fill="#16a34a">单库内仍透明</text>
+  <text x="400" y="466" font-size="10" fill="#475569">各业务库独立主键与排序</text>
+  <text x="400" y="480" font-size="9" fill="#94a3b8">全局唯一 ID 需另设发号（见 2016 第 12 篇）</text>
+
+  <rect x="736" y="430" width="304" height="58" rx="5" fill="#ffffff" stroke="#ea580c" stroke-width="1"/>
+  <text x="748" y="450" font-size="10" fill="#c2410c">全局唯一约束失效</text>
+  <text x="748" y="466" font-size="10" fill="#475569">分页：各分片取 TopN 再归并，大偏移爆炸</text>
+  <text x="748" y="480" font-size="9" fill="#94a3b8">全局唯一靠发号组件，不靠 DB 索引</text>
+
+  <!-- ============ 行 5：路由复杂度 ============ -->
+  <text x="28" y="514" font-size="11" font-weight="600" fill="#475569">路由复杂度</text>
+
+  <rect x="40" y="524" width="304" height="58" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="544" font-size="10" fill="#16a34a">无路由</text>
+  <text x="52" y="560" font-size="10" fill="#475569">所有 SQL 直达同一库</text>
+  <text x="52" y="574" font-size="9" fill="#94a3b8">应用代码不感知库的位置</text>
+
+  <rect x="388" y="524" width="304" height="58" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+  <text x="400" y="544" font-size="10" fill="#ca8a04">按业务路由（数据源选择）</text>
+  <text x="400" y="560" font-size="10" fill="#475569">应用按业务选数据源，库内无路由</text>
+  <text x="400" y="574" font-size="9" fill="#94a3b8">Spring 多 DataSource 抽象层</text>
+
+  <rect x="736" y="524" width="304" height="58" rx="5" fill="#ffffff" stroke="#ea580c" stroke-width="1"/>
+  <text x="748" y="544" font-size="10" fill="#c2410c">按拆分键路由（每条 SQL）</text>
+  <text x="748" y="560" font-size="10" fill="#475569">不带键的查询退化为广播</text>
+  <text x="748" y="574" font-size="9" fill="#94a3b8">ShardingSphere-JDBC / MyCAT 在此层介入</text>
+
+  <!-- ============ 底部：交换与不可逆 ============ -->
+  <rect x="24" y="600" width="1032" height="124" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="624" font-size="12" font-weight="600" fill="#1f2937">交换内容与不可逆性</text>
+
+  <text x="40" y="648" font-size="10" font-weight="600" fill="#92400e">换来的</text>
+  <text x="120" y="648" font-size="10" fill="#475569">垂直拆分换业务隔离与单库容量上限提升；水平拆分换水平扩展能力（加机器即可加容量）。</text>
+
+  <text x="40" y="672" font-size="10" font-weight="600" fill="#92400e">放弃的</text>
+  <text x="120" y="672" font-size="10" fill="#475569">跨行 JOIN、跨表事务、全局唯一约束与排序分页的透明支持；水平拆分还放弃单库运维简单性。</text>
+
+  <text x="40" y="696" font-size="10" font-weight="600" fill="#92400e">不可逆</text>
+  <text x="120" y="696" font-size="10" fill="#475569">拆分后应用层路由与拼装逻辑铺开，回到单库要重写大量查询路径；决策门槛要高，能归档就不扩容。</text>
+
+  <text x="40" y="716" font-size="10" font-weight="600" fill="#92400e">顺序</text>
+  <text x="120" y="716" font-size="10" fill="#475569">垂直拆分先行（按业务隔离），水平拆分殿后（按数据量）；顺序反了要在分片内再拆业务，复杂度叠加。</text>
+</svg>

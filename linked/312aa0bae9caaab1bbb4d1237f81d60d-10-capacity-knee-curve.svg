@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 560" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <rect width="780" height="560" rx="8" fill="#f8fafc"/>
+  <text x="30" y="34" font-size="16" font-weight="600" fill="#1f2937">单机容量曲线：QPS 与 RT 的关系，以及拐点在哪</text>
+
+  <!-- 拐点之后的危险区域底色 -->
+  <rect x="400" y="70" width="320" height="390" fill="#fef2f2"/>
+
+  <!-- 网格线 -->
+  <g stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="100" y1="120" x2="720" y2="120"/>
+    <line x1="100" y1="190" x2="720" y2="190"/>
+    <line x1="100" y1="260" x2="720" y2="260"/>
+    <line x1="100" y1="330" x2="720" y2="330"/>
+    <line x1="100" y1="400" x2="720" y2="400"/>
+  </g>
+
+  <!-- 坐标轴 -->
+  <line x1="100" y1="70" x2="100" y2="460" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="100" y1="460" x2="720" y2="460" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- 区域标注 -->
+  <text x="255" y="240" font-size="13" font-weight="600" fill="#1d4ed8" text-anchor="middle">拐点之前：RT 平稳</text>
+  <text x="255" y="260" font-size="11" fill="#1d4ed8" text-anchor="middle">资源有余量，加量几乎免费</text>
+  <text x="600" y="330" font-size="13" font-weight="600" fill="#b91c1c" text-anchor="middle">拐点之后：RT 非线性上涨</text>
+  <text x="600" y="350" font-size="11" fill="#b91c1c" text-anchor="middle">排队主导，P99 先失控</text>
+
+  <!-- P99 曲线（琥珀） -->
+  <path d="M100,414 C240,414 330,410 385,398 C425,388 450,362 468,312 C486,258 502,168 512,108 C517,86 520,75 521,72"
+        fill="none" stroke="#d97706" stroke-width="2.5"/>
+
+  <!-- 平均 RT 曲线（蓝） -->
+  <path d="M100,432 C250,432 340,430 400,424 C440,420 470,404 495,368 C520,332 545,258 560,190 C568,150 575,108 580,80"
+        fill="none" stroke="#2563eb" stroke-width="2.5"/>
+
+  <!-- 拐点标注（落在 P99 曲线上） -->
+  <line x1="400" y1="392" x2="400" y2="460" stroke="#d97706" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <circle cx="400" cy="392" r="4.5" fill="#d97706"/>
+  <rect x="300" y="360" width="96" height="24" rx="5" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/>
+  <text x="348" y="376" font-size="12" font-weight="600" fill="#b45309" text-anchor="middle">拐点（真实容量）</text>
+  <line x1="380" y1="384" x2="397" y2="390" stroke="#d97706" stroke-width="1"/>
+  <text x="400" y="478" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">单机拐点 QPS</text>
+
+  <!-- 图例 -->
+  <line x1="118" y1="90" x2="148" y2="90" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="156" y="94" font-size="11" fill="#1d4ed8">平均 RT</text>
+  <line x1="228" y1="90" x2="258" y2="90" stroke="#d97706" stroke-width="2.5"/>
+  <text x="266" y="94" font-size="11" fill="#b45309">P99 RT</text>
+
+  <!-- 轴标签 -->
+  <text x="410" y="508" font-size="11.5" fill="#64748b" text-anchor="middle">QPS（相对刻度，已脱敏）</text>
+  <text x="265" y="0" font-size="11.5" fill="#64748b" text-anchor="middle" transform="translate(42 265) rotate(-90) translate(-265 0)">RT（毫秒，示意）</text>
+
+  <!-- 底部结论 -->
+  <text x="390" y="542" font-size="11.5" fill="#64748b" text-anchor="middle">容量评估取「拐点 QPS × 安全系数」反推机器数；曲线尽头的极限值没有意义——到那时服务已经在超时了。</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#164e63"/>
+      <stop offset="55%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/><circle cx="380" cy="60" r="2"/><circle cx="460" cy="60" r="2"/><circle cx="540" cy="60" r="2"/><circle cx="620" cy="60" r="2"/><circle cx="700" cy="60" r="2"/>
+    <circle cx="60" cy="390" r="2"/><circle cx="140" cy="390" r="2"/><circle cx="220" cy="390" r="2"/><circle cx="300" cy="390" r="2"/><circle cx="380" cy="390" r="2"/><circle cx="460" cy="390" r="2"/><circle cx="540" cy="390" r="2"/><circle cx="620" cy="390" r="2"/><circle cx="700" cy="390" r="2"/>
+  </g>
+
+  <!-- old panel -->
+  <rect x="120" y="95" width="230" height="210" rx="12" fill="#ecfeff" opacity="0.92"/>
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" fill="#155e75">
+    <text x="140" y="130">list: [1, 2, 3]</text>
+    <text x="140" y="162">count: 10</text>
+    <text x="140" y="194">user: "A"</text>
+    <text x="140" y="226">show: true</text>
+  </g>
+
+  <!-- new panel -->
+  <rect x="450" y="95" width="230" height="210" rx="12" fill="#ffffff"/>
+  <g font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" fill="#155e75">
+    <text x="470" y="130">list: [1, 2, 3]</text>
+    <text x="470" y="162">count: 11</text>
+    <text x="470" y="194">user: "A"</text>
+    <text x="470" y="226">show: true</text>
+  </g>
+  <!-- changed row highlight -->
+  <rect x="458" y="144" width="214" height="26" rx="5" fill="#fde047" opacity="0.55"/>
+
+  <!-- diff arrow -->
+  <path d="M 365 200 L 435 200" stroke="#fde047" stroke-width="5"/>
+  <path d="M 420 188 L 438 200 L 420 212" stroke="#fde047" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="400" y="182" fill="#fde047" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" font-weight="700" text-anchor="middle">diff</text>
+
+  <!-- setData hint -->
+  <text x="400" y="330" fill="#a5f3fc" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" text-anchor="middle" opacity="0.9">setData({ "count": 11 })</text>
+
+  <!-- title -->
+  <text x="400" y="392" fill="#ffffff" font-family="Georgia, 'Noto Serif SC', serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="1">Fast Data Diff</text>
+  <text x="400" y="422" fill="#a5f3fc" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">小程序 setData 高性能 diff</text>
+</svg>

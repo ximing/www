@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="500" viewBox="0 0 1100 500" role="img" aria-labelledby="title desc">
+  <title id="title">一轮一个工具和允许并行，两种写法同时存在</title>
+  <desc id="desc">Cline 每条消息只用一个工具，结果由下一轮用户消息带回，结束必须调用 attempt_completion。Claude Code 允许同一个 function_calls 块里放多个互不依赖的工具。有顺序的动作不并行。</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif; fill: #182230; }
+    .title { font-size: 24px; font-weight: 700; }
+    .label { font-size: 18px; font-weight: 700; }
+    .box { font-size: 16px; font-weight: 700; }
+    .sub { font-size: 15px; fill: #526176; }
+  </style>
+  <rect width="1100" height="500" rx="18" fill="#f8fafc"/>
+  <text x="40" y="46" class="title">两种循环同时存在于这批 prompt 里</text>
+
+  <text x="40" y="96" class="label">Cline：每条消息一个工具</text>
+  <rect x="40" y="116" width="200" height="84" rx="14" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+  <text x="64" y="152" class="box">模型回复</text>
+  <text x="64" y="178" class="sub">一个 XML 工具</text>
+  <path d="M248 158h44" fill="none" stroke="#64748b" stroke-width="4"/>
+  <path d="m284 146 16 12-16 12" fill="none" stroke="#64748b" stroke-width="4"/>
+  <rect x="308" y="116" width="220" height="84" rx="14" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+  <text x="332" y="152" class="box">下一轮用户消息</text>
+  <text x="332" y="178" class="sub">带回工具结果</text>
+  <path d="M536 158h44" fill="none" stroke="#64748b" stroke-width="4"/>
+  <path d="m572 146 16 12-16 12" fill="none" stroke="#64748b" stroke-width="4"/>
+  <rect x="588" y="116" width="180" height="84" rx="14" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+  <text x="612" y="152" class="box">再发一个工具</text>
+  <text x="612" y="178" class="sub">一次一个动作</text>
+  <path d="M776 158h44" fill="none" stroke="#64748b" stroke-width="4"/>
+  <path d="m812 146 16 12-16 12" fill="none" stroke="#64748b" stroke-width="4"/>
+  <rect x="828" y="116" width="232" height="84" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  <text x="852" y="152" class="box">attempt_completion</text>
+  <text x="852" y="178" class="sub">确认成功后才能结束</text>
+
+  <text x="40" y="272" class="label">Claude Code / ZCode：互不依赖可以并行</text>
+  <rect x="40" y="292" width="160" height="84" rx="14" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="64" y="328" class="box">模型回复</text>
+  <text x="64" y="354" class="sub">一次</text>
+  <path d="M208 334h44" fill="none" stroke="#64748b" stroke-width="4"/>
+  <path d="m244 322 16 12-16 12" fill="none" stroke="#64748b" stroke-width="4"/>
+  <rect x="260" y="292" width="320" height="84" rx="14" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="284" y="322" class="box">同一个 function_calls 块</text>
+  <text x="284" y="348" class="sub">读取 A + 读取 B + 搜索，并行发出</text>
+  <path d="M588 334h44" fill="none" stroke="#64748b" stroke-width="4"/>
+  <path d="m624 322 16 12-16 12" fill="none" stroke="#64748b" stroke-width="4"/>
+  <rect x="640" y="292" width="200" height="84" rx="14" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="664" y="328" class="box">结果同轮返回</text>
+  <text x="664" y="354" class="sub">不用等用户消息</text>
+
+  <text x="40" y="448" class="sub">有顺序的动作不并行：Cursor 2.0 允许并行调用，但编辑每轮最多一次；Cline 的浏览器一次一个动作。</text>
+  <text x="40" y="476" class="sub">实现时以运行时为准：解析器只取第一个工具，prompt 里就留「一轮一个」。</text>
+</svg>

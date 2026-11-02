@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1000" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#042f2e"/>
+      <stop offset="55%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.4" r="0.72">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="2000" height="1000" fill="url(#bg)"/>
+  <rect width="2000" height="1000" fill="url(#glow)"/>
+
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="140" cy="860" r="3"/><circle cx="215" cy="860" r="3"/><circle cx="290" cy="860" r="3"/><circle cx="365" cy="860" r="3"/><circle cx="440" cy="860" r="3"/><circle cx="515" cy="860" r="3"/><circle cx="590" cy="860" r="3"/>
+    <circle cx="140" cy="910" r="3"/><circle cx="215" cy="910" r="3"/><circle cx="290" cy="910" r="3"/><circle cx="365" cy="910" r="3"/><circle cx="440" cy="910" r="3"/><circle cx="515" cy="910" r="3"/><circle cx="590" cy="910" r="3"/>
+  </g>
+
+  <text x="136" y="320" fill="#ccfbf1" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="22" letter-spacing="6">BRANCHING CONVERSATION</text>
+  <text x="130" y="520" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="168" font-weight="700" letter-spacing="8">支流</text>
+  <text x="140" y="610" fill="#ecfdf5" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="34" letter-spacing="3">一次对话记成一棵树</text>
+  <path d="M 140 668 L 460 668" stroke="#ccfbf1" stroke-width="3" opacity="0.6"/>
+  <text x="140" y="732" fill="#ccfbf1" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="20" letter-spacing="2" opacity="0.95">React · Fastify · Postgres · Meilisearch</text>
+
+  <g fill="none" stroke="#ccfbf1" stroke-width="3" opacity="0.75">
+    <path d="M 1320 430 C 1420 430, 1440 300, 1540 300"/>
+    <path d="M 1320 470 C 1440 470, 1460 620, 1540 620"/>
+    <path d="M 1700 660 C 1780 700, 1800 760, 1820 790"/>
+  </g>
+
+  <rect x="1140" y="390" width="200" height="88" rx="16" fill="#f0fdfa"/>
+  <text x="1240" y="442" fill="#134e4a" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="24" font-weight="600" text-anchor="middle">根问题</text>
+
+  <rect x="1540" y="250" width="200" height="80" rx="16" fill="#f0fdfa"/>
+  <text x="1640" y="298" fill="#134e4a" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="22" font-weight="600" text-anchor="middle">子问题</text>
+
+  <rect x="1540" y="580" width="200" height="80" rx="16" fill="#f0fdfa"/>
+  <text x="1640" y="628" fill="#134e4a" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="22" font-weight="600" text-anchor="middle">同级问题</text>
+
+  <rect x="1800" y="760" width="160" height="64" rx="14" fill="#ccfbf1"/>
+  <text x="1880" y="800" fill="#134e4a" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="20" font-weight="600" text-anchor="middle">再往下</text>
+</svg>

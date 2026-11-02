@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="560" viewBox="0 0 760 560" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Panel A: document structure and position numbering -->
+  <text x="30" y="20" font-size="13" fill="#333" font-weight="bold">文档结构：doc(paragraph, hr, hr, paragraph) 与位置编号</text>
+
+  <rect x="30" y="32" width="700" height="112" fill="#f7f7f5" stroke="#999" stroke-width="1.5"/>
+  <text x="42" y="52" font-size="11" fill="#666">doc（content: block+）</text>
+
+  <rect x="50" y="62" width="170" height="58" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="135" y="86" text-anchor="middle" font-size="11" fill="#2c4a73">paragraph「第一段」</text>
+  <text x="135" y="104" text-anchor="middle" font-size="10" fill="#555">nodeSize 5，占 [0, 5)</text>
+
+  <rect x="240" y="62" width="110" height="58" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="295" y="86" text-anchor="middle" font-size="11" fill="#6b5c2e">hr（atom）</text>
+  <text x="295" y="104" text-anchor="middle" font-size="10" fill="#555">叶子，nodeSize 1</text>
+
+  <rect x="370" y="62" width="110" height="58" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="425" y="86" text-anchor="middle" font-size="11" fill="#6b5c2e">hr（atom）</text>
+  <text x="425" y="104" text-anchor="middle" font-size="10" fill="#555">叶子，nodeSize 1</text>
+
+  <rect x="500" y="62" width="170" height="58" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="585" y="86" text-anchor="middle" font-size="11" fill="#2c4a73">paragraph「第二段」</text>
+  <text x="585" y="104" text-anchor="middle" font-size="10" fill="#555">nodeSize 5，占 [7, 12)</text>
+
+  <!-- position ticks -->
+  <line x1="50" y1="132" x2="50" y2="146" stroke="#999" stroke-width="1"/>
+  <text x="50" y="160" text-anchor="middle" font-size="10" fill="#666">pos 0</text>
+
+  <line x1="230" y1="132" x2="230" y2="146" stroke="#b05a4a" stroke-width="1.5"/>
+  <text x="230" y="160" text-anchor="middle" font-size="10" fill="#b05a4a">pos 5</text>
+  <text x="230" y="176" text-anchor="middle" font-size="9" fill="#b05a4a">左侧段落有 inlineContent</text>
+  <text x="230" y="189" text-anchor="middle" font-size="9" fill="#b05a4a">开放，valid 不通过</text>
+
+  <line x1="360" y1="132" x2="360" y2="146" stroke="#3a7d44" stroke-width="2"/>
+  <text x="360" y="160" text-anchor="middle" font-size="10" fill="#3a7d44" font-weight="bold">pos 6</text>
+  <text x="360" y="176" text-anchor="middle" font-size="9" fill="#3a7d44">两侧都是封闭 atom</text>
+  <text x="360" y="189" text-anchor="middle" font-size="9" fill="#3a7d44">valid 通过，gap cursor 落点</text>
+
+  <line x1="490" y1="132" x2="490" y2="146" stroke="#b05a4a" stroke-width="1.5"/>
+  <text x="490" y="160" text-anchor="middle" font-size="10" fill="#b05a4a">pos 7</text>
+  <text x="490" y="176" text-anchor="middle" font-size="9" fill="#b05a4a">右侧段落开放</text>
+  <text x="490" y="189" text-anchor="middle" font-size="9" fill="#b05a4a">valid 不通过</text>
+
+  <line x1="670" y1="132" x2="670" y2="146" stroke="#999" stroke-width="1"/>
+  <text x="670" y="160" text-anchor="middle" font-size="10" fill="#666">pos 12</text>
+
+  <!-- Panel B: rendering layers -->
+  <text x="30" y="228" font-size="13" fill="#333" font-weight="bold">渲染层：用户看到的光标是画出来的</text>
+
+  <rect x="30" y="240" width="700" height="240" fill="#f7f7f5" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="42" y="260" font-size="11" fill="#2c4a73">编辑器根 DOM：.ProseMirror.ProseMirror-hideselection</text>
+
+  <!-- rendered content, left half -->
+  <text x="60" y="296" font-size="12" fill="#333">第一段</text>
+  <line x1="60" y1="326" x2="360" y2="326" stroke="#888" stroke-width="2"/>
+  <text x="368" y="330" font-size="10" fill="#888">hr</text>
+
+  <!-- fake caret widget -->
+  <rect x="60" y="340" width="44" height="18" fill="none" stroke="#3a7d44" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="60" y1="338" x2="80" y2="338" stroke="#000" stroke-width="2.5"/>
+  <!-- hidden native caret at same spot -->
+  <line x1="60" y1="340" x2="60" y2="358" stroke="#bbb" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+  <line x1="60" y1="386" x2="360" y2="386" stroke="#888" stroke-width="2"/>
+  <text x="368" y="390" font-size="10" fill="#888">hr</text>
+  <text x="60" y="420" font-size="12" fill="#333">第二段</text>
+
+  <!-- leader lines from widget to notes -->
+  <line x1="104" y1="349" x2="430" y2="302" stroke="#666" stroke-width="0.8" marker-end="url(#arr)"/>
+  <line x1="60" y1="358" x2="430" y2="372" stroke="#666" stroke-width="0.8" marker-end="url(#arr)"/>
+
+  <!-- callout box, right half -->
+  <rect x="424" y="286" width="292" height="180" fill="#fff" stroke="#bbb" stroke-width="1"/>
+  <text x="436" y="306" font-size="10.5" fill="#333">① Decoration.widget 在 pos 6 插入</text>
+  <text x="448" y="322" font-size="10.5" fill="#333">div.ProseMirror-gapcursor，:after</text>
+  <text x="448" y="338" font-size="10.5" fill="#333">画 20px 横线并闪烁（可见光标）</text>
+
+  <text x="436" y="364" font-size="10.5" fill="#333">② visible = false → 根节点加</text>
+  <text x="448" y="380" font-size="10.5" fill="#333">hideselection：caret-color: transparent</text>
+  <text x="448" y="396" font-size="10.5" fill="#333">原生 caret 与选区高亮被隐藏</text>
+
+  <text x="436" y="422" font-size="10.5" fill="#333">③ selectionToDOM 仍把真实 DOM 选区</text>
+  <text x="448" y="438" font-size="10.5" fill="#333">设到 pos 6；Safari / 旧 Chrome 用</text>
+  <text x="448" y="454" font-size="10.5" fill="#333">temporarilyEditableNear 辅助落位</text>
+
+  <text x="30" y="516" font-size="10.5" fill="#666">效果：真实选区在缝隙位置但不可见，可见光标是 widget，键盘焦点与输入始终留在编辑器内。</text>
+</svg>

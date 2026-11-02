@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="55%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.35" cy="0.4" r="0.75">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <rect width="1600" height="600" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="110" cy="520" r="2.5"/><circle cx="170" cy="520" r="2.5"/><circle cx="230" cy="520" r="2.5"/><circle cx="290" cy="520" r="2.5"/><circle cx="350" cy="520" r="2.5"/><circle cx="410" cy="520" r="2.5"/><circle cx="470" cy="520" r="2.5"/><circle cx="530" cy="520" r="2.5"/>
+    <circle cx="110" cy="556" r="2.5"/><circle cx="170" cy="556" r="2.5"/><circle cx="230" cy="556" r="2.5"/><circle cx="290" cy="556" r="2.5"/><circle cx="350" cy="556" r="2.5"/><circle cx="410" cy="556" r="2.5"/><circle cx="470" cy="556" r="2.5"/><circle cx="530" cy="556" r="2.5"/>
+  </g>
+
+  <!-- left typography block -->
+  <text x="108" y="178" fill="#bfdbfe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="16" letter-spacing="6">AI-FIRST REACTIVE STATE</text>
+  <text x="104" y="292" fill="#ffffff" font-family="Georgia, 'Songti SC', 'Noto Serif SC', serif" font-size="96" font-weight="700" letter-spacing="2">RabJS</text>
+  <text x="110" y="352" fill="#dbeafe" font-family="'PingFang SC', 'Noto Sans SC', system-ui, sans-serif" font-size="24" letter-spacing="3">响应式状态架构</text>
+  <path d="M 110 396 L 340 396" stroke="#bfdbfe" stroke-width="2" opacity="0.6"/>
+  <text x="110" y="436" fill="#bfdbfe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="15" letter-spacing="2" opacity="0.9">observer · service · react</text>
+
+  <!-- right shared-state diagram: four readers/writers around central state -->
+  <g stroke="#bfdbfe" stroke-width="4" fill="none" opacity="0.8">
+    <path d="M 1150 300 L 970 160"/>
+    <path d="M 1150 300 L 1330 160"/>
+    <path d="M 1150 300 L 970 440"/>
+    <path d="M 1150 300 L 1330 440"/>
+    <path d="M 970 160 L 1330 160" stroke-dasharray="8 10" opacity="0.5"/>
+    <path d="M 970 440 L 1330 440" stroke-dasharray="8 10" opacity="0.5"/>
+  </g>
+  <g fill="#eff6ff">
+    <circle cx="970" cy="160" r="26"/>
+    <circle cx="1330" cy="160" r="26"/>
+    <circle cx="970" cy="440" r="26" opacity="0.92"/>
+    <circle cx="1330" cy="440" r="26" opacity="0.92"/>
+  </g>
+  <g fill="#3b82f6">
+    <circle cx="970" cy="160" r="12"/>
+    <circle cx="1330" cy="160" r="12"/>
+    <circle cx="970" cy="440" r="12"/>
+    <circle cx="1330" cy="440" r="12"/>
+  </g>
+  <g fill="#dbeafe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" text-anchor="middle" letter-spacing="2">
+    <text x="970" y="112">HUMAN</text>
+    <text x="1330" y="112">AGENT</text>
+    <text x="970" y="496">DEVTOOLS</text>
+    <text x="1330" y="496">MCP</text>
+  </g>
+
+  <!-- central observer node with pulse rings -->
+  <circle cx="1150" cy="300" r="92" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.14"/>
+  <circle cx="1150" cy="300" r="74" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.26"/>
+  <circle cx="1150" cy="300" r="54" fill="#ffffff"/>
+  <circle cx="1150" cy="300" r="35" fill="#1e3a8a"/>
+  <circle cx="1150" cy="300" r="14" fill="#93c5fd"/>
+  <text x="1150" y="394" fill="#dbeafe" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" text-anchor="middle" letter-spacing="3">STATE</text>
+</svg>

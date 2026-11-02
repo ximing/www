@@ -1,0 +1,113 @@
+<svg viewBox="0 0 980 880" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="stageFiber" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="stageScope" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="stageStack" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3fb950"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#f85149"/></marker>
+  </defs>
+
+  <rect width="980" height="880" fill="url(#bg)" rx="8"/>
+
+  <text x="490" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="bold" font-family="'Segoe UI','SF Pro',sans-serif">JSVM3 异常控制流：Guard 命中与 unwind 控制转移</text>
+  <text x="490" y="54" text-anchor="middle" fill="#8b949e" font-size="12">g() 的 try 块抛出 7，经 finally 后被外层 catch 捕获——实测 trace = ['in-try', 'in-finally', 'outer-catch-7']</text>
+
+  <!-- 左上：示例源码 -->
+  <rect x="30" y="80" width="440" height="150" rx="6" fill="url(#stageStack)" filter="url(#glow)"/>
+  <text x="50" y="102" fill="#a371f7" font-size="12" font-weight="bold">示例源码（运行行为经实际执行验证）</text>
+  <text x="50" y="126" fill="#c9d1d9" font-size="10.5">function g() {</text>
+  <text x="50" y="141" fill="#c9d1d9" font-size="10.5">  try { trace.push('in-try'); throw 7; }</text>
+  <text x="50" y="156" fill="#c9d1d9" font-size="10.5">  finally { trace.push('in-finally'); }</text>
+  <text x="50" y="171" fill="#c9d1d9" font-size="10.5">}</text>
+  <text x="50" y="186" fill="#c9d1d9" font-size="10.5">try { g(); } catch (e) { trace.push('outer-catch-' + e); }</text>
+  <text x="50" y="214" fill="#8b949e" font-size="10">要点：finally 必须先于异常传播执行，</text>
+  <text x="50" y="228" fill="#8b949e" font-size="10">且 catch 在调用者帧上——跨越一个 Frame</text>
+
+  <!-- 右上：g 的 Guard 与关键字节码 -->
+  <rect x="490" y="80" width="460" height="150" rx="6" fill="url(#stageFiber)" filter="url(#glow)"/>
+  <text x="510" y="102" fill="#58a6ff" font-size="12" font-weight="bold">g 编译产物：Guard 表 + 指令布局（真实反汇编）</text>
+  <text x="510" y="126" fill="#3fb950" font-size="10.5">guard: { start, handler: null, finalizer, end }</text>
+  <text x="510" y="146" fill="#c9d1d9" font-size="10.5">ENTER_GUARD [0]   ; Guard 压入 frame.guards</text>
+  <text x="510" y="161" fill="#f85149" font-size="10.5">THROW             ; evalError = 7, 挂起帧</text>
+  <text x="510" y="176" fill="#c9d1d9" font-size="10.5">finalizer:  finally 块指令</text>
+  <text x="510" y="191" fill="#c9d1d9" font-size="10.5">EXIT_GUARD [0]    ; 弹出本层 Guard</text>
+  <text x="510" y="206" fill="#c9d1d9" font-size="10.5">PAUSE             ; 哨兵：挂起帧等 Fiber 处理</text>
+  <text x="510" y="221" fill="#8b949e" font-size="10">end: EXIT_GUARD（正常落下路径的出口）</text>
+
+  <!-- 控制转移时序 -->
+  <text x="40" y="262" fill="#e6edf3" font-size="13" font-weight="bold">控制转移时序（Fiber.run 主循环视角）</text>
+
+  <!-- Step 1 -->
+  <rect x="30" y="276" width="620" height="86" rx="5" fill="#0d1117" stroke="#f85149" stroke-width="1"/>
+  <text x="50" y="298" fill="#f85149" font-size="11" font-weight="bold">① THROW：错误只是帧上的字段</text>
+  <text x="50" y="316" fill="#c9d1d9" font-size="10">throwErr(frame, 7)：frame.evalError = 7</text>
+  <text x="50" y="331" fill="#c9d1d9" font-size="10">frame.suspended = true → Frame.run() 循环退出</text>
+  <text x="50" y="346" fill="#8b949e" font-size="10">不抛宿主异常；原生函数抛错也被 callFun() 收编为同一路径</text>
+
+  <path d="M340,362 L340,376" fill="none" stroke="#f85149" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+  <!-- Step 2 -->
+  <rect x="30" y="382" width="620" height="86" rx="5" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="50" y="404" fill="#3fb950" font-size="11" font-weight="bold">② Fiber.run 发现 evalError → unwind(7)</text>
+  <text x="50" y="422" fill="#c9d1d9" font-size="10">ip = frame.ip - 1（ip 已指向下一条，回退到出错指令）</text>
+  <text x="50" y="437" fill="#3fb950" font-size="10">Guard 命中：start ≤ ip ≤ end，且 handler = null</text>
+  <text x="50" y="452" fill="#c9d1d9" font-size="10">纯 try/finally：frame.ip = finalizer，错误保留在 evalError</text>
+
+  <path d="M340,468 L340,482" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 3 -->
+  <rect x="30" y="488" width="620" height="86" rx="5" fill="#0d1117" stroke="#58a6ff" stroke-width="1"/>
+  <text x="50" y="510" fill="#58a6ff" font-size="11" font-weight="bold">③ finally 块执行（ip: finalizer → end）</text>
+  <text x="50" y="528" fill="#c9d1d9" font-size="10">trace.push('in-finally') 照常执行——finally 先于传播</text>
+  <text x="50" y="543" fill="#c9d1d9" font-size="10">EXIT_GUARD 弹出本层 Guard（frame.guards 清空）</text>
+  <text x="50" y="558" fill="#c9d1d9" font-size="10">PAUSE 挂起帧：「停在这里，等 Fiber 来收拾」</text>
+
+  <path d="M340,574 L340,588" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 4 -->
+  <rect x="30" y="594" width="620" height="86" rx="5" fill="#0d1117" stroke="#a371f7" stroke-width="1"/>
+  <text x="50" y="616" fill="#a371f7" font-size="11" font-weight="bold">④ evalError 仍在 → 再次 unwind(7)</text>
+  <text x="50" y="634" fill="#c9d1d9" font-size="10">本帧 guards 已空，Guard 无法命中</text>
+  <text x="50" y="649" fill="#c9d1d9" font-size="10">popFrame()：g 的 Frame 出栈，返回值通道不涉及</text>
+  <text x="50" y="664" fill="#8b949e" font-size="10">异常传播到调用者（模块顶层）帧，重复查找</text>
+
+  <path d="M340,680 L340,694" fill="none" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 5 -->
+  <rect x="30" y="700" width="620" height="86" rx="5" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="50" y="722" fill="#3fb950" font-size="11" font-weight="bold">⑤ 外层帧 Guard 命中 handler → 进 catch</text>
+  <text x="50" y="740" fill="#c9d1d9" font-size="10">ip ≤ handler（错误发生在 try 块内）：evalStack.push(7)</text>
+  <text x="50" y="755" fill="#c9d1d9" font-size="10">evalError = null，frame.ip = handler</text>
+  <text x="50" y="770" fill="#3fb950" font-size="10">catch (e) 入口指令把栈顶错误对象绑定给 e → 'outer-catch-7'</text>
+
+  <!-- 右侧：unwind 判定逻辑 -->
+  <rect x="680" y="276" width="270" height="330" rx="6" fill="url(#stageScope)" filter="url(#glow)"/>
+  <text x="815" y="300" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="bold">unwind() 判定逻辑</text>
+  <text x="815" y="317" text-anchor="middle" fill="#8b949e" font-size="10">src/vm/fiber.ts</text>
+  <text x="700" y="342" fill="#c9d1d9" font-size="10">ip = frame.ip - 1</text>
+  <text x="700" y="362" fill="#3fb950" font-size="10">if start ≤ ip ≤ end:</text>
+  <text x="712" y="382" fill="#c9d1d9" font-size="10">handler ≠ null:</text>
+  <text x="724" y="402" fill="#c9d1d9" font-size="10">ip ≤ handler → 进 catch</text>
+  <text x="724" y="422" fill="#c9d1d9" font-size="10">否则 → 补跑 finalizer</text>
+  <text x="724" y="442" fill="#c9d1d9" font-size="10">　　　 或 popFrame 向上</text>
+  <text x="712" y="462" fill="#c9d1d9" font-size="10">handler = null:</text>
+  <text x="724" y="482" fill="#c9d1d9" font-size="10">ip = finalizer（错误保留）</text>
+  <text x="700" y="502" fill="#a371f7" font-size="10">else: popFrame → 上一帧</text>
+  <text x="700" y="522" fill="#8b949e" font-size="10">所有帧都无 Guard 命中：</text>
+  <text x="700" y="537" fill="#8b949e" font-size="10">throw err 抛给宿主</text>
+
+  <rect x="680" y="626" width="270" height="160" rx="6" fill="url(#stageStack)" filter="url(#glow)"/>
+  <text x="815" y="650" text-anchor="middle" fill="#a371f7" font-size="12" font-weight="bold">两份 Guard</text>
+  <text x="700" y="674" fill="#c9d1d9" font-size="10">Script.guards：编译期静态表</text>
+  <text x="700" y="690" fill="#8b949e" font-size="10">Label 在 end() 时回填为地址</text>
+  <text x="700" y="714" fill="#c9d1d9" font-size="10">frame.guards：运行期生效栈</text>
+  <text x="700" y="730" fill="#8b949e" font-size="10">ENTER_GUARD 压入 / EXIT_GUARD 弹出</text>
+  <text x="700" y="754" fill="#8b949e" font-size="10">嵌套 try 在栈上叠多层，</text>
+  <text x="700" y="769" fill="#8b949e" font-size="10">unwind 只查栈顶 Guard</text>
+
+  <text x="40" y="816" fill="#8b949e" font-size="10">对称路径：try 块中 return（RETV）时，Fiber.run 改写 frame.ip = finalizer、exitIp = end，让 finally 先于返回执行——</text>
+  <text x="40" y="832" fill="#8b949e" font-size="10">同样是「Guard 还在 frame.guards 上」触发的补跑机制（见正文「Guard 的四个字段与 exitIp 改写」）。</text>
+</svg>

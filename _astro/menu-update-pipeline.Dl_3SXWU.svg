@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="372" viewBox="0 0 760 372" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+
+  <text x="30" y="20" font-size="13" fill="#333" font-weight="bold">menu 的两段式管线：render 一次，update 每次 state 变化</text>
+
+  <!-- Left panel: render phase -->
+  <rect x="30" y="36" width="340" height="288" fill="#f7f7f5" stroke="#999" stroke-width="1.5"/>
+  <text x="45" y="56" font-size="11" fill="#666" font-weight="bold">渲染阶段（编辑器挂载时一次）</text>
+
+  <rect x="45" y="66" width="310" height="40" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="200" y="82" text-anchor="middle" font-size="10.5" fill="#2c4a73">配置：menuBar({ content })</text>
+  <text x="200" y="97" text-anchor="middle" font-size="10" fill="#555">content 是 MenuElement[][]，内层数组为一组</text>
+
+  <line x1="200" y1="106" x2="200" y2="126" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <rect x="45" y="130" width="310" height="70" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="200" y="147" text-anchor="middle" font-size="10.5" fill="#2c4a73">renderGrouped(view, content)</text>
+  <text x="200" y="163" text-anchor="middle" font-size="10" fill="#555">逐项调 render(view)，得 {dom, update, focusable?}</text>
+  <text x="200" y="179" text-anchor="middle" font-size="10" fill="#555">项外包 span.ProseMirror-menuitem，组间插 separator</text>
+  <text x="200" y="193" text-anchor="middle" font-size="10" fill="#555">update 函数逐项收进数组</text>
+
+  <line x1="200" y1="200" x2="200" y2="220" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <rect x="45" y="224" width="310" height="54" fill="#e8eef7" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="200" y="242" text-anchor="middle" font-size="10.5" fill="#2c4a73">DOM 拼成 fragment 挂进 .ProseMirror-menubar</text>
+  <text x="200" y="258" text-anchor="middle" font-size="10" fill="#555">wrapper 包住 editorView.dom，工具栏就位</text>
+  <text x="200" y="272" text-anchor="middle" font-size="10" fill="#555">此后不再重建 DOM</text>
+
+  <!-- Right panel: update phase -->
+  <rect x="390" y="36" width="340" height="288" fill="#f7f7f5" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="405" y="56" font-size="11" fill="#6b5c2e" font-weight="bold">更新阶段（每次 state 变化）</text>
+
+  <rect x="405" y="66" width="310" height="40" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="560" y="82" text-anchor="middle" font-size="10.5" fill="#6b5c2e">插件 view 的 update 被调</text>
+  <text x="560" y="97" text-anchor="middle" font-size="10" fill="#555">MenuBarView.update() → contentUpdate(state)</text>
+
+  <line x1="560" y1="106" x2="560" y2="126" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <rect x="405" y="130" width="310" height="86" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="560" y="147" text-anchor="middle" font-size="10.5" fill="#6b5c2e">每个 MenuItem.update(state) 三步判定</text>
+  <text x="560" y="163" text-anchor="middle" font-size="10" fill="#555">select 为假 → display:none，返回 false</text>
+  <text x="560" y="179" text-anchor="middle" font-size="10" fill="#555">enable 为假 → 加 ProseMirror-menu-disabled、aria-disabled</text>
+  <text x="560" y="195" text-anchor="middle" font-size="10" fill="#555">active 为真（且可用）→ 加 ProseMirror-menu-active、aria-pressed</text>
+  <text x="560" y="210" text-anchor="middle" font-size="10" fill="#555">只改 class、aria 属性与 display</text>
+
+  <line x1="560" y1="216" x2="560" y2="236" stroke="#666" stroke-width="1" marker-end="url(#arr)"/>
+
+  <rect x="405" y="240" width="310" height="58" fill="#efe9e0" stroke="#8a7a4a" stroke-width="1.5"/>
+  <text x="560" y="257" text-anchor="middle" font-size="10.5" fill="#6b5c2e">false 逐层传播</text>
+  <text x="560" y="273" text-anchor="middle" font-size="10" fill="#555">组内全部 false → 该组与相邻 separator 隐藏</text>
+  <text x="560" y="289" text-anchor="middle" font-size="10" fill="#555">Dropdown 子项全部 false → 整个下拉按钮隐藏</text>
+
+  <!-- dashed arrow: update functions collected during render feed the update phase -->
+  <path d="M355 251 C 375 251, 375 120, 401 100" fill="none" stroke="#3a7d44" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+  <text x="383" y="180" text-anchor="middle" font-size="9" fill="#3a7d44" transform="rotate(-90 383 180)">渲染时收集的 update 数组</text>
+
+  <text x="30" y="352" font-size="10.5" fill="#666">要点：render 只跑一次产出 DOM 与 update 函数；之后每次 state 变化只走右侧，状态同步不触碰 DOM 结构。</text>
+</svg>

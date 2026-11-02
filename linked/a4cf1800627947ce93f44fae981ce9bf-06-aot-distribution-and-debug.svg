@@ -1,0 +1,89 @@
+<svg viewBox="0 0 980 700" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <linearGradient id="compile" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2a3a"/><stop offset="100%" stop-color="#28425c"/></linearGradient>
+    <linearGradient id="build" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a16"/><stop offset="100%" stop-color="#62451e"/></linearGradient>
+    <linearGradient id="runtime" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4731"/><stop offset="100%" stop-color="#236b4a"/></linearGradient>
+    <linearGradient id="debug" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a1a3a"/><stop offset="100%" stop-color="#46285c"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#8b949e"/></marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#58a6ff"/></marker>
+  </defs>
+  <rect width="980" height="700" rx="8" fill="url(#bg)"/>
+  <text x="490" y="36" text-anchor="middle" fill="#e6edf3" font-family="'Segoe UI','SF Pro',sans-serif" font-size="18" font-weight="bold">JSVM3：预编译产物的分发、恢复与调试路径</text>
+  <text x="490" y="58" text-anchor="middle" fill="#8b949e" font-size="11">编译器和运行时可分离；传输协议以指令 ID 与索引表为中心，调试信息需要由另一条路径保留</text>
+
+  <text x="58" y="103" fill="#8b949e" font-size="11">开发 / 编译期</text>
+  <line x1="58" y1="113" x2="922" y2="113" stroke="#30363d"/>
+
+  <rect x="55" y="145" width="174" height="142" rx="7" fill="url(#compile)" filter="url(#glow)"/>
+  <text x="142" y="173" text-anchor="middle" fill="#79c0ff" font-size="13" font-weight="bold">源代码 → Script</text>
+  <text x="73" y="201" fill="#c9d1d9" font-size="10.5">transform()</text>
+  <text x="73" y="221" fill="#8b949e" font-size="10">instructions</text>
+  <text x="73" y="239" fill="#8b949e" font-size="10">children / guards</text>
+  <text x="73" y="257" fill="#8b949e" font-size="10">局部、全局、字符串表</text>
+
+  <path d="M229 216 L282 216" fill="none" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="256" y="200" text-anchor="middle" fill="#8b949e" font-size="9.5">scriptToJson()</text>
+
+  <rect x="284" y="145" width="188" height="142" rx="7" fill="url(#compile)" filter="url(#glow)"/>
+  <text x="378" y="173" text-anchor="middle" fill="#79c0ff" font-size="13" font-weight="bold">紧凑 JSON 数组</text>
+  <text x="302" y="201" fill="#c9d1d9" font-size="10.5">[fName, name, instructions, ...]</text>
+  <text x="302" y="221" fill="#8b949e" font-size="10">每条指令：[id, ...args]</text>
+  <text x="302" y="239" fill="#8b949e" font-size="10">子 Script 递归嵌入</text>
+  <text x="302" y="257" fill="#8b949e" font-size="10">正则转为 source/flags 字符串</text>
+
+  <path d="M472 216 L525 216" fill="none" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="498" y="200" text-anchor="middle" fill="#8b949e" font-size="9.5">JSON.stringify</text>
+
+  <rect x="527" y="145" width="178" height="142" rx="7" fill="url(#build)" filter="url(#glow)"/>
+  <text x="616" y="173" text-anchor="middle" fill="#f2cc60" font-size="13" font-weight="bold">配套运行时构建</text>
+  <text x="545" y="201" fill="#c9d1d9" font-size="10.5">Rollup + Babel</text>
+  <text x="545" y="221" fill="#8b949e" font-size="10">OPCodeIdx 常量替换</text>
+  <text x="545" y="239" fill="#8b949e" font-size="10">预处理条件分支</text>
+  <text x="545" y="257" fill="#8b949e" font-size="10">Terser 压缩与改名</text>
+
+  <path d="M705 216 L758 216" fill="none" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="732" y="200" text-anchor="middle" fill="#8b949e" font-size="9.5">分发</text>
+
+  <rect x="760" y="145" width="164" height="142" rx="7" fill="url(#runtime)" filter="url(#glow)"/>
+  <text x="842" y="173" text-anchor="middle" fill="#56d364" font-size="13" font-weight="bold">端侧输入</text>
+  <text x="778" y="201" fill="#c9d1d9" font-size="10.5">字节码 JSON + VM</text>
+  <text x="778" y="221" fill="#8b949e" font-size="10">无需在端侧解析源码</text>
+  <text x="778" y="239" fill="#8b949e" font-size="10">协议与 VM 版本需匹配</text>
+
+  <text x="58" y="344" fill="#8b949e" font-size="11">端侧恢复与执行</text>
+  <line x1="58" y1="354" x2="922" y2="354" stroke="#30363d"/>
+
+  <rect x="155" y="390" width="186" height="133" rx="7" fill="url(#runtime)" filter="url(#glow)"/>
+  <text x="248" y="420" text-anchor="middle" fill="#56d364" font-size="13" font-weight="bold">fromJson()</text>
+  <text x="173" y="447" fill="#c9d1d9" font-size="10.5">InsMap.get(id)</text>
+  <text x="173" y="467" fill="#8b949e" font-size="10">重建 Instruction</text>
+  <text x="173" y="485" fill="#8b949e" font-size="10">递归重建 children</text>
+  <text x="173" y="503" fill="#8b949e" font-size="10">还原 Guard、RegExp</text>
+
+  <path d="M341 456 L404 456" fill="none" stroke="#3fb950" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="406" y="390" width="186" height="133" rx="7" fill="url(#runtime)" filter="url(#glow)"/>
+  <text x="499" y="420" text-anchor="middle" fill="#56d364" font-size="13" font-weight="bold">Script / JSVM.exec()</text>
+  <text x="424" y="447" fill="#c9d1d9" font-size="10.5">Fiber / Frame</text>
+  <text x="424" y="467" fill="#8b949e" font-size="10">逐条取 Instruction</text>
+  <text x="424" y="485" fill="#8b949e" font-size="10">以 Scope 索引寻址</text>
+  <text x="424" y="503" fill="#8b949e" font-size="10">执行结果回到宿主</text>
+
+  <path d="M592 456 L655 456" fill="none" stroke="#3fb950" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="657" y="390" width="186" height="133" rx="7" fill="#0d1117" stroke="#3fb950" stroke-width="1.2"/>
+  <text x="750" y="420" text-anchor="middle" fill="#56d364" font-size="13" font-weight="bold">往返行为验证</text>
+  <text x="675" y="447" fill="#c9d1d9" font-size="10.5">fromJson.test.ts</text>
+  <text x="675" y="467" fill="#8b949e" font-size="10">1 + 2 → 3</text>
+  <text x="675" y="485" fill="#8b949e" font-size="10">fibonacci(10) → 55</text>
+  <text x="675" y="503" fill="#8b949e" font-size="10">验证可执行性，非深比较</text>
+
+  <text x="58" y="573" fill="#8b949e" font-size="11">调试分支：可读性与紧凑协议的取舍</text>
+  <line x1="58" y1="583" x2="922" y2="583" stroke="#30363d"/>
+  <path d="M378 287 C378 325, 760 313, 750 390" fill="none" stroke="#a371f7" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+  <text x="574" y="323" text-anchor="middle" fill="#a371f7" font-size="10">JSVM_DEBUG 时 toJSON() 改用对象形态；常规紧凑数组仍以数字 id 表示操作码</text>
+
+  <rect x="260" y="615" width="460" height="58" rx="7" fill="url(#debug)" filter="url(#glow)"/>
+  <text x="490" y="640" text-anchor="middle" fill="#d2a8ff" font-size="12" font-weight="bold">demo/src/disassemble.ts：读取 Script 的 name、args、索引表，输出可读指令文本</text>
+  <text x="490" y="660" text-anchor="middle" fill="#c9d1d9" font-size="10">可解析 GETL/SETL 的作用域深度、GETG/SETG 的名字、FUNCTION 的子 Script 与 STRING_LITERAL 字符串</text>
+</svg>

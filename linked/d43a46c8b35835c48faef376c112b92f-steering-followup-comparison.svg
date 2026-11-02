@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="580" viewBox="0 0 840 580" font-family="system-ui, -apple-system, sans-serif">
+  <text x="420" y="34" text-anchor="middle" font-size="15" font-weight="600" fill="#27272a">steering 与 followUp：队列读取时机不同</text>
+  <text x="420" y="55" text-anchor="middle" font-size="11" fill="#71717a">两者最终都会作为 user 消息进入 pending，并驱动一次新的 turn</text>
+
+  <rect x="28" y="82" width="370" height="416" rx="12" fill="#fffbeb"/>
+  <text x="213" y="113" text-anchor="middle" font-size="14" font-weight="600" fill="#92400e">steering：agent 尚在运行</text>
+  <text x="213" y="133" text-anchor="middle" font-size="11" fill="#a16207">当前 turn 结束后立即读取</text>
+  <line x1="72" y1="190" x2="354" y2="190" stroke="#d4d4d8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="92" cy="190" r="7" fill="#71717a"/>
+  <circle cx="183" cy="190" r="7" fill="#b45309"/>
+  <circle cx="276" cy="190" r="7" fill="#71717a"/>
+  <circle cx="340" cy="190" r="7" fill="#b45309"/>
+  <text x="92" y="218" text-anchor="middle" font-size="11" fill="#52525b">turn 1</text>
+  <text x="183" y="218" text-anchor="middle" font-size="11" fill="#92400e">用户追加</text>
+  <text x="183" y="234" text-anchor="middle" font-size="11" fill="#92400e">steering</text>
+  <text x="276" y="218" text-anchor="middle" font-size="11" fill="#52525b">turn 1 结算</text>
+  <text x="340" y="218" text-anchor="middle" font-size="11" fill="#92400e">turn 2</text>
+  <path d="M183 248 V300 H276 V248" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4"/>
+  <rect x="100" y="324" width="226" height="72" rx="8" fill="#ffffff"/>
+  <text x="213" y="349" text-anchor="middle" font-size="11" fill="#27272a">消息先进入 steering 队列</text>
+  <text x="213" y="370" text-anchor="middle" font-size="11" fill="#71717a">turn_end 后 poll，下一轮请求前</text>
+  <text x="213" y="386" text-anchor="middle" font-size="11" fill="#71717a">注入 pending / context</text>
+  <text x="213" y="448" text-anchor="middle" font-size="11" fill="#92400e">当前流与工具批继续完成，不被中止</text>
+
+  <rect x="442" y="82" width="370" height="416" rx="12" fill="#f4f4f5"/>
+  <text x="627" y="113" text-anchor="middle" font-size="14" font-weight="600" fill="#3f3f46">followUp：agent 原本将结束</text>
+  <text x="627" y="133" text-anchor="middle" font-size="11" fill="#71717a">内层循环清空后才读取</text>
+  <line x1="486" y1="190" x2="768" y2="190" stroke="#d4d4d8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="506" cy="190" r="7" fill="#71717a"/>
+  <circle cx="598" cy="190" r="7" fill="#71717a"/>
+  <circle cx="691" cy="190" r="7" fill="#52525b"/>
+  <circle cx="754" cy="190" r="7" fill="#52525b"/>
+  <text x="506" y="218" text-anchor="middle" font-size="11" fill="#52525b">turn 1</text>
+  <text x="598" y="218" text-anchor="middle" font-size="11" fill="#52525b">工作完成</text>
+  <text x="598" y="234" text-anchor="middle" font-size="11" fill="#52525b">内层清空</text>
+  <text x="691" y="218" text-anchor="middle" font-size="11" fill="#3f3f46">读取</text>
+  <text x="691" y="234" text-anchor="middle" font-size="11" fill="#3f3f46">followUp</text>
+  <text x="754" y="218" text-anchor="middle" font-size="11" fill="#3f3f46">新 turn</text>
+  <path d="M598 248 V300 H691 V248" fill="none" stroke="#52525b" stroke-width="2" stroke-dasharray="5 4"/>
+  <rect x="514" y="324" width="226" height="72" rx="8" fill="#ffffff"/>
+  <text x="627" y="349" text-anchor="middle" font-size="11" fill="#27272a">agent 已无 tool call 与 pending 消息</text>
+  <text x="627" y="370" text-anchor="middle" font-size="11" fill="#71717a">准备 agent_end 前 poll followUp</text>
+  <text x="627" y="386" text-anchor="middle" font-size="11" fill="#71717a">有消息才重新进入内层循环</text>
+  <text x="627" y="448" text-anchor="middle" font-size="11" fill="#3f3f46">没有 followUp 消息则发出 agent_end</text>
+
+  <line x1="60" y1="532" x2="780" y2="532" stroke="#e4e4e7" stroke-width="1"/>
+  <text x="420" y="558" text-anchor="middle" font-size="11" fill="#71717a">差异：steering 接续正在进行的运行；followUp 决定一次本应结束的运行是否继续。</text>
+</svg>

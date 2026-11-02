@@ -1,0 +1,1 @@
+import"./rolldown-runtime.XKyaHtl9.js";import{t as e}from"./react.BfpWPlTZ.js";import{t}from"./jsx-runtime.CY43vKnX.js";e();var n=t();function r({children:e}){return(0,n.jsx)(`div`,{className:`mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent`,children:e})}export{r as t};

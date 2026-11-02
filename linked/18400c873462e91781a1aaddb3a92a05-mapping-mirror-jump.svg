@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="300" viewBox="0 0 720 300" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#666" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrP" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#7a5aa0" stroke-width="1.2"/>
+    </marker>
+    <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#b05a5a" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="26" font-size="12" fill="#333">Mapping 的镜像跳转：位置在 maps[0] 中被删，到镜像步 maps[2] 用 recover 找回</text>
+
+  <!-- mirror arc -->
+  <path d="M118,64 C118,26 418,26 418,64" fill="none" stroke="#7a5aa0" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrP)"/>
+  <text x="268" y="22" text-anchor="middle" font-size="11" fill="#7a5aa0">mirror 数组记录镜像对 [0, 2]</text>
+
+  <!-- step map boxes -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="70" y="64" width="96" height="48" fill="#f7e3e3" stroke="#b05a5a"/>
+    <text x="118" y="84" fill="#333">maps[0]</text>
+    <text x="118" y="100" fill="#8a3a3a">S_A（删除 p）</text>
+
+    <rect x="220" y="64" width="96" height="48" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="268" y="84" fill="#333">maps[1]</text>
+    <text x="268" y="100" fill="#2c4a73">S_B</text>
+
+    <rect x="370" y="64" width="96" height="48" fill="#f0e9f7" stroke="#7a5aa0"/>
+    <text x="418" y="84" fill="#333">maps[2]</text>
+    <text x="418" y="100" fill="#5a3a80">S_A 的逆</text>
+
+    <rect x="520" y="64" width="96" height="48" fill="#e8eef7" stroke="#4a6fa5"/>
+    <text x="568" y="84" fill="#333">maps[3]</text>
+    <text x="568" y="100" fill="#2c4a73">S_C</text>
+  </g>
+
+  <!-- sequential arrows -->
+  <g stroke="#666" stroke-width="1.2" fill="none">
+    <line x1="166" y1="88" x2="220" y2="88" marker-end="url(#arr)"/>
+    <line x1="316" y1="88" x2="370" y2="88" marker-end="url(#arr)"/>
+    <line x1="466" y1="88" x2="520" y2="88" marker-end="url(#arr)"/>
+  </g>
+
+  <!-- flow under box 0 -->
+  <line x1="118" y1="112" x2="118" y2="130" stroke="#b05a5a" stroke-width="1.2" marker-end="url(#arrR)"/>
+  <text x="118" y="146" text-anchor="middle" font-size="11" fill="#8a3a3a">p 落在被删区间内部</text>
+  <text x="118" y="162" text-anchor="middle" font-size="11" fill="#8a3a3a">记下 recover 值 r（区间下标 + 偏移）</text>
+
+  <!-- jump path -->
+  <path d="M118,168 L118,206 L418,206 L418,168" fill="none" stroke="#b05a5a" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrR)"/>
+  <text x="268" y="224" text-anchor="middle" font-size="11" fill="#8a3a3a">getMirror(0) = 2：跳过 S_B，i 直接跳到镜像步</text>
+
+  <!-- recover under box 2 -->
+  <text x="418" y="146" text-anchor="middle" font-size="11" fill="#5a3a80">maps[2].recover(r) 找回 p</text>
+  <text x="418" y="162" text-anchor="middle" font-size="11" fill="#5a3a80">continue：从 maps[3] 接着映射</text>
+
+  <!-- notes -->
+  <g font-size="11" fill="#444">
+    <text x="40" y="256">没被删除的位置：沿顶部箭头顺序穿过每张 StepMap，delInfo 逐位或累计，不触发跳转</text>
+    <text x="40" y="276">跳转成立时 continue 跳过了删除步的 delInfo 累计：从调用方看，这次删除被后面的逆步抵消了</text>
+  </g>
+</svg>

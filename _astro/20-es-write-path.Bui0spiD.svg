@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 720" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrAmb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ca8a04"/>
+    </marker>
+  </defs>
+
+  <rect width="1120" height="720" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">Elasticsearch 写入到可检索的全链路</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">文档先入内存 buffer 与 translog，refresh（默认 1s）生成可检索 segment，flush 落盘清 translog；近实时窗口 = refresh 间隔</text>
+
+  <!-- ============ index 请求 ============ -->
+  <rect x="24" y="300" width="120" height="70" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1"/>
+  <text x="84" y="328" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">index 请求</text>
+  <text x="84" y="346" font-size="10" fill="#475569" text-anchor="middle">写入一条文档</text>
+  <text x="84" y="360" font-size="9" fill="#94a3b8" text-anchor="middle">POST /idx/_doc</text>
+
+  <line x1="144" y1="335" x2="188" y2="335" stroke="#475569" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- ============ 内存 buffer + translog ============ -->
+  <rect x="194" y="220" width="230" height="230" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="309" y="244" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">分片主副本（内存）</text>
+
+  <!-- indexing buffer -->
+  <rect x="210" y="262" width="198" height="78" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+  <text x="309" y="282" font-size="11" font-weight="600" fill="#c2410c" text-anchor="middle">indexing buffer</text>
+  <text x="309" y="300" font-size="10" fill="#475569" text-anchor="middle">文档暂存于 JVM 堆</text>
+  <text x="309" y="316" font-size="9" fill="#94a3b8" text-anchor="middle">尚未生成倒排索引</text>
+  <text x="309" y="332" font-size="9" fill="#94a3b8" text-anchor="middle">indices.memory.buffer_size 默认 10% 堆</text>
+
+  <!-- translog -->
+  <rect x="210" y="354" width="198" height="82" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="309" y="374" font-size="11" font-weight="600" fill="#b91c1c" text-anchor="middle">translog（预写日志）</text>
+  <text x="309" y="392" font-size="10" fill="#475569" text-anchor="middle">同步追加写，崩溃恢复用</text>
+  <text x="309" y="408" font-size="9" fill="#94a3b8" text-anchor="middle">durability=request: 每次请求 fsync</text>
+  <text x="309" y="424" font-size="9" fill="#94a3b8" text-anchor="middle">durability=async:  每 5s fsync（可能丢）</text>
+
+  <!-- ============ refresh 箭头 ============ -->
+  <line x1="424" y1="300" x2="500" y2="300" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrGrn)"/>
+  <text x="462" y="290" font-size="10" font-weight="600" fill="#15803d" text-anchor="middle">refresh</text>
+  <text x="462" y="316" font-size="9" fill="#16a34a" text-anchor="middle">默认 1s</text>
+
+  <!-- ============ segment（OS cache，可检索） ============ -->
+  <rect x="506" y="220" width="250" height="170" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+  <text x="631" y="244" font-size="12" font-weight="600" fill="#15803d" text-anchor="middle">segment（OS page cache）</text>
+  <text x="631" y="264" font-size="10" fill="#475569" text-anchor="middle">Lucene 倒排索引的物理单元</text>
+  <text x="631" y="282" font-size="10" fill="#16a34a" text-anchor="middle">写入文件但未 fsync，已可检索</text>
+  <text x="631" y="300" font-size="9" fill="#94a3b8" text-anchor="middle">不可变：删除=标记位，更新=删+建</text>
+  <text x="631" y="316" font-size="9" fill="#94a3b8" text-anchor="middle">小段积累后由 merge 合并</text>
+  <text x="631" y="338" font-size="10" font-weight="600" fill="#15803d" text-anchor="middle">查询读这里</text>
+  <text x="631" y="356" font-size="9" fill="#94a3b8" text-anchor="middle">GET /idx/_search</text>
+  <text x="631" y="376" font-size="9" fill="#94a3b8" text-anchor="middle">refresh 间隔内的新写入不在</text>
+
+  <!-- ============ flush 箭头 ============ -->
+  <line x1="756" y1="305" x2="832" y2="305" stroke="#ca8a04" stroke-width="1.4" marker-end="url(#arrAmb)"/>
+  <text x="794" y="295" font-size="10" font-weight="600" fill="#92400e" text-anchor="middle">flush</text>
+  <text x="794" y="321" font-size="9" fill="#ca8a04" text-anchor="middle">translog ≥512MB</text>
+  <text x="794" y="335" font-size="9" fill="#ca8a04" text-anchor="middle">或定时触发</text>
+
+  <!-- ============ 磁盘 segment ============ -->
+  <rect x="838" y="240" width="230" height="130" rx="6" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+  <text x="953" y="264" font-size="12" font-weight="600" fill="#92400e" text-anchor="middle">segment 落盘</text>
+  <text x="953" y="284" font-size="10" fill="#475569" text-anchor="middle">fsync 到磁盘，持久化</text>
+  <text x="953" y="302" font-size="10" fill="#475569" text-anchor="middle">清空 translog</text>
+  <text x="953" y="320" font-size="9" fill="#94a3b8" text-anchor="middle">崩溃恢复不再需要这段 translog</text>
+  <text x="953" y="342" font-size="9" fill="#94a3b8" text-anchor="middle">merge 也在后台合并落盘段</text>
+
+  <!-- ============ 近实时窗口标注 ============ -->
+  <rect x="194" y="470" width="336" height="60" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="362" y="492" font-size="11" font-weight="600" fill="#b91c1c" text-anchor="middle">近实时窗口：refresh 间隔内（默认 ≤1s）</text>
+  <text x="362" y="510" font-size="10" fill="#dc2626" text-anchor="middle">文档已在 buffer + translog，但未生成 segment</text>
+  <text x="362" y="524" font-size="10" fill="#dc2626" text-anchor="middle">查询搜不到 → 写入后立刻搜不到的根因</text>
+
+  <line x1="362" y1="470" x2="362" y2="452" stroke="#dc2626" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrRed)"/>
+
+  <!-- ============ 崩溃丢失窗口标注 ============ -->
+  <rect x="550" y="470" width="336" height="60" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="718" y="492" font-size="11" font-weight="600" fill="#c2410c" text-anchor="middle">崩溃丢失窗口：translog 未 fsync 部分</text>
+  <text x="718" y="510" font-size="10" fill="#ea580c" text-anchor="middle">async 模式下崩溃丢最近 ≤5s 写入</text>
+  <text x="718" y="524" font-size="10" fill="#ea580c" text-anchor="middle">request 模式不丢，但每次请求 fsync 吞吐低</text>
+
+  <line x1="718" y1="470" x2="500" y2="438" stroke="#ea580c" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrAmb)"/>
+
+  <!-- ============ 底部：关键取舍 ============ -->
+  <rect x="24" y="560" width="1072" height="140" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="584" font-size="12" font-weight="600" fill="#1f2937">写入模型决定的三组取舍</text>
+
+  <text x="40" y="610" font-size="10" font-weight="600" fill="#15803d">近实时 vs 实时</text>
+  <text x="160" y="610" font-size="10" fill="#475569">segment 先进 OS cache 即可检索，不等 fsync；换来写入吞吐，代价是 refresh 间隔内不可见</text>
+
+  <text x="40" y="634" font-size="10" font-weight="600" fill="#b91c1c">持久化 vs 吞吐</text>
+  <text x="160" y="634" font-size="10" fill="#475569">translog fsync 间隔决定崩溃丢失窗口；request 不丢但慢，async 快但丢秒级；flush 才把 segment 真正落盘</text>
+
+  <text x="40" y="658" font-size="10" font-weight="600" fill="#92400e">不可变段 vs 更新</text>
+  <text x="160" y="658" font-size="10" fill="#475569">segment 不可变让查询无锁高效，但 update=delete+insert，频繁更新产生标记删除与 merge 压力</text>
+
+  <text x="40" y="682" font-size="9" fill="#94a3b8">把 ES 当数据库用（强一致读写、深分页遍历、高频更新）都与这三组取舍冲突；适合查询为主、文档少更新、容忍秒级延迟的场景。</text>
+</svg>

@@ -1,0 +1,1 @@
+function e(e){return e===`aimo.plus`||e.endsWith(`.aimo.plus`)}export{e as t};

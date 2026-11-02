@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrGrn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrBlu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="700" rx="8" fill="#f8fafc"/>
+  <text x="28" y="34" font-size="16" font-weight="600" fill="#1f2937">Kafka 数据路径：顺序写、page cache 与 sendfile 零拷贝</text>
+  <text x="28" y="55" font-size="12" fill="#64748b">写入只在 page cache 落地、OS 异步刷盘；消费读取走 sendfile，数据不进 broker 用户态</text>
+
+  <!-- ============ 写入路径（上半区） ============ -->
+  <rect x="20" y="74" width="920" height="200" rx="6" fill="#eff6ff" opacity="0.55"/>
+  <text x="36" y="96" font-size="13" font-weight="600" fill="#1d4ed8">写入路径：append-only 顺序追加</text>
+
+  <!-- Producer -->
+  <rect x="40" y="118" width="120" height="62" rx="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+  <text x="100" y="142" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">Producer</text>
+  <text x="100" y="160" font-size="10" fill="#475569" text-anchor="middle">攒批 batch.size</text>
+  <text x="100" y="173" font-size="10" fill="#475569" text-anchor="middle">linger.ms</text>
+
+  <!-- Broker JVM -->
+  <rect x="230" y="118" width="130" height="62" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <text x="295" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">Broker JVM</text>
+  <text x="295" y="160" font-size="10" fill="#475569" text-anchor="middle">接收批次</text>
+  <text x="295" y="173" font-size="10" fill="#64748b" text-anchor="middle">不缓存消息体</text>
+
+  <!-- page cache -->
+  <rect x="430" y="118" width="130" height="62" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="495" y="142" font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Page Cache</text>
+  <text x="495" y="160" font-size="10" fill="#475569" text-anchor="middle">OS 内核维护</text>
+  <text x="495" y="173" font-size="10" fill="#64748b" text-anchor="middle">不占 JVM 堆</text>
+
+  <!-- 磁盘 .log -->
+  <rect x="630" y="118" width="150" height="62" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <text x="705" y="142" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">磁盘 .log 段</text>
+  <text x="705" y="160" font-size="10" fill="#475569" text-anchor="middle">顺序追加</text>
+  <text x="705" y="173" font-size="10" fill="#64748b" text-anchor="middle">OS 异步刷盘</text>
+
+  <!-- 写入箭头 -->
+  <line x1="160" y1="149" x2="228" y2="149" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrBlu)"/>
+  <text x="194" y="142" font-size="9" fill="#1d4ed8" text-anchor="middle">网络</text>
+
+  <line x1="360" y1="149" x2="428" y2="149" stroke="#475569" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="394" y="142" font-size="9" fill="#475569" text-anchor="middle">write</text>
+
+  <line x1="560" y1="149" x2="628" y2="149" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="594" y="142" font-size="9" fill="#16a34a" text-anchor="middle">flush(异步)</text>
+
+  <!-- 写入说明 -->
+  <rect x="40" y="206" width="820" height="48" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="52" y="225" font-size="10" fill="#475569">· 消息追加到当前活跃日志段末尾，不修改已写入数据；删除靠 retention 整段丢弃或 compact，磁盘访问为纯顺序</text>
+  <text x="52" y="242" font-size="10" fill="#475569">· broker 只把数据写进 page cache 即可应答，刷盘时机由 OS 决定（flush.messages / flush.ms 可配，默认交 OS）</text>
+
+  <!-- ============ 消费读取路径（下半区） ============ -->
+  <rect x="20" y="290" width="920" height="316" rx="6" fill="#f0fdf4" opacity="0.5"/>
+  <text x="36" y="312" font-size="13" font-weight="600" fill="#16a34a">消费读取路径：sendfile 零拷贝（数据不进 broker 用户态）</text>
+
+  <!-- 磁盘 -->
+  <rect x="40" y="336" width="130" height="62" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <text x="105" y="360" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">磁盘 .log</text>
+  <text x="105" y="378" font-size="10" fill="#475569" text-anchor="middle">按 offset 顺序读</text>
+
+  <!-- page cache -->
+  <rect x="240" y="336" width="130" height="62" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="305" y="360" font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Page Cache</text>
+  <text x="305" y="378" font-size="10" fill="#475569" text-anchor="middle">热数据命中</text>
+
+  <!-- socket 缓冲 -->
+  <rect x="440" y="336" width="130" height="62" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.4"/>
+  <text x="505" y="360" font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Socket 发送缓冲</text>
+  <text x="505" y="378" font-size="10" fill="#475569" text-anchor="middle">内核态</text>
+
+  <!-- NIC -->
+  <rect x="640" y="336" width="110" height="62" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.4"/>
+  <text x="695" y="360" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">网卡</text>
+  <text x="695" y="378" font-size="10" fill="#475569" text-anchor="middle">DMA</text>
+
+  <!-- Consumer -->
+  <rect x="810" y="336" width="110" height="62" rx="6" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.4"/>
+  <text x="865" y="360" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="middle">Consumer</text>
+  <text x="865" y="378" font-size="10" fill="#475569" text-anchor="middle">fetch.min.bytes</text>
+
+  <!-- sendfile 路径箭头 -->
+  <line x1="170" y1="367" x2="238" y2="367" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="204" y="359" font-size="9" fill="#16a34a" text-anchor="middle">① DMA</text>
+
+  <line x1="370" y1="367" x2="438" y2="367" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="404" y="359" font-size="9" fill="#16a34a" text-anchor="middle">② CPU 拷贝</text>
+
+  <line x1="570" y1="367" x2="638" y2="367" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrGrn)"/>
+  <text x="604" y="359" font-size="9" fill="#16a34a" text-anchor="middle">③ DMA</text>
+
+  <line x1="750" y1="367" x2="808" y2="367" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#arrBlu)"/>
+  <text x="779" y="359" font-size="9" fill="#1d4ed8" text-anchor="middle">网络</text>
+
+  <!-- sendfile 标注 -->
+  <rect x="240" y="410" width="330" height="34" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.1"/>
+  <text x="405" y="431" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">FileChannel.transferTo → sendfile(2) ：3 次数据移动，数据不进 broker JVM</text>
+
+  <!-- 传统 read+write 对比 -->
+  <text x="40" y="472" font-size="12" font-weight="600" fill="#b91c1c">对比：若 broker 走传统 read + write（Kafka 不采用）</text>
+
+  <rect x="40" y="486" width="880" height="50" rx="5" fill="#ffffff" stroke="#dc2626" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="52" y="506" font-size="10" fill="#475569">磁盘 →(DMA)→ page cache →(CPU)→ broker JVM 堆（用户态） →(CPU)→ socket 缓冲 →(DMA)→ 网卡</text>
+  <text x="52" y="524" font-size="10" fill="#b91c1c">4 次数据移动、4 次用户态/内核态切换；消息体进 broker 堆，GC 与拷贝开销随流量线性增长</text>
+
+  <!-- 底部结论 -->
+  <rect x="24" y="556" width="912" height="38" rx="6" fill="#fffbeb" stroke="#ca8a04" stroke-width="1.2"/>
+  <text x="40" y="578" font-size="11" font-weight="600" fill="#92400e">结论</text>
+  <text x="92" y="578" font-size="11" fill="#475569">broker 像调度器：只决定读哪段、发给谁；数据搬运交给内核，CPU 不随流量线性增长。</text>
+  <text x="92" y="590" font-size="10" fill="#a16207">page cache 不占 JVM 堆，-Xmx 不宜过大，剩余内存留给 cache；重启后 cache 仍在。</text>
+
+  <!-- 图例 -->
+  <rect x="24" y="612" width="912" height="68" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="36" y="632" font-size="11" font-weight="600" fill="#1f2937">图例</text>
+  <rect x="36" y="642" width="14" height="10" fill="#eff6ff" stroke="#1d4ed8"/><text x="56" y="652" font-size="10" fill="#475569">Producer / Consumer（客户端）</text>
+  <rect x="236" y="642" width="14" height="10" fill="#ffffff" stroke="#475569"/><text x="256" y="652" font-size="10" fill="#475569">Broker JVM / 磁盘</text>
+  <rect x="386" y="642" width="14" height="10" fill="#ffffff" stroke="#16a34a"/><text x="406" y="652" font-size="10" fill="#475569">Page cache / Socket 缓冲（内核态）</text>
+  <text x="36" y="672" font-size="10" fill="#64748b">DMA = 由磁盘/网卡控制器搬运，不占 CPU；CPU 拷贝 = 由 CPU 在内核态内搬运</text>
+</svg>

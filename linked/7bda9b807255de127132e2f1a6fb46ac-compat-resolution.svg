@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, sans-serif">
+  <text x="400" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#292524">compat 分层解析：探测给默认值，数据给修正值</text>
+
+  <!-- stage 1 -->
+  <rect x="60" y="58" width="440" height="118" rx="12" fill="#f5f4f2"/>
+  <text x="84" y="86" font-size="15" font-weight="700" fill="#44403c">1. detectCompat 自动探测</text>
+  <text x="84" y="110" font-size="12.5" fill="#78716c">按 provider 名与 baseUrl 判断（api.x.ai、</text>
+  <text x="84" y="130" font-size="12.5" fill="#78716c">openrouter.ai、api.z.ai……）</text>
+  <text x="84" y="156" font-size="12.5" fill="#78716c">产出 22 项 compat 默认值</text>
+
+  <!-- stage 2 -->
+  <rect x="60" y="200" width="440" height="118" rx="12" fill="#f0efec"/>
+  <text x="84" y="228" font-size="15" font-weight="700" fill="#44403c">2. model.compat 逐字段覆盖</text>
+  <text x="84" y="252" font-size="12.5" fill="#78716c">catalog 数据里的显式修正，逐字段覆盖合并</text>
+  <text x="84" y="272" font-size="12.5" fill="#78716c">（thinkingFormat、maxTokensField、</text>
+  <text x="84" y="292" font-size="12.5" fill="#78716c">cacheControlFormat、sessionAffinityFormat……）</text>
+
+  <!-- stage 3 -->
+  <rect x="60" y="342" width="440" height="118" rx="12" fill="#f5f4f2"/>
+  <text x="84" y="370" font-size="15" font-weight="700" fill="#44403c">3. ResolvedCompat → 最终请求参数</text>
+  <text x="84" y="394" font-size="12.5" fill="#78716c">role: system / developer</text>
+  <text x="84" y="414" font-size="12.5" fill="#78716c">max_tokens / max_completion_tokens</text>
+  <text x="84" y="434" font-size="12.5" fill="#78716c">10 种 thinking 参数格式 · cache 标记 · 亲和头</text>
+
+  <!-- arrows down -->
+  <path d="M280 176 L280 196" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M274 190 L280 198 L286 190" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M280 318 L280 338" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+  <path d="M274 332 L280 340 L286 332" stroke="#a8a29e" stroke-width="1.5" fill="none"/>
+
+  <!-- side annotations -->
+  <rect x="524" y="58" width="216" height="118" rx="12" fill="#fae8e2"/>
+  <text x="540" y="86" font-size="12.5" font-weight="700" fill="#b5512f">方言例子</text>
+  <text x="540" y="108" font-size="11.5" fill="#7c4a32">Moonshot 只认 max_tokens</text>
+  <text x="540" y="128" font-size="11.5" fill="#7c4a32">DeepSeek 重放要带空的</text>
+  <text x="540" y="146" font-size="11.5" fill="#7c4a32">reasoning_content 字段</text>
+
+  <rect x="524" y="200" width="216" height="118" rx="12" fill="#fae8e2"/>
+  <text x="540" y="228" font-size="12.5" font-weight="700" fill="#b5512f">覆盖来源</text>
+  <text x="540" y="250" font-size="11.5" fill="#7c4a32">compat 标志随模型 catalog</text>
+  <text x="540" y="268" font-size="11.5" fill="#7c4a32">下发，构建期统一维护，</text>
+  <text x="540" y="286" font-size="11.5" fill="#7c4a32">也可在配置里手工指定</text>
+
+  <rect x="524" y="342" width="216" height="118" rx="12" fill="#fae8e2"/>
+  <text x="540" y="370" font-size="12.5" font-weight="700" fill="#b5512f">效果</text>
+  <text x="540" y="392" font-size="11.5" fill="#7c4a32">新接一家「OpenAI 兼容」</text>
+  <text x="540" y="410" font-size="11.5" fill="#7c4a32">服务不写新代码，</text>
+  <text x="540" y="428" font-size="11.5" fill="#7c4a32">只填一组标志</text>
+</svg>

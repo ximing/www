@@ -1,0 +1,59 @@
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#8b949e"/></marker>
+  </defs>
+  <rect width="700" height="400" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">安全、权限与治理</text>
+  <text x="350" y="46" text-anchor="middle" fill="#8b949e" font-size="11">Policy · Secrets · Approval · Audit · Blast Radius</text>
+
+  <rect x="40" y="62" width="300" height="30" rx="4" fill="#3a1a1a" stroke="#f85149" stroke-width="1"/>
+  <text x="190" y="82" text-anchor="middle" fill="#f85149" font-size="12">问题：只判断单次操作是否允许</text>
+
+  <text x="55" y="110" fill="#8b949e" font-size="11">不评估爆炸半径和动作影响</text>
+  <text x="55" y="130" fill="#8b949e" font-size="11">文件、命令、网络共用一套权限</text>
+  <text x="55" y="150" fill="#8b949e" font-size="11">凭证进入沙箱，注入可读到 token</text>
+  <text x="55" y="170" fill="#8b949e" font-size="11">高频弹窗导致连点批准</text>
+  <text x="55" y="190" fill="#8b949e" font-size="11">没有干预记录和回滚能力</text>
+
+  <text x="348" y="130" fill="#fd7e14" font-size="16" font-weight="bold">→</text>
+
+  <rect x="360" y="62" width="300" height="30" rx="4" fill="#1a3a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="510" y="82" text-anchor="middle" fill="#3fb950" font-size="12">解决：这一层实际要管的内容</text>
+
+  <text x="375" y="110" fill="#8b949e" font-size="11">身份与租户隔离</text>
+  <text x="375" y="130" fill="#8b949e" font-size="11">Policy + 分面授权</text>
+  <text x="375" y="150" fill="#8b949e" font-size="11">Secrets 留在沙箱外</text>
+  <text x="375" y="170" fill="#8b949e" font-size="11">环境 / 分类器 / 人工 分层决策</text>
+  <text x="375" y="190" fill="#8b949e" font-size="11">预算、审计、爆炸半径与回滚</text>
+
+  <rect x="40" y="218" width="620" height="158" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="55" y="240" fill="#e6edf3" font-size="12" font-weight="bold">一次操作的治理路径</text>
+
+  <rect x="55" y="258" width="110" height="48" rx="4" fill="#1a365d" stroke="#2a4a7f" stroke-width="1"/>
+  <text x="110" y="278" text-anchor="middle" fill="#58a6ff" font-size="11">请求</text>
+  <text x="110" y="294" text-anchor="middle" fill="#8b949e" font-size="10">工具 · 路径 · 网络</text>
+
+  <line x1="165" y1="282" x2="188" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="195" y="258" width="130" height="48" rx="4" fill="#4a2a00" stroke="#7a5000" stroke-width="1"/>
+  <text x="260" y="278" text-anchor="middle" fill="#ffa657" font-size="11">Policy Engine</text>
+  <text x="260" y="294" text-anchor="middle" fill="#8b949e" font-size="10">身份 · 分面 · 配额</text>
+
+  <line x1="325" y1="282" x2="348" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="355" y="258" width="140" height="48" rx="4" fill="#3a2a1a" stroke="#5c4228" stroke-width="1"/>
+  <text x="425" y="278" text-anchor="middle" fill="#d29922" font-size="11">分层决策</text>
+  <text x="425" y="294" text-anchor="middle" fill="#8b949e" font-size="10">允许 / 分类器 / 人工</text>
+
+  <line x1="495" y1="282" x2="518" y2="282" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="525" y="258" width="120" height="48" rx="4" fill="#1a4731" stroke="#236b4a" stroke-width="1"/>
+  <text x="585" y="278" text-anchor="middle" fill="#3fb950" font-size="11">落地</text>
+  <text x="585" y="294" text-anchor="middle" fill="#8b949e" font-size="10">Gateway / Sandbox</text>
+
+  <text x="55" y="332" fill="#8b949e" font-size="11">策略在这里定义。层② 的 Gateway 和 Sandbox 执行允许、拒绝和隔离。</text>
+  <text x="55" y="350" fill="#8b949e" font-size="11">凭证不进沙箱。审计记下策略版本、决策和人工干预，不只记工具调用。</text>
+  <text x="55" y="368" fill="#484f58" font-size="11">看见什么：层④。是否完成：层⑦。轨迹怎么记：层⑥。</text>
+</svg>

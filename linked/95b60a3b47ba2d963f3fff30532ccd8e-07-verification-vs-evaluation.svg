@@ -1,0 +1,50 @@
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono','Menlo','Monaco','Consolas',monospace" font-size="13">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1117"/><stop offset="100%" stop-color="#161b22"/></linearGradient>
+  </defs>
+  <rect width="700" height="340" fill="url(#bg)" rx="8"/>
+
+  <text x="350" y="28" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="bold">Verification vs Evaluation：两种不同的闭环</text>
+
+  <!-- Verification -->
+  <rect x="40" y="48" width="300" height="46" rx="6" fill="#1a2a2a" stroke="#56d4dd" stroke-width="1.5"/>
+  <text x="190" y="68" text-anchor="middle" fill="#56d4dd" font-size="13" font-weight="bold">Verification 验证</text>
+  <text x="190" y="85" text-anchor="middle" fill="#8b949e" font-size="11">在线闭环：本次任务做对了吗？</text>
+
+  <rect x="40" y="102" width="300" height="120" rx="4" fill="#161b22" stroke="#21262d" stroke-width="1"/>
+  <text x="55" y="120" fill="#8b949e" font-size="11">• 编译是否通过</text>
+  <text x="55" y="138" fill="#8b949e" font-size="11">• 单测是否通过</text>
+  <text x="55" y="156" fill="#8b949e" font-size="11">• 功能是否满足需求</text>
+  <text x="55" y="174" fill="#8b949e" font-size="11">• 是否引入回归</text>
+  <text x="55" y="192" fill="#8b949e" font-size="11">• 是否符合架构规范</text>
+  <text x="55" y="210" fill="#8b949e" font-size="11">• 是否满足 Definition of Done</text>
+
+  <text x="55" y="232" fill="#484f58" font-size="11">在 Agent 执行过程中持续发生</text>
+  <text x="55" y="250" fill="#484f58" font-size="11">属于 Agent Loop 内部的反馈 Sensor</text>
+
+  <!-- VS -->
+  <rect x="345" y="100" width="10" height="180" fill="none"/>
+  <text x="350" y="195" text-anchor="middle" fill="#fd7e14" font-size="18" font-weight="bold">vs</text>
+
+  <!-- Evaluation -->
+  <rect x="360" y="48" width="300" height="46" rx="6" fill="#2a1a2a" stroke="#bc8cff" stroke-width="1.5"/>
+  <text x="510" y="68" text-anchor="middle" fill="#bc8cff" font-size="13" font-weight="bold">Evaluation 评测</text>
+  <text x="510" y="85" text-anchor="middle" fill="#8b949e" font-size="11">离线/准在线评估：Harness 整体表现如何？</text>
+
+  <rect x="360" y="102" width="300" height="120" rx="4" fill="#161b22" stroke="#21262d" stroke-width="1"/>
+  <text x="375" y="120" fill="#8b949e" font-size="11">• 通用 Benchmark</text>
+  <text x="375" y="138" fill="#8b949e" font-size="11">• 领域任务集</text>
+  <text x="375" y="156" fill="#8b949e" font-size="11">• 回归套件</text>
+  <text x="375" y="174" fill="#8b949e" font-size="11">• 多次 Trial · Pass@k</text>
+  <text x="375" y="192" fill="#8b949e" font-size="11">• 成功率 / 成本 / 延迟</text>
+  <text x="375" y="210" fill="#8b949e" font-size="11">• 安全违规率 / 人工接管率</text>
+
+  <text x="375" y="232" fill="#484f58" font-size="11">跨任务、跨模型、跨版本评估</text>
+  <text x="375" y="250" fill="#484f58" font-size="11">需要多轮 Trial 对抗随机性</text>
+
+  <!-- Bottom note -->
+  <rect x="40" y="270" width="620" height="55" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="55" y="290" fill="#e6edf3" font-size="12" font-weight="bold">不要把 Verification 和 Evaluation 混为一层</text>
+  <text x="55" y="308" fill="#8b949e" font-size="11">Verification 是 Agent Loop 内部的反馈控制，Evaluation 是 Harness 级别的质量度量。前者是执行过程中持续发生的，</text>
+  <text x="55" y="322" fill="#8b949e" font-size="11">后者是跨任务、跨版本的离线评估。两者各有独立的设计目标和数据需求。</text>
+</svg>

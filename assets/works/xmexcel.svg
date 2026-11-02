@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="55%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.7">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>
+
+  <!-- dot grid -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/><circle cx="380" cy="60" r="2"/><circle cx="460" cy="60" r="2"/><circle cx="540" cy="60" r="2"/><circle cx="620" cy="60" r="2"/><circle cx="700" cy="60" r="2"/>
+    <circle cx="60" cy="390" r="2"/><circle cx="140" cy="390" r="2"/><circle cx="220" cy="390" r="2"/><circle cx="300" cy="390" r="2"/><circle cx="380" cy="390" r="2"/><circle cx="460" cy="390" r="2"/><circle cx="540" cy="390" r="2"/><circle cx="620" cy="390" r="2"/><circle cx="700" cy="390" r="2"/>
+  </g>
+
+  <!-- spreadsheet -->
+  <rect x="240" y="90" width="320" height="220" rx="10" fill="#f0fdf4"/>
+  <!-- header row -->
+  <rect x="240" y="90" width="320" height="44" rx="10" fill="#bbf7d0"/>
+  <rect x="240" y="112" width="320" height="22" fill="#bbf7d0"/>
+  <!-- grid lines -->
+  <g stroke="#86efac" stroke-width="2">
+    <path d="M 240 134 L 560 134 M 240 178 L 560 178 M 240 222 L 560 222 M 240 266 L 560 266"/>
+    <path d="M 320 90 L 320 310 M 400 90 L 400 310 M 480 90 L 480 310"/>
+  </g>
+  <!-- active cell -->
+  <rect x="400" y="178" width="80" height="44" fill="none" stroke="#15803d" stroke-width="4"/>
+  <rect x="400" y="178" width="80" height="44" fill="#dcfce7" opacity="0.7"/>
+
+  <!-- collaboration cursors -->
+  <path d="M 510 250 L 510 278 L 518 270 L 524 282 L 529 279 L 523 267 L 533 267 Z" fill="#f97316"/>
+  <path d="M 290 160 L 290 188 L 298 180 L 304 192 L 309 189 L 303 177 L 313 177 Z" fill="#3b82f6"/>
+
+  <!-- title -->
+  <text x="400" y="395" fill="#ffffff" font-family="Georgia, 'Noto Serif SC', serif" font-size="32" font-weight="700" text-anchor="middle" letter-spacing="1">XmExcel</text>
+  <text x="400" y="425" fill="#bbf7d0" font-family="'Noto Sans SC', system-ui, sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">实时协作表格</text>
+</svg>

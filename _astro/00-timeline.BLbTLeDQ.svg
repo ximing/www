@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 640" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d97757"/>
+      <stop offset="1" stop-color="#6b4fbb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="640" fill="#faf9f7" rx="12"/>
+  <text x="800" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="#1f1e1c">Anthropic 工程化演进时间线（2024.09 – 2026.05）</text>
+  <text x="800" y="82" text-anchor="middle" font-size="15" fill="#6e6a63">基于 Anthropic Engineering Blog 全部 25 篇官方文章梳理</text>
+
+  <!-- main line -->
+  <rect x="90" y="318" width="1420" height="4" rx="2" fill="url(#line)"/>
+
+  <!-- stage 1 (above) -->
+  <circle cx="160" cy="320" r="9" fill="#d97757"/>
+  <line x1="160" y1="311" x2="160" y2="240" stroke="#d97757" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="160" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2024.09–12</text>
+  <text x="160" y="180" text-anchor="middle" font-size="17" font-weight="700" fill="#b5512f">① 原则确立</text>
+  <text x="160" y="206" text-anchor="middle" font-size="13" fill="#4a463f">Contextual Retrieval</text>
+  <text x="160" y="226" text-anchor="middle" font-size="13" fill="#4a463f">Building Effective Agents</text>
+  <text x="160" y="372" text-anchor="middle" font-size="13" fill="#8a857c">简单可组合</text>
+  <text x="160" y="392" text-anchor="middle" font-size="13" fill="#8a857c">先工作流后自治</text>
+
+  <!-- stage 2 (below) -->
+  <circle cx="340" cy="320" r="9" fill="#c96a48"/>
+  <line x1="340" y1="329" x2="340" y2="400" stroke="#c96a48" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="340" y="440" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2025.01–03</text>
+  <text x="340" y="470" text-anchor="middle" font-size="17" font-weight="700" fill="#b5512f">② 脚手架即竞争力</text>
+  <text x="340" y="496" text-anchor="middle" font-size="13" fill="#4a463f">SWE-bench 49%</text>
+  <text x="340" y="516" text-anchor="middle" font-size="13" fill="#4a463f">think tool（+54%）</text>
+  <text x="340" y="268" text-anchor="middle" font-size="13" fill="#8a857c">Agent = 模型 + 脚手架</text>
+
+  <!-- stage 3 (above) -->
+  <circle cx="520" cy="320" r="9" fill="#bb5f3f"/>
+  <line x1="520" y1="311" x2="520" y2="240" stroke="#bb5f3f" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="520" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2025.04–06</text>
+  <text x="520" y="180" text-anchor="middle" font-size="17" font-weight="700" fill="#b5512f">③ Coding 与多智能体</text>
+  <text x="520" y="206" text-anchor="middle" font-size="13" fill="#4a463f">Claude Code Best Practices</text>
+  <text x="520" y="226" text-anchor="middle" font-size="13" fill="#4a463f">Multi-agent Research（+90.2%）</text>
+  <text x="520" y="372" text-anchor="middle" font-size="13" fill="#8a857c">上下文窗口是</text>
+  <text x="520" y="392" text-anchor="middle" font-size="13" fill="#8a857c">最重要的资源</text>
+
+  <!-- stage 4 (below) -->
+  <circle cx="700" cy="320" r="9" fill="#a55a4a"/>
+  <line x1="700" y1="329" x2="700" y2="400" stroke="#a55a4a" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="700" y="440" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2025.09–10</text>
+  <text x="700" y="470" text-anchor="middle" font-size="17" font-weight="700" fill="#8f5052">④ 上下文与工具</text>
+  <text x="700" y="496" text-anchor="middle" font-size="13" fill="#4a463f">Context Engineering</text>
+  <text x="700" y="516" text-anchor="middle" font-size="13" fill="#4a463f">Tools / Skills / Sandboxing</text>
+  <text x="700" y="268" text-anchor="middle" font-size="13" fill="#8a857c">最小高信号上下文</text>
+
+  <!-- stage 5 (above) -->
+  <circle cx="880" cy="320" r="9" fill="#8f5a66"/>
+  <line x1="880" y1="311" x2="880" y2="240" stroke="#8f5a66" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="880" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2025.11</text>
+  <text x="880" y="180" text-anchor="middle" font-size="17" font-weight="700" fill="#78566e">⑤ 长任务 Harness</text>
+  <text x="880" y="206" text-anchor="middle" font-size="13" fill="#4a463f">Initializer + Coding Agent</text>
+  <text x="880" y="226" text-anchor="middle" font-size="13" fill="#4a463f">MCP 代码执行 / Tool Search</text>
+  <text x="880" y="372" text-anchor="middle" font-size="13" fill="#8a857c">跨会话交接</text>
+  <text x="880" y="392" text-anchor="middle" font-size="13" fill="#8a857c">与 token 效率</text>
+
+  <!-- stage 6 (below) -->
+  <circle cx="1060" cy="320" r="9" fill="#7b5b8a"/>
+  <line x1="1060" y1="329" x2="1060" y2="400" stroke="#7b5b8a" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="1060" y="440" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2026.01–02</text>
+  <text x="1060" y="470" text-anchor="middle" font-size="17" font-weight="700" fill="#6b4fbb">⑥ Eval 成为显学</text>
+  <text x="1060" y="496" text-anchor="middle" font-size="13" fill="#4a463f">Demystifying Evals / Infra Noise</text>
+  <text x="1060" y="516" text-anchor="middle" font-size="13" fill="#4a463f">16 个 Agent 构建 C 编译器</text>
+  <text x="1060" y="268" text-anchor="middle" font-size="13" fill="#8a857c">评测轨迹而非回答</text>
+
+  <!-- stage 7 (above) -->
+  <circle cx="1240" cy="320" r="9" fill="#6b4fbb"/>
+  <line x1="1240" y1="311" x2="1240" y2="240" stroke="#6b4fbb" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="1240" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2026.03–04</text>
+  <text x="1240" y="180" text-anchor="middle" font-size="17" font-weight="700" fill="#6b4fbb">⑦ 可控自治与质量治理</text>
+  <text x="1240" y="206" text-anchor="middle" font-size="13" fill="#4a463f">Auto Mode（拦截 83%）</text>
+  <text x="1240" y="226" text-anchor="middle" font-size="13" fill="#4a463f">Harness 消融 / 质量回归复盘</text>
+  <text x="1240" y="372" text-anchor="middle" font-size="13" fill="#8a857c">93% 的批准率</text>
+  <text x="1240" y="392" text-anchor="middle" font-size="13" fill="#8a857c">不是安全</text>
+
+  <!-- stage 8 (below) -->
+  <circle cx="1420" cy="320" r="9" fill="#553fa8"/>
+  <line x1="1420" y1="329" x2="1420" y2="400" stroke="#553fa8" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="1420" y="440" text-anchor="middle" font-size="14" font-weight="600" fill="#6e6a63">2026.04–05</text>
+  <text x="1420" y="470" text-anchor="middle" font-size="17" font-weight="700" fill="#553fa8">⑧ 平台化与结构遏制</text>
+  <text x="1420" y="496" text-anchor="middle" font-size="13" fill="#4a463f">Managed Agents</text>
+  <text x="1420" y="516" text-anchor="middle" font-size="13" fill="#4a463f">How We Contain Claude</text>
+  <text x="1420" y="268" text-anchor="middle" font-size="13" fill="#8a857c">脑手分离，限制爆炸半径</text>
+
+  <!-- footer -->
+  <rect x="90" y="570" width="1420" height="3" rx="1.5" fill="#e3e0da"/>
+  <text x="800" y="608" text-anchor="middle" font-size="15" fill="#6e6a63">演进主线：先跑通任务 → 再管好上下文与工具 → 然后用 Eval 证明能力 → 最后用治理控制风险</text>
+</svg>
